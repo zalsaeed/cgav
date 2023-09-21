@@ -1,0 +1,31 @@
+event_title: "Sample Event"
+event_date: "30-5-2023"
+event_type: "training"
+certificate_background: "certificate-templates/sample_background.png"
+
+intro: "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن"
+
+csv_file: 'data/sample-data.csv'
+
+male_recipient_title: "المتدرب:"
+female_recipient_title: "المتدربة:"
+
+male_certificate_body: "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م"
+female_certificate_body: "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م"
+
+# possible singers setup!
+#signers: [
+#  ["أ.د. عبدالله بن احمد الاحمد", "عميد كلية الحاسب"],
+#  ["د. فهد بن سالم السالم", "مشرف وحدة خدمة المجتمع"]
+#]
+
+dean_name: "أ.د. عبدالله بن احمد الاحمد"
+dean_position: "عميد كلية الحاسب"
+path_to_dean_signature: "signatures/sample-sig-1.png"
+
+csu_director_name: "د. فهد بن سالم السالم"
+csu_position: "مشرف وحدة خدمة المجتمع"
+path_to_csu_signature: "signatures/sample-sig-2.png"
+
+male_final_greeting: "مع تمنياتنا له بالتوفيق والسداد"
+female_final_greeting: "مع تمنياتنا لها بالتوفيق والسداد"
