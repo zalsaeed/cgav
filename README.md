@@ -7,12 +7,12 @@ designed with the following principles in mind:
 1. It has a minimal number of types of users (minimal privilege
     management).
 2. Provide adapters with full certificate design management.
-    a. Users can add new certificate background. 
-    b. USers can manage how the certificate text would appear (e.g.,
+    - a. Users can add new certificate background. 
+    - b. USers can manage how the certificate text would appear (e.g.,
         font type, size, alignment, etc).
-    c. Users can define multiple variables within the certificate
+    - c. Users can define multiple variables within the certificate
         (e.g., recipient name, recipient ranking, etc).
-    d. Users can define 1-3 certificates signers and their details
+    - d. Users can define 1-3 certificates signers and their details
         (name, position, signature).
 3. Define as many event types as users need (e.g., training course,
     award, etc).
