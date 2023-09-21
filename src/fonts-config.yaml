@@ -1,0 +1,28 @@
+root_dir: "fonts"
+
+# list all fonts you would like to include. This will be a list of lists.
+# The font defining list is expected to contain the following elements:
+# [font_family, font_style, font_file_path_from_root, bool_for_unicode]
+fonts:
+  - ["NotoSans", "", "NotoSans/NotoSansArabic-Regular.ttf", True]
+  - ["NotoSans", "B", "NotoSans/NotoSansArabic-Bold.ttf", True]
+
+  - ["NotoSansSemiCondensed", "", "NotoSans/NotoSansArabic_SemiCondensed-Regular.ttf", True]
+  - ["NotoSansSemiCondensed", "B", "NotoSans/NotoSansArabic_SemiCondensed-Bold.ttf", True]
+
+  - ["NotoSansCondensed", "", "NotoSans/NotoSansArabic_Condensed-Regular.ttf", True]
+  - ["NotoSansCondensed", "B", "NotoSans/NotoSansArabic_Condensed-Bold.ttf", True]
+
+  - ["NotoSansExtraCondensed", "", "NotoSans/NotoSansArabic_ExtraCondensed-Regular.ttf", True]
+  - ["NotoSansExtraCondensed", "B", "NotoSans/NotoSansArabic_ExtraCondensed-Bold.ttf", True]
+
+  - ["Amiri", "", "Amiri/Amiri-Regular.ttf", True]
+  - ["Amiri", "I", "Amiri/Amiri-Italic.ttf", True]
+  - ["Amiri", "B", "Amiri/Amiri-Bold.ttf", True]
+  - ["Amiri", "BI", "Amiri/Amiri-BoldItalic.ttf", True]
+
+  - ["SakkalMajalla", "", "SakkalMajalla/majalla.ttf", True]
+  - ["SakkalMajalla", "B", "SakkalMajalla/majallab.ttf", True]
+
+  - ["Scheherazade", "", "Scheherazade/ScheherazadeNew-Regular.ttf", True]
+  - ["Scheherazade", "B", "Scheherazade/ScheherazadeNew-Bold.ttf", True]
