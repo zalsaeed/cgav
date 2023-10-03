@@ -1,0 +1,3 @@
+# pickle files for fonts building
+src/fonts/*/*.pkl
+
