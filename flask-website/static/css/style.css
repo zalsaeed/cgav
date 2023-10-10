@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    font-family: 'IBM Plex Sans Thai', sans-serif;
+    background-color: #f8f8f8;
+    /* Light gray background color */
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #ccc;
+}
