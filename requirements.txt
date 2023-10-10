@@ -5,3 +5,4 @@ matplotlib==3.7.2
 python-bidi==0.4.2
 arabic-reshaper==3.0.0
 pyyaml==6.0.1
+flask
