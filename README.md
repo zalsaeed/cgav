@@ -72,7 +72,11 @@ To run the web page, follow these steps:
 
 2. Run an instance of the system with port mapping:
     ```shell
-    docker run --name new_cgav -p 5080:5080 -it cgav:latest /bin/bash
+    docker run --name new_cgav -p 5000:5000 -it cgav:latest /bin/bash
+
+    for windows 
+    
+    docker run --name new_cgav -p 5000:5000 -it cgav:latest sh 
     ```
 
 3. Navigate to the `flask-website` directory:
@@ -86,6 +90,37 @@ To run the web page, follow these steps:
     ```
 
 This will start the development server, and you can access the web page in your browser at [http://localhost:5080](http://localhost:5080).
+
+
+## Running the login Page
+
+To run the web page, follow these steps:
+
+1. Build the Docker image :
+    ```shell
+    docker build -t cgav:latest .
+    ```
+
+2. Run an instance of the system with port mapping:
+    ```shell
+    docker run --name new_cgav -p 5000:5000 -it cgav:latest /bin/bash
+
+    for windows 
+    
+    docker run --name new_cgav -p 5000:5000 -it cgav:latest sh 
+    ```
+
+3. Navigate to the `flask-login` directory:
+    ```shell
+    cd flask-login
+    ```
+
+4. Run the Flask web application:
+    ```shell
+    python app.py
+    ```
+
+This will start the development server, and you can access the web page in your browser at [http://localhost:5000](http://localhost:5000).
 
 # Sample Output
 
