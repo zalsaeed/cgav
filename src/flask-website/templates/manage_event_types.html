@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% block title %}Manage Event Types{% endblock %}
+{% block body %}
+<div class="center-container">
+    <div class="border-shadow-container">
+        <h2 class="text-2xl font-bold mb-4">Manage Event Types</h2>
+
+        <!-- Add New Type Section -->
+        <div class="mb-4">
+            <button id="btnAddNewType" onclick="toggleAddNewTypeForm()" class="button">
+                Add New Type
+            </button>
+            <div id="addNewTypeForm" class="mt-4 hidden">
+                <label for="newTypeName">Type Name:</label>
+                <input type="text" id="newTypeName" name="newTypeName" class="border rounded p-2 mr-2">
+                <div class="button-container">
+                    <button onclick="saveNewType()" class="button">Save</button>
+                    <button onclick="cancelAddNewType()" class="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Existing Type Section -->
+        <div>
+            <button id="btnDeleteExistingType" onclick="toggleDeleteExistingTypeForm()" class="button">
+                Delete Existing Type
+            </button>
+            <div id="deleteExistingTypeForm" class="mt-4 hidden">
+                <label for="existingType">Select Type to Delete:</label>
+                <select id="existingType" name="existingType" class="border rounded p-2 mr-2">
+                    {% for type in existing_event_types %}
+                    <option value="{{ type }}">{{ type }}</option>
+                    {% endfor %}
+                </select>
+                <div class="button-container">
+                    <button onclick="confirmDelete()" class="button">Delete</button>
+                    <button onclick="cancelDelete()" class="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Function to capitalize the first letter of a string
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    // Function to toggle the visibility of the add new type form
+    function toggleAddNewTypeForm() {
+        document.getElementById('addNewTypeForm').classList.toggle('hidden');
+        hideDeleteForm();
+    }
+
+    // Function to save a new type
+    function saveNewType() {
+        var newTypeInput = document.getElementById('newTypeName');
+        var newType = newTypeInput.value.trim();
+
+        if (newType !== "") {
+            newType = capitalizeFirstLetter(newType);
+
+            if (!typeExists(newType)) {
+                sendUpdateToServer('add', newType);
+                newTypeInput.value = "";
+            } else {
+                showErrorMessage('Type "' + newType + '" already exists!');
+            }
+        }
+    }
+
+    // Function to cancel adding a new type
+    function cancelAddNewType() {
+        hideAddForm();
+    }
+
+    // Function to toggle the visibility of the delete existing type form
+    function toggleDeleteExistingTypeForm() {
+        document.getElementById('deleteExistingTypeForm').classList.toggle('hidden');
+        hideAddForm();
+    }
+
+    // Function to confirm and delete an existing type
+    function confirmDelete() {
+        var selectedType = document.getElementById('existingType').value;
+
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: `This will delete the type "${selectedType}" and all related certificates.`,
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#246195',
+            confirmButtonText: 'Yes, delete it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendUpdateToServer('delete', selectedType);
+            }
+        });
+    }
+
+    // Function to cancel deleting an existing type
+    function cancelDelete() {
+        hideDeleteForm();
+    }
+
+    // Function to check if a new type already exists
+    function typeExists(newType) {
+        var existingTypeSelect = document.getElementById('existingType');
+        return Array.from(existingTypeSelect.options).some(option => option.value.toLowerCase() === newType.toLowerCase());
+    }
+
+    // Function to show a success message
+    function showSuccessMessage(message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+        });
+    }
+
+    // Function to show an error message
+    function showErrorMessage(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message,
+        });
+    }
+
+    // Function to send updates to the server
+    function sendUpdateToServer(action, typeName) {
+        fetch('/update_event_types', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=${action}&typeName=${encodeURIComponent(typeName)}`,
+        })
+            .then(response => response.json())
+            .then(data => handleServerResponse(action, typeName, data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Function to handle the server response
+    function handleServerResponse(action, typeName, data) {
+        if ('message' in data) {
+            updateFrontend(action, typeName);
+            showSuccessMessage(data.message);
+        } else {
+            showErrorMessage(data.error);
+        }
+    }
+
+    // Function to update the frontend based on the server response
+    function updateFrontend(action, typeName) {
+        var existingTypeSelect = document.getElementById('existingType');
+        var options = existingTypeSelect.options;
+
+        if (action === 'add') {
+            var newOption = document.createElement('option');
+            newOption.value = typeName;
+            newOption.text = typeName;
+            existingTypeSelect.add(newOption);
+        } else if (action === 'delete') {
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === typeName) {
+                    existingTypeSelect.remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    // Function to hide the add new type form
+    function hideAddForm() {
+        document.getElementById('addNewTypeForm').classList.add('hidden');
+    }
+
+    // Function to hide the delete existing type form
+    function hideDeleteForm() {
+        document.getElementById('deleteExistingTypeForm').classList.add('hidden');
+    }
+</script>
+
+
+{% endblock %}
