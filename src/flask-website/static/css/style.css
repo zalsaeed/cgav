@@ -2,12 +2,57 @@ body {
     margin: 0;
     font-family: 'IBM Plex Sans Thai', sans-serif;
     background-color: #f8f8f8;
-    /* Light gray background color */
+
 }
 
+/* Footer */
 footer {
     position: fixed;
     bottom: 0;
     width: 100%;
     background-color: #ccc;
 }
+
+/*  End Styling of Footer */
+
+/* Event Type Page */
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.border-shadow-container {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    width: 50%;
+    /* Adjust as needed */
+    max-width: 50%;
+    /* Set a maximum width if desired */
+}
+
+.button {
+    background-color: #427AA1;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+    /* Adjust as needed */
+    font-size: 100%;
+}
+
+.button-container {
+    display: flex;
+    gap: 16px;
+    /* Adjust the space between buttons */
+    margin-top: 16px;
+    /* Add some space between buttons and the form */
+}
+
+/* End Styling of Event Type Page */
