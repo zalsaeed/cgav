@@ -24,14 +24,16 @@ RUN npm install --global yarn
 # Install all listed plugins:
 # RUN vim -c 'PlugInstall' -c 'qa!' ~/.vimrc
 # OR you could use 
-RUN vim +PlugInstall +qall
+# RUN vim +PlugInstall +qall
 
-RUN vim +'CocInstall coc-pyright' +qall
+# RUN vim +'CocInstall coc-pyright' +qall
 
 COPY requirements.txt requirements.txt
 
+
 RUN pip3 install --upgrade setuptools
 RUN pip3 install -r requirements.txt
+
 
 COPY src/ /root/src/
 WORKDIR /root/src/
