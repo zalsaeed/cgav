@@ -126,6 +126,11 @@ def logout():
     return redirect(url_for('login'))
 
 
+@app.route('/add_certificate', methods=['GET', 'POST'])
+def add_certificate():
+    return render_template('add_certificate.html')
+
+
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
