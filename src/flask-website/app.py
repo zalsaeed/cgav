@@ -59,6 +59,9 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+class Certificate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)
 
 # Global variable to store existing event types
 existing_event_types = []
@@ -135,6 +138,30 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
+
+
+# New route to confirm delete from the database
+
+@app.route('/delete_certificate', methods=['GET', 'POST'])
+def delete_certificate():
+    if request.method == 'POST':
+        certificate_name = request.form.get('certificateName')
+
+        certificate = Certificate.query.filter_by(name=certificate_name).first()
+
+        # If certificate is found in the database
+        if certificate:
+            db.session.delete(certificate)
+            db.session.commit()
+            return redirect(url_for(
+                'certificates_content_page'))  # Replace 'certificates_content_page' with the correct route name for certificates content page.
+
+        else:
+            # Return back to the same page with an error message
+            return render_template('delete_certificate.html',
+                                   error="Certificate name is incorrect. Please try again and make sure of the correct name.")
+
+    return render_template('delete_certificate.html')
 
 
 if __name__ == "__main__":
