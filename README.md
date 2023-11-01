@@ -28,99 +28,86 @@ git history.
 
 # Getting Started
 
-## Install
+## Build and Run
 
-The project is containerized using Docker. We explain how to build
-it and and deploy it within the context of the Docker container. If
-you wish to build it from scratch we recommend you look at the build
-recipe from `Dockerfile` to satisfy all the dependencies. 
+The project is containerized using Docker and Docker Compose.
+We explain how to build it and deploy it within the context of
+compose. If you wish to build it from scratch we recommend you
+look at the build recipe from `Dockerfile` to build it manually. 
 
-- Build an image of the system: 
-    ```shell
-    docker build -t cgav:latest .
-    ```
-- Run an instance of the system given the image we just built:
-    ```shell
-    docker run --name new_cgav -it cgav:latest /bin/bash
-    ```
+### `.env` file:
 
-## Usage
+Before you start you must provide a `.env` file that conform to
+the following keys and structure.
 
-The system can be used manually by running the `main.py` file. 
-By default the project uses the
-[sample-event.yaml](src/events/sample-event.yaml) for the event details
-which in turn uses the [sample-data.csv](src/data/sample-data.csv) to
-get recipient information. You can change these settings by providing
-a new event file (yaml file) and use the `-e` flag with main. 
+```ini
+# configurations used by the docker compose file
 
-The following is a sample command for generating sample certificates: 
+# web configurations
+WEB_PORT=5000
+
+# db configurations
+DB_PORT=3306
+INIT_FILE=./resources (or where you keep the .sql build script)
+HOSTNAME=test
+MYSQL_DATABASE=root
+MYSQL_ROOT_PASSWORD=changeme
+MYSQL_USER=dbuser
+MYSQL_PASSWORD=changeme
+SCHEMA=schema_name
+```
+  
+
+### Build and Run the System: 
+
+If you have the correct `.env` file, then all you need is to run    
+```shell
+docker-compose up -d
+```
+This will start the development server, and you can access the
+web page in your browser at
+[http://localhost:{your-prot}](http://localhost:{yourport}).
+
+### Stop and Delete the Instants:
+
+To stop the system and remove the instant completely, you would
+pass the `down` option to docker compose.
+
+```shell
+docker-compose down
+```
+
+## Helpers 
+
+If your would like to access the `web` container,
+you can use a command similar to the ones below
+depending on your system.
+
+- Unix based systems:
+  ```shell
+  docker exec -it <your_container_name> /bin/bash
+  ```
+- Windows:
+  ```shell
+  docker exec -it <your_container_name> sh
+  ```
+
+~~## Usage~~
+
+~~The system can be used manually by running the `main.py` file.~~ 
+~~By default, the project uses the~~
+~~[sample-event.yaml](src/events/sample-event.yaml) for the event details~~
+~~which in turn uses the [sample-data.csv](src/data/sample-data.csv) to~~
+~~get recipient information. You can change these settings by providing~~
+~~a new event file (yaml file) and use the `-e` flag with main.~~ 
+
+~~The following is a sample command for generating sample certificates:~~ 
 ```shell
 cd src
 python3 main.py
 ```
 
-By default all output will be saved under `src/output`.
-
-## Running the Web Page
-
-To run the web page, follow these steps:
-
-1. Build the Docker image :
-    ```shell
-    docker build -t cgav:latest .
-    ```
-
-2. Run an instance of the system with port mapping:
-    ```shell
-    docker run --name new_cgav -p 5000:5000 -it cgav:latest /bin/bash
-
-    for windows 
-    
-    docker run --name new_cgav -p 5000:5000 -it cgav:latest sh 
-    ```
-
-3. Navigate to the `flask-website` directory:
-    ```shell
-    cd flask-website
-    ```
-
-4. Run the Flask web application:
-    ```shell
-    python app.py
-    ```
-
-This will start the development server, and you can access the web page in your browser at [http://localhost:5000](http://localhost:5000).
-
-
-## Running the login Page
-
-To run the web page, follow these steps:
-
-1. Build the Docker image :
-    ```shell
-    docker build -t cgav:latest .
-    ```
-
-2. Run an instance of the system with port mapping:
-    ```shell
-    docker run --name new_cgav -p 5000:5000 -it cgav:latest /bin/bash
-
-    for windows 
-    
-    docker run --name new_cgav -p 5000:5000 -it cgav:latest sh 
-    ```
-
-3. Navigate to the `flask-login` directory:
-    ```shell
-    cd flask-login
-    ```
-
-4. Run the Flask web application:
-    ```shell
-    python app.py
-    ```
-
-This will start the development server, and you can access the web page in your browser at [http://localhost:5000](http://localhost:5000).
+~~By default, all output will be saved under `src/output`.~~
 
 # Sample Output
 

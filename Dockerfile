@@ -38,3 +38,5 @@ RUN pip3 install -r requirements.txt
 COPY src/ /root/src/
 WORKDIR /root/src/
 
+ENTRYPOINT ["python3"]
+CMD ["flask-website/app.py"]

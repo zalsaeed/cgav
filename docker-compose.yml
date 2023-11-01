@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT}:5000"
+    volumes:
+      - ./src:/root/src/
+    env_file:
+      - .env
+    links:
+      - db
+  db:
+    image: mysql:8.2
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    volumes:
+      - ${INIT_FILE}:/docker-entrypoint-initdb.d
+    ports:
+      - "${DB_PORT}:3306"
+    hostname: "${HOSTNAME}"
