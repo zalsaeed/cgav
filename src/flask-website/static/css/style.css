@@ -56,3 +56,123 @@ footer {
 }
 
 /* End Styling of Event Type Page */
+
+/* start style new template page  */
+.input1{
+    border:1px solid rgba(44, 78, 113, 1);
+    background-color: rgb(214 224 232 / 49%);
+  }
+
+  
+  .body {
+    font: 1em/1.618 Inter, sans-serif;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    min-height: 70vh;
+    padding: 10px;
+  }
+  #container div{
+    width:130px;
+    justify-content: center;
+    display: flex;
+}
+  .card {
+    max-width: 300px;
+    /* min-height: 595px; */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    max-width: 500px;
+    /* height: 300px; */
+    padding: 20px;
+    min-width: 346px;
+    border: 1px solid rgba(44, 78, 113, 1);
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 0 10px 1px rgba(66, 122, 161, 1);
+  
+    backdrop-filter: blur(15px);
+  }
+  
+  .card-footer {
+    font-size: 0.65em;
+    color: #446;
+  }
+  .text-center {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+  #profile-upload{
+  background-image:url('');
+  background-size:cover;
+  background-position: center;
+  background-color:rgb(214 224 232 / 49%);
+  height:175px;
+  /* width: 279px; */
+  border: 1px dashed rgba(44, 78, 113, 1);
+  position:relative;
+  border-radius:10px;
+  overflow:hidden;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  -ms-border-radius:10px;
+  -o-border-radius:10px;
+}
+#profile-upload:hover input.upload{
+  display:block;
+}
+#profile-upload:hover .hvr-profile-img{
+  display:inline-block;
+ }
+
+#profile-upload:hover{
+    box-shadow: 0 0 10px 1px rgba(66, 122, 161, 1);
+   -webkit-transform: scale(1); 
+}
+#profile-upload input.upload {
+    z-index:1;
+    left: 0;
+    margin: 0;
+    bottom: 0;
+    top: 0;
+    padding: 0;
+    opacity: 0;
+    outline: none;
+    cursor: pointer;
+    position: absolute;
+    background:#ccc;
+    width:100%;
+    display:none;
+}
+
+#profile-upload .hvr-profile-img {
+  width:100%;
+  height:100%;
+  display: none;
+  position:absolute;
+  vertical-align: middle;
+  position: relative;
+  background: transparent;
+ }
+#profile-upload .fa:after {
+    content: "";
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:0px;
+    background:rgba(0,0,0,0.3);
+    z-index:-1;
+    transition: height 0.3s;
+    -webkit-transition: height 0.3s;
+    -moz-transition: height 0.3s;
+    -ms-transition: height 0.3s;
+    -o-transition: height 0.3s;
+}
+
+#profile-upload:hover .fa:after { height:100%; }
+/* End Styling of New Template Page */

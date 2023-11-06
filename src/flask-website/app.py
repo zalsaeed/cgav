@@ -2,9 +2,11 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import InputRequired, Length, ValidationError
+from wtforms import StringField, PasswordField, FileField, SubmitField
+from wtforms.validators import InputRequired,DataRequired , Length, ValidationError
 from flask_bcrypt import Bcrypt
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
 
@@ -15,6 +17,7 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
+app.config['UPLOAD_FOLDER']='../certificate-templates'
 
 
 login_manager = LoginManager()
@@ -63,8 +66,15 @@ class Certificate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
 
+class NewTemplates(FlaskForm):
+    templatesName= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
+    templatesImage= FileField('*Upload Background', validators=[DataRequired()])
+    submit= SubmitField('Add')
+
 # Global variable to store existing event types
 existing_event_types = []
+# Global variable to store existing templates
+templates=[]
 
 # Existing route
 
@@ -167,6 +177,24 @@ def delete_certificate():
                                    error="Certificate name is incorrect. Please try again and make sure of the correct name.")
 
     return render_template('delete_certificate.html')
+
+@app.route("/create_new_template", methods=['GET',"POST"])
+def newtemp():
+    form=NewTemplates()
+    if form.validate_on_submit():
+        file = form.templatesImage.data
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
+        template = {
+            'name': form.templatesName.data,
+            'image_path': os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
+        }
+        templates.append(template)
+        # For test only
+        # print(templates)
+
+        return "You Add New Templates Successfully."
+
+    return render_template('create_new_template.html',form=form)
 
 
 if __name__ == "__main__":
