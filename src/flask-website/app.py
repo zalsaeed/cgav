@@ -8,6 +8,15 @@ from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 import os
 
+# to access the data in .env file
+HOSTNAME = os.environ.get('HOSTNAME')
+DB_PORT = os.environ.get('DB_PORT')
+MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
+MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
+MYSQL_USER = os.environ.get('MYSQL_USER')
+MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+SCHEMA = os.environ.get("SCHEMA")
+
 app = Flask(__name__)
 
 # Global variable to store existing event types
@@ -15,7 +24,11 @@ existing_event_types = []
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# old uri 
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# new uri
+app.config['SQLALCHEMY_DATABASE_URI'] =\
+    f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 app.config['UPLOAD_FOLDER']='../certificate-templates'
 
@@ -27,35 +40,40 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return users.query.get(int(user_id))
 
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
+class users(db.Model, UserMixin):
+    # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    user_name = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    
 
 
 class RegisterForm(FlaskForm):
-    username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    user_name = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
+    
+    id = StringField(validators=[
+                           InputRequired()], render_kw={"placeholder": "user_id"})
 
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
     submit = SubmitField('Register')
 
-    def validate_username(self, username):
-        existing_user_username = User.query.filter_by(
-            username=username.data).first()
-        if existing_user_username:
+    def validate_user_name(self, user_name):
+        existing_user_user_name = users.query.filter_by(
+            user_name=user_name.data).first()
+        if existing_user_user_name:
             raise ValidationError(
-                'That username already exists. Please choose a different one.')
+                'That user_name already exists. Please choose a different one.')
 
 
 class LoginForm(FlaskForm):
-    username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+    user_name = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
 
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
@@ -81,14 +99,14 @@ templates=[]
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('login_register.html')
 
-
+# login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = users.query.filter_by(user_name=form.user_name.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
@@ -140,14 +158,14 @@ def logout():
 def add_certificate():
     return render_template('add_certificate.html')
 
-
+# register route
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = users(user_name=form.user_name.data, password=hashed_password, id=form.id.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
