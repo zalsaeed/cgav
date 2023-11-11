@@ -69,6 +69,10 @@ class RegisterForm(FlaskForm):
         if existing_user_user_name:
             raise ValidationError(
                 'That user_name already exists. Please choose a different one.')
+    def validate_id(self, id):
+        existing_user_id = users.query.filter_by(id=id.data).first()
+        if existing_user_id:
+            raise ValidationError('chose different ID')
 
 
 class LoginForm(FlaskForm):
