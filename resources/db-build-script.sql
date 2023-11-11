@@ -6,12 +6,12 @@ USE cgav;
 
 CREATE TABLE users
 (
-    user_id VARCHAR(255) NOT NULL,
+    id VARCHAR(255) NOT NULL,
     user_name VARCHAR(255),
     email VARCHAR(255),
-    password VARCHAR(15),
+    password VARCHAR(80),
     user_role INT,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE Template
@@ -66,7 +66,7 @@ CREATE TABLE CertificateCustomizations
 (
     customization_id VARCHAR(255) NOT NULL,
     template_id VARCHAR(255),
-    user_id VARCHAR(255),
+    id VARCHAR(255),
     title_position_x INT,
     title_position_y INT,
     recipient_name_position_x INT,
@@ -78,7 +78,7 @@ CREATE TABLE CertificateCustomizations
     signs JSON,
     PRIMARY KEY (customization_id),
     FOREIGN KEY (template_id) REFERENCES Template(template_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    FOREIGN KEY (id) REFERENCES users(id)
 );
 
 CREATE TABLE addCertificate
