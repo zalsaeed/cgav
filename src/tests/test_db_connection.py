@@ -46,7 +46,7 @@ class TestUsingPyMySQL(unittest.TestCase):
         """
 
         info = {
-            "user_id": "test_id",
+            "id": "test_id",
             "user_name": "test_username",
             "email": "test@test.com",
             "password": "test_password",
@@ -55,22 +55,22 @@ class TestUsingPyMySQL(unittest.TestCase):
 
         # insert the data we have
         with self.connection.cursor() as cursor:
-            sql_insert = ("INSERT INTO `users` (`user_id`, `user_name`, `email`, `password`, `user_role`) "
+            sql_insert = ("INSERT INTO `users` (`id`, `user_name`, `email`, `password`, `user_role`) "
                           "VALUES (%s, %s, %s, %s, %s);")
-            cursor.execute(sql_insert, (info['user_id'], info['user_name'], info["email"], info["password"],
+            cursor.execute(sql_insert, (info['id'], info['user_name'], info["email"], info["password"],
                                         info["user_role"]))
         self.connection.commit()
 
         # fetch back the same data inserted
         with self.connection.cursor() as cursor:
             # Read a single record
-            sql_lookup = "SELECT * FROM `users` WHERE `user_id`=%s;"
-            cursor.execute(sql_lookup, (info["user_id"]))
+            sql_lookup = "SELECT * FROM `users` WHERE `id`=%s;"
+            cursor.execute(sql_lookup, (info["id"]))
             result = cursor.fetchone()  # this should be a dictionary
 
             self.assertIsInstance(result, dict)
 
-            self.assertEqual(info['user_id'], result['user_id'])
+            self.assertEqual(info['id'], result['id'])
             self.assertEqual(info['user_name'], result['user_name'])
             self.assertEqual(info['email'], result['email'])
             self.assertEqual(info['password'], result['password'])
@@ -78,8 +78,8 @@ class TestUsingPyMySQL(unittest.TestCase):
 
         # remove the data from the database
         with self.connection.cursor() as cursor:
-            sql_delete = f"DELETE FROM `users` WHERE (`user_id` =%s);"
-            cursor.execute(sql_delete, (info["user_id"]))
+            sql_delete = f"DELETE FROM `users` WHERE (`id` =%s);"
+            cursor.execute(sql_delete, (info["id"]))
 
         self.connection.commit()
 
@@ -122,7 +122,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         We want to make sure the columns in the users table (as an example)
         are as we expect.
         """
-        users_table_columns_names = ['users.user_id', 'users.user_name', 'users.email',
+        users_table_columns_names = ['users.id', 'users.user_name', 'users.email',
                                      'users.password', 'users.user_role']
 
         # get the users table from the base object (the reflection object)
@@ -145,7 +145,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         """
 
         info = {
-            "user_id": "test_id2",
+            "id": "test_id2",
             "user_name": "test_username2",
             "email": "test@test.com2",
             "password": "test_password2",
@@ -156,23 +156,23 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         users_table = self.base.classes.users
         session = self.db.session
 
-        session.add(users_table(user_id=info["user_id"],
+        session.add(users_table(id=info["id"],
                                 user_name=info['user_name'],
                                 email=info["email"],
                                 password=info["password"],
                                 user_role=info["user_role"]))
         session.commit()
 
-        result = session.query(users_table).filter_by(user_id=info["user_id"]).first()
+        result = session.query(users_table).filter_by(id=info["id"]).first()
         # print(result.__dict__)  # to see what we got
 
-        self.assertEqual(info['user_id'], result.user_id)
+        self.assertEqual(info['id'], result.id)
         self.assertEqual(info['user_name'], result.user_name)
         self.assertEqual(info['email'], result.email)
         self.assertEqual(info['password'], result.password)
         self.assertEqual(info['user_role'], result.user_role)
 
-        session.query(users_table).filter_by(user_id=info["user_id"]).delete()
+        session.query(users_table).filter_by(id=info["id"]).delete()
         session.commit()
 
 
