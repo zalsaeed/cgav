@@ -7,6 +7,7 @@ from wtforms.validators import InputRequired,DataRequired , Length, ValidationEr
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 import os
+import db_classes
 from werkzeug.utils import secure_filename
 
 # Import for custom email handling
@@ -55,49 +56,49 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return users.query.get(int(user_id))
+    return db_classes.users.query.get(int(user_id))
 
 
-class users(db.Model, UserMixin):
-    # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    user_name = db.Column(db.String(20), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
+# class users(db.Model, UserMixin):
+#     # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
+#     id = db.Column(db.Integer, primary_key=True, unique=True)
+#     user_name = db.Column(db.String(20), nullable=False, unique=True)
+#     password = db.Column(db.String(80), nullable=False)
     
 
 
-class RegisterForm(FlaskForm):
-    user_name = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
+# class RegisterForm(FlaskForm):
+#     user_name = StringField(validators=[
+#                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
     
-    id = StringField(validators=[
-                           InputRequired()], render_kw={"placeholder": "user_id"})
+#     id = StringField(validators=[
+#                            InputRequired()], render_kw={"placeholder": "user_id"})
 
-    password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+#     password = PasswordField(validators=[
+#                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
-    submit = SubmitField('Register')
+#     submit = SubmitField('Register')
 
-    def validate_user_name(self, user_name):
-        existing_user_user_name = users.query.filter_by(
-            user_name=user_name.data).first()
-        if existing_user_user_name:
-            raise ValidationError(
-                'That user_name already exists. Please choose a different one.')
-    def validate_id(self, id):
-        existing_user_id = users.query.filter_by(id=id.data).first()
-        if existing_user_id:
-            raise ValidationError('chose different ID')
+#     def validate_user_name(self, user_name):
+#         existing_user_user_name = users.query.filter_by(
+#             user_name=user_name.data).first()
+#         if existing_user_user_name:
+#             raise ValidationError(
+#                 'That user_name already exists. Please choose a different one.')
+#     def validate_id(self, id):
+#         existing_user_id = users.query.filter_by(id=id.data).first()
+#         if existing_user_id:
+#             raise ValidationError('chose different ID')
 
 
-class LoginForm(FlaskForm):
-    user_name = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
+# class LoginForm(FlaskForm):
+#     user_name = StringField(validators=[
+#                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
 
-    password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+#     password = PasswordField(validators=[
+#                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
-    submit = SubmitField('Login')
+#     submit = SubmitField('Login')
 
 class Certificate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -123,9 +124,9 @@ def home():
 # login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
+    form = db_classes.LoginForm()
     if form.validate_on_submit():
-        user = users.query.filter_by(user_name=form.user_name.data).first()
+        user = db_classes.users.query.filter_by(user_name=form.user_name.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
@@ -179,11 +180,11 @@ def add_certificate():
 # register route
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegisterForm()
+    form = db_classes.RegisterForm()
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = users(user_name=form.user_name.data, password=hashed_password, id=form.id.data)
+        new_user = db_classes.users(user_name=form.user_name.data, password=hashed_password, id=form.id.data, user_role= form.user_role.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
