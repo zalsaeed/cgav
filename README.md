@@ -56,7 +56,21 @@ MYSQL_USER=dbuser
 MYSQL_PASSWORD=changeme
 SCHEMA=schema_name
 ```
-  
+
+```ini
+# Mail Server Configuration for Gmail
+MAIL_SERVER='smtp.gmail.com'
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USE_SSL=False
+MAIL_USERNAME='your_mail@gmail.com'
+MAIL_PASSWORD='your_mail_app_pass'
+MAIL_DEFAULT_SENDER='your_mail@gmail.com'
+```
+
+**Note:**
+If you need guidance on generating an App Password, please refer to the [README.md]() for step-by-step instructions.
+
 
 ### Build and Run the System: 
 

@@ -39,4 +39,4 @@ COPY src/ /root/src/
 WORKDIR /root/src/
 
 ENTRYPOINT ["python3"]
-CMD ["flask-website/app.py"]
+CMD ["flask_website/app.py"]

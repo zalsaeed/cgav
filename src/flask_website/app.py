@@ -1,12 +1,21 @@
-from flask import Flask, render_template, url_for, redirect, request, jsonify
+from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, FileField, SubmitField
 from wtforms.validators import InputRequired,DataRequired , Length, ValidationError
 from flask_bcrypt import Bcrypt
-from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 import os
+from werkzeug.utils import secure_filename
+
+# Import for custom email handling
+# from flask import render_template_string
+# from jinja2 import Template
+from dotenv import load_dotenv
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # to access the data in .env file
 HOSTNAME = os.environ.get('HOSTNAME')
@@ -18,10 +27,6 @@ MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
 SCHEMA = os.environ.get("SCHEMA")
 
 app = Flask(__name__)
-
-# Global variable to store existing event types
-existing_event_types = []
-
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 # old uri 
@@ -32,6 +37,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 app.config['UPLOAD_FOLDER']='../certificate-templates'
 
+# Mail Server Configuration
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -137,7 +152,6 @@ def manage_event_types():
 
 # New route to handle updates from the frontend
 
-
 @app.route('/update_event_types', methods=['POST'])
 def update_event_types():
     action = request.form.get('action')
@@ -219,5 +233,54 @@ def newtemp():
     return render_template('create_new_template.html',form=form)
 
 
+@app.route('/send_email', methods=['GET', 'POST'])
+@login_required
+def send_email():
+    if request.method == 'POST':
+        selected_emails = request.form.getlist('emails')
+
+        # Get the custom email details from the form
+        subject = request.form.get('subject')
+        custom_content = request.form.get('custom-content')
+
+        # Iterate over selected emails
+        for email in selected_emails:
+            # Find the PDF file for the user
+            certificate_folder = os.path.join(os.path.dirname(__file__), 'sample-event')
+            pdf_files = [f for f in os.listdir(certificate_folder) if f.startswith(f"{email}-") and f.endswith(".pdf")]
+
+            if pdf_files:
+                # Use the first PDF file found for the user
+                certificate_filename = os.path.join(certificate_folder, pdf_files[0])
+
+                # Construct the message
+                msg = Message('Your Certificate', recipients=[email], sender='no-reply@example.com')
+
+                # Use custom or default values
+                if  subject and custom_content:
+                    msg.subject = subject
+                    msg.body = custom_content
+                else:
+                    msg.body = 'Dear User,\n\nPlease find attached your certificate.'
+
+                # Attach the certificate to the email
+                with app.open_resource(certificate_filename) as certificate:
+                    msg.attach(email + '_certificate.pdf', 'application/pdf', certificate.read())
+
+                # Send the email
+                mail.send(msg)
+            else:
+                # No certificate file found for the user
+                print(f"Certificate not found for {email}")
+
+        # Check if custom values were used
+        if subject and custom_content:
+            flash("Custom emails sent successfully!", "success")
+        else:
+            flash("Default emails sent successfully!", "success")
+
+    return render_template('send_email.html')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
+

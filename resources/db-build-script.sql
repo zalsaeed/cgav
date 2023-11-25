@@ -1,8 +1,8 @@
-CREATE DATABASE IF NOT EXISTS cgav;
+CREATE DATABASE
+IF NOT EXISTS cgav;
 USE cgav;
 
 -- TABLE
-
 
 CREATE TABLE users
 (
@@ -120,7 +120,12 @@ CREATE TABLE CertificateSigns
     FOREIGN KEY (sign_id) REFERENCES signs(sign_id)
 );
 
-CREATE TABLE demo (ID integer primary key, Name varchar(20), Hint text );
+CREATE TABLE demo
+(
+    ID integer primary key,
+    Name varchar(20),
+    Hint text
+);
  
 -- INDEX
  

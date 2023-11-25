@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Send Emails{% endblock %}
+
+{% block body %}
+<div class="container mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
+    <h2 class="text-2xl font-bold mb-4">Send Emails</h2>
+    <form action="{{ url_for('send_email') }}" method="post" enctype="multipart/form-data" id="emailForm">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Select Emails:</label>
+
+            <!-- Checkbox for "Select All" -->
+            <div class="mt-2">
+                <input type="checkbox" id="select-all"
+                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="select-all" class="text-sm text-gray-700">Select All</label>
+            </div>
+
+            <!-- Checkboxes for emails -->
+            <div class="mt-2">
+                <input type="checkbox" name="emails" value="wsam76@hotmail.com" data-username="wsam76" id="user1"
+                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="user1" class="text-sm text-gray-700">wsam76@hotmail.com</label>
+            </div>
+
+            <div class="mt-2">
+                <input type="checkbox" name="emails" value="iiw7.jr@gmail.com" data-username="iiw7" id="user2"
+                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="user2" class="text-sm text-gray-700">iiw7.jr@gmail.com</label>
+            </div>
+            <!-- Button to open the pop-up -->
+            <button type="button"
+                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                onclick="openPopup()">
+                Customize Email
+            </button>
+        </div>
+
+        <!-- Pop-up for custom email details (hidden by default) -->
+        <div id="popup"
+            class="hidden fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg">
+                <label class="block text-sm font-medium text-gray-700 mt-4">Subject:</label>
+                <input type="text" name="subject" id="subject" class="mt-2 p-2 border rounded w-full"
+                    placeholder="Enter email subject">
+
+                <label class="block text-sm font-medium text-gray-700 mt-4">Content:</label>
+                <textarea name="custom-content" id="custom-content" class="mt-2 p-2 border rounded w-full" rows="4"
+                    placeholder="Enter your custom email content"></textarea>
+
+                <!-- Hidden fields to store custom email details -->
+                <input type="hidden" name="subject-input" id="subject-input">
+                <input type="hidden" name="custom-content-input" id="custom-content-input">
+
+                <div class="mt-4 flex justify-between">
+                    <!-- Save button -->
+                    <button type="button"
+                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+                        onclick="updateEmailDetailsAndClosePopup()">Save</button>
+
+                    <!-- Cancel button -->
+                    <button type="button"
+                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring focus:border-gray-300"
+                        onclick="closePopup()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+
+        <button type="submit"
+            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+            Send Email
+        </button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: '{{ messages[0] }}',
+            showConfirmButton: false,
+            timer: 1500
+        });
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        document.getElementById('select-all').addEventListener('change', function () {
+            var checkboxes = document.querySelectorAll('input[name="emails"]');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = document.getElementById('select-all').checked;
+            });
+        });
+
+        function openPopup() {
+            document.getElementById('popup').classList.remove('hidden');
+        }
+
+        function closePopup() {
+            document.getElementById('popup').classList.add('hidden');
+        }
+
+
+        // JavaScript to update email details and close pop-up
+        function updateEmailDetailsAndClosePopup() {
+            var subject = document.getElementById('subject').value;
+            var customContent = document.getElementById('custom-content').value;
+
+            // Check if subject or custom content is empty
+            if (subject.trim() === '' || customContent.trim() === '') {
+                // Display SweetAlert2 error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Subject or custom content cannot be empty.',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            } else {
+                // Set the values in hidden fields
+                document.getElementById('subject-input').value = subject;
+                document.getElementById('custom-content-input').value = customContent;
+
+                // Close the pop-up
+                closePopup();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Custom email details saved successfully!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        }
+        function validateForm() {
+            var subject = document.getElementById('subject').value;
+            var customContent = document.getElementById('custom-content').value;
+
+            if (!subject || !customContent) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Subject and custom content are required.',
+                });
+                return false;
+            }
+
+            return true;
+        }
+        // Function to handle success pop-up
+        function showSuccessPopup() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Emails sent successfully!',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+        // Function to handle error pop-up
+        function showErrorPopup(errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: errorMessage,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+        // Update the form submission handling
+        document.getElementById('emailForm').addEventListener('submit', function (event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Check if any checkboxes are selected
+            var checkboxes = document.querySelectorAll('input[name="emails"]:checked');
+            if (checkboxes.length === 0) {
+                showErrorPopup('Please select at least one email.');
+                return;
+            }
+
+            // Submit the form using AJAX
+            var formData = new FormData(event.target);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', event.target.action, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Emails sent successfully
+                    showSuccessPopup();
+
+                    // Reload the page after a short delay (adjust as needed)
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    // Error in sending emails
+                    showErrorPopup('Error sending emails. Please try again.');
+                }
+            };
+            xhr.send(formData);
+        });
+    </script>
+
+</div>
+{% endblock %}
