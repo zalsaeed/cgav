@@ -23,8 +23,8 @@ class RegisterForm(FlaskForm):
     user_name = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
     
-    id = StringField(validators=[
-                           InputRequired()], render_kw={"placeholder": "user_id"})
+    # id = StringField(validators=[
+    #                        InputRequired()], render_kw={"placeholder": "user_id"})
     
     user_role = StringField(validators=[
                            InputRequired()], render_kw={"placeholder": "user_role"})
