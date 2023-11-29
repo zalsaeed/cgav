@@ -30,3 +30,15 @@ MAIL_PASSWORD='you 16-character app password'
 
 Refrence:
 [Sign in with app passwords](https://support.google.com/mail/answer/185833?hl=en)
+
+#### . how to run the script to add a user
+after building the compose file you should enter cgav-web-1
+after that go to flask_website
+```
+cd flask_website
+```
+then run usertest.py
+```
+python3 usertest.py
+```
+
