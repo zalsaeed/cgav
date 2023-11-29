@@ -69,7 +69,7 @@ MAIL_DEFAULT_SENDER='your_mail@gmail.com'
 ```
 
 **Note:**
-If you need guidance on generating an App Password, please refer to the [README.md]() for step-by-step instructions.
+If you need guidance on generating an App Password, please refer to the [README.md](https://github.com/zalsaeed/cgav/blob/main/src/flask_website/README.md) for step-by-step instructions.
 
 
 ### Build and Run the System: 
