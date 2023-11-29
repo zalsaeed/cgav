@@ -6,7 +6,7 @@ USE cgav;
 
 CREATE TABLE users
 (
-    id VARCHAR(255) NOT NULL,
+    id INT(255) NOT NULL AUTO_INCREMENT,
     user_name VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(80),
@@ -66,7 +66,7 @@ CREATE TABLE CertificateCustomizations
 (
     customization_id VARCHAR(255) NOT NULL,
     template_id VARCHAR(255),
-    id VARCHAR(255),
+    id INT(255),
     title_position_x INT,
     title_position_y INT,
     recipient_name_position_x INT,
