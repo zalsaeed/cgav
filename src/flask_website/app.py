@@ -8,6 +8,18 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 import os
 import db_classes
+from certificate_models import CertificateEvent, EventType, CertificateForm
+import uuid
+import csv
+from io import StringIO
+
+
+
+
+
+
+
+
 from werkzeug.utils import secure_filename
 
 # Import for custom email handling
@@ -173,9 +185,72 @@ def logout():
     return redirect(url_for('login'))
 
 
+
+app.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'certificate-templates')
+
+# Ensure the upload_folder exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 @app.route('/add_certificate', methods=['GET', 'POST'])
 def add_certificate():
-    return render_template('add_certificate.html')
+    form = CertificateForm()
+    message = ""  # Empty message by default
+
+    if form.validate_on_submit():
+        file = form.file.data
+        if file and allowed_file(file.filename):
+            # Read the file into a StringIO object for parsing as CSV
+            file_stream = StringIO(file.read().decode('utf-8-sig'), newline=None)
+            csv_reader = csv.DictReader(file_stream)  # Use DictReader to read the CSV into a dictionary
+
+            # Check if CSV has all required headers
+            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash',
+                                'date_issued'}
+            if not required_headers.issubset(set(csv_reader.fieldnames)):
+                message = 'The CSV file does not have the required headers.'
+            else:
+                # The CSV has the required headers, so save the file and the event
+                file.seek(0)  # Seek back to the start of the file
+                filename = secure_filename(file.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+
+                # Create a new CertificateEvent instance with the file path
+                new_certificate_event = CertificateEvent(
+                    certificate_event_id=str(uuid.uuid4()),
+                    certificate_title=form.certificate_title.data,
+                    event_type_id=form.event_type.data,
+                    presenter_name=form.presenter_name.data,
+                    secret_phrase=form.secret_phrase.data,
+                    event_date=form.date.data,
+                    certificate_description=form.certificate_description.data,
+                    file_path=file_path  # Save the path to the file
+                )
+
+                # Add the new event to the session and commit it to the database
+                db.session.add(new_certificate_event)
+                db.session.commit()
+
+                return redirect(url_for('dashboard'))  # Redirect to the dashboard after successful upload
+
+        else:
+            message = 'Please upload a CSV file.'
+
+    # If it's a GET request or the form is not valid, render the page with the form
+    return render_template('add_certificate.html', form=form, message=message)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in {'csv'}
+
+@app.route('/settings')
+def settings():
+    # Your code here
+    return render_template('settings.html')
+
+
+
 
 # register route
 @ app.route('/register', methods=['GET', 'POST'])

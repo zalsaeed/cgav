@@ -1,0 +1,176 @@
+h1 {
+  color: #007bff;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background-color: #fafafa;
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #007bff;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+input[type="text"],
+select,
+input[type="date"],
+input[type="file"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #555;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+select:focus,
+input[type="date"]:focus,
+input[type="file"]:focus {
+  border-color: #007bff;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+#add-template-button {
+  padding: 8px 12px; /* Smaller padding for a more compact button */
+  font-size: 1rem; /* Smaller font size for a more proportional size */
+  border-radius: 0.25rem; /* Slightly rounded corners */
+  margin-left: 10px; /* Add some space between the select dropdown and button */
+}
+
+    .input-group > .form-select {
+        flex-grow: 1; /* Ensure the select element grows to fill the space */
+    }
+
+button#add-template-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+button#add-template-button:hover {
+  background-color: #0056b3;
+}
+
+button.cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+button.cancel:hover {
+  background-color: #bbb;
+}
+
+span.required {
+  color: red;
+  margin-left: 5px;
+}
+
+.p-flex {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Handles spacing between the elements */
+}
+
+a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+/* Add some padding to the bottom of the container */
+.container {
+  padding-bottom: 100px; /* Adjust the value as needed to ensure visibility */
+}
+
+/* Ensure that the body is at least the height of the viewport */
+html, body {
+  min-height: 100%;
+}
+
+/* Optional: Add a rule for a footer if you have one */
+.footer {
+  /* If you have a footer, make sure it's not positioned in a way that overlaps your content */
+}
+
+/* Enhanced button styling */
+button, .button, input[type="submit"] {
+  background-color: #f8f9fa; /* Light grey background */
+  color: #333; /* Dark text for contrast */
+  padding: 10px 20px;
+
+  border-radius: 4px; /* Rounded corners for a modern look */
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin: 0 5px; /* Add space around buttons */
+}
+
+button:hover, .button:hover, input[type="submit"]:hover,
+button:focus, .button:focus, input[type="submit"]:focus {
+  background-color: #e2e6ea; /* Slightly darker background on hover/focus */
+  border-color: #dae0e5; /* Slightly darker border on hover/focus */
+}
+
+/* Specific styles for the 'Cancel' button */
+button.cancel, .button.cancel {
+  background-color: transparent; /* No background for a 'ghost' effect */
+  color: #6c757d; /* Muted text color */
+  border-color: #6c757d; /* Muted border color */
+}
+
+button.cancel:hover, .button.cancel:hover,
+button.cancel:focus, .button.cancel:focus {
+  color: #5a6268; /* Darker text on hover/focus */
+  border-color: #5a6268; /* Darker border on hover/focus */
+}
+
+
+.error-message {
+    color: red;
+    background-color: #ffdddd;
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+
+
+
+

@@ -1,0 +1,107 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 250px;
+    background-color: #fffffff;
+    color: #264653;
+    height: 100vh;
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.sidebar img {
+    display: block;
+    margin: 0 auto 15px auto;
+    border-radius: 50%;
+}
+
+.sidebar h2, .sidebar h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.sidebar div {
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar div:hover {
+    background-color: #353b48;
+}
+
+/* Content styling */
+.content {
+    margin-left: 270px;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.public-profile-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+.public-profile-container h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #dcdde1;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.public-profile-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.public-profile-container input[type="text"],
+.public-profile-container input[type="email"],
+.public-profile-container input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    border: 1px solid #dcdde1;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Profile picture editing section */
+.profile-pic {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-pic img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-pic .edit-btn {
+    display: inline-block;
+    background-color: #00a8ff;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.profile-pic .edit-btn:hover {
+    background-color: #0097e6;
+}

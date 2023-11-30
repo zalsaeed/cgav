@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Settings{% endblock %}
+{% block body %}
+
+<div class="profile-container">
+    <div class="sidebar">
+        <img src="{{ url_for('static', filename='profile_picture.jpg') }}" alt="Profile Picture" onerror="this.onerror=null; this.src='https://via.placeholder.com/80';">
+        <h2>KBAabalkhail</h2>
+        <div id="publicProfileTab">Public profile</div>
+        <div id="accountTab">Manage Event Types</div>
+        <div>Settings4</div>
+        <div>Settings5</div>
+        <div>Settings6</div>
+        <div>Settings7</div>
+    </div>
+    <div class="content">
+        <!-- The public profile content will be loaded here -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function loadPublicProfile() {
+    // Define the HTML content for the public profile
+    const profileContent = `
+        <div class="public-profile-container">
+            <h2>Public Profile</h2>
+            <div class="profile-pic">
+                <img id="profileImage" src="https://via.placeholder.com/150" alt="Profile Picture">
+                <!-- Assuming you want to allow users to upload a profile picture -->
+                <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" style="display: none;" />
+                <a href="#" class="edit-btn" onclick="document.getElementById('imageUpload').click(); return false;">Edit Picture</a>
+            </div>
+            <div class="view-mode">
+                <!-- View Mode Content -->
+                <p>Name: <span id="displayName">KBAabalkhail</span></p>
+                <p>Email: <span id="displayEmail">kba@example.com</span></p>
+                <p>Phone Number: <span id="displayPhone">Not provided</span></p>
+                <button id="editModeBtn">Edit ✏️</button>
+            </div>
+            <div class="edit-mode" style="display: none;">
+                <!-- Edit Mode Content -->
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="KBAabalkhail">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="kba@example.com">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone" placeholder="Your phone number">
+                <button id="saveBtn">Save 💾</button>
+            </div>
+        </div>
+    `;
+    $(".content").html(profileContent);
+}
+
+
+    function saveProfileData() {
+        // Function to save the updated profile data
+        // You need to implement the AJAX request to your backend here
+    }
+
+    $(document).ready(function() {
+        // Load the public profile section by default
+        loadPublicProfile();
+
+        // Click event for the Public Profile Tab
+        $("#publicProfileTab").click(function() {
+            loadPublicProfile();
+        });
+
+        // Click event for the "Account" button in the sidebar
+        $("#accountTab").click(function() {
+            $(".content").load("/manage_event_types");
+        });
+
+        // Handle the "Edit" button click
+        $(document).on('click', '#editModeBtn', function() {
+            $('.view-mode').hide();
+            $('.edit-mode').show();
+        });
+
+        // Handle the save button click
+        $(document).on('click', '#saveBtn', function() {
+            saveProfileData();
+            $('.edit-mode').hide();
+            $('.view-mode').show();
+        });
+
+    });
+</script>
+{% endblock %}

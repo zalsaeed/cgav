@@ -85,7 +85,7 @@ CREATE TABLE addCertificate
 (
     certificate_event_id VARCHAR(255) NOT NULL,
     certificate_title VARCHAR(255),
-    event_type_id VARCHAR(255),
+    event_type_id VARCHAR(255) NULL, -- Allow NULL values for event_type_id
     recipient_id VARCHAR(255),
     customization_id VARCHAR(255),
     template_id VARCHAR(255),
@@ -94,9 +94,14 @@ CREATE TABLE addCertificate
     event_end_date DATETIME,
     description VARCHAR(320),
     secret_key VARCHAR(255),
+    presenter_name VARCHAR(255),       -- Added column
+    secret_phrase VARCHAR(255),        -- Added column
+    event_date DATETIME,               -- Added column
+    certificate_description TEXT,      -- Changed from VARCHAR to TEXT
+    file_path VARCHAR(255),            -- Added column
     PRIMARY KEY (certificate_event_id),
     FOREIGN KEY (template_id) REFERENCES Template(template_id),
-    FOREIGN KEY (event_type_id) REFERENCES Event_type(event_type_id),
+    FOREIGN KEY (event_type_id) REFERENCES Event_type(event_type_id), -- This constraint will remain, but can now reference NULL
     FOREIGN KEY (recipient_id) REFERENCES recipient(recipient_id),
     FOREIGN KEY (customization_id) REFERENCES CertificateCustomizations(customization_id),
     FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id)

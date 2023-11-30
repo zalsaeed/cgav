@@ -1,252 +1,96 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-  <title>Create Certificate with File Upload</title>
+{% block title %}Create Certificate with File Upload{% endblock %}
 
-  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans+Thai&display=swap" rel="stylesheet">
+{% block body %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Add Certificate</h1>
+   <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
 
-    <style>
-    h1 {
-      color: #007bff;
-      font-family: 'IBM Plex Sans Thai', sans-serif;
-    }
 
-    body {
-    font-family: 'IBM Plex Sans Thai', sans-serif;
-    background-color: #fafafa;
-}
+      <div class="form-section">
+        <div class="mb-3">
+          {{ form.certificate_title.label(class="form-label") }}
+          {{ form.certificate_title(class="form-control", placeholder="Enter certificate title") }}
+          {% for error in form.certificate_title.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 30px;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-}
+        <div class="mb-3">
+          {{ form.presenter_name.label(class="form-label") }}
+          {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
+          {% for error in form.presenter_name.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-h1 {
-    color: #007bff;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 30px;
-}
+        <div class="mb-3">
+          {{ form.secret_phrase.label(class="form-label") }}
+          {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
+          {% for error in form.secret_phrase.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-.form-section {
-    margin-bottom: 30px;
-}
+        <div class="mb-3">
+          {{ form.event_type.label(class="form-label") }}
+          {{ form.event_type(class="form-control") }}
+          {% for error in form.event_type.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
+        <div class="mb-3">
+          {{ form.date.label(class="form-label") }}
+          {{ form.date(class="form-control") }}
+          {% for error in form.date.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-input[type="text"],
-select,
-input[type="date"],
-input[type="file"] {
-    width: 100%;
-    padding: 10px 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 16px;
-    color: #555;
-    transition: border-color 0.3s;
-}
+        <div class="mb-3">
+          {{ form.certificate_description.label(class="form-label") }}
+          {{ form.certificate_description(class="form-control", placeholder="Enter certificate description") }}
+          {% for error in form.certificate_description.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      </div>
 
-input[type="text"]:focus,
-select:focus,
-input[type="date"]:focus,
-input[type="file"]:focus {
-    border-color: #007bff;
-}
 
-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s;
-}
 
-button#add-template-button {
-    background-color: #007bff;
-    color: #fff;
-}
+      <div class="file-upload-section">
+        <h2 class="mt-4 mb-2">Attendance Information:</h2>
+        <div class="mb-3">
+          {{ form.file.label(class="form-label") }}
+          {{ form.file(class="form-control") }}
+          {% for error in form.file.errors %}
+            <span style="color: red;">{{ error }}</span>
+          {% endfor %}
 
-button#add-template-button:hover {
-    background-color: #0056b3;
-}
-
-button.cancel {
-    background-color: #ccc;
-    color: #333;
-}
-
-button.cancel:hover {
-    background-color: #bbb;
-}
-
-span.required {
-    color: red;
-    margin-left: 5px;
-}
-
-.p-flex {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Handles spacing between the elements */
-}
-
-a {
-    color: #007bff;
-    text-decoration: underline;
-}
-
-a:hover {
-    text-decoration: none;
-}
-
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h1>Add Certificate</h1>
-    <div class="form-section">
-      <form id="upload-and-certificate-form" action="/create_certificate" method="POST" enctype="multipart/form-data">
-        <p>
-          <label for="certificate_title">Certificate Title<span class="required">*</span>:</label>
-          <input type="text" id="certificate_title" name="certificate_title" required />
-        </p>
-        <p>
-          <label for="presenter_name">Presenter Name<span class="required">*</span>:</label>
-          <input type="text" id="presenter_name" name="presenter_name" required />
-        </p>
-        <p>
-          <label for="Secret Phrase">Secret Phrase<span class="required">*</span>:</label>
-          <input type="text" id="Secret Phrase" name="Secret Phrase" required />
-        </p>
-        <p>
-          <label for="event_type">Event Type<span class="required">*</span>:</label>
-          <select id="event_type" name="event_type" required>
-            <option value="شهادة شكر">شهادة شكر</option>
-            <option value="شهادة حضور">شهادة حضور</option>
-            <option value="شهادة اقامة دورة">شهادة اقامة دورة</option>
-          </select>
-        </p>
-        <p>
-          <label for="date">Date<span class="required">*</span>:</label>
-          <input type="date" id="date" name="date" required />
-        </p>
-        <p>
-          <label for="certificate_template">Certificate Template<span class="required">*</span>:</label>
-          <div class="p-flex">
-            <select id="certificate_template" name="certificate_template">
-              <option value="template1">Template 1</option>
-              <option value="template2">Template 2</option>
-              <option value="template3">Template 3</option>
-            </select>
-            <button id="add-template-button">Template settings</button>
-          </div>
-        </p>
-        <p>
-          <label for="certificate_description">Certificate Description<span class="required">*</span>:</label>
-          <input type="text" id="certificate_description" name="certificate_description" required />
-        </p>
-      </form>
+          {% if message %}
+    <div class="error-message">
+        {{ message }}
     </div>
+{% endif %}
 
-    <div class="file-upload-section">
-      <h2>*Attendance information:</h2>
 
-      <p>
-        <label for="file">CSV File<span class="required">*</span>:</label>
-        <input type="file" id="file" name="file" accept=".csv" required />
-      </p>
-      <p>
-        * The file must be in <a href="{{ url_for('static', filename='sample-of-csv-file.csv') }}" download>CSV format</a>
-      </p>
-    </div>
+        </div>
+        <p>* The file must be in CSV format</p>
+      </div>
 
-    <button type="button" class="cancel" id="cancel-button">Cancel</button>
-    <button type="submit" id="create-certificate-button">Add Certificate</button>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
+  <button type="button" class="button cancel" onclick="window.location.href='{{ url_for('home') }}'">Cancel</button>
+  <input type="submit" value="Submit" class="button">
+</div>
+
+    </form>
   </div>
+{% endblock %}
 
-  <div id="imagePreview"></div>
-
-
-   <script>
-    function fileValidation(callback) {
-        const fileInput = document.getElementById('file');
-        const filePath = fileInput.value;
-        const allowedExtensions = /(\.csv)$/i;
-
-        // Check file extension first
-        if (!allowedExtensions.test(filePath)) {
-            alert('Invalid file type. Please select a CSV file.');
-            fileInput.value = ''; // Clear the file input
-            callback(false);
-            return;
-        }
-
-        // Read the file contents
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const content = e.target.result;
-            const lines = content.split('\n');
-
-            // Assuming the first line of the CSV contains the headers
-            if (lines.length > 0) {
-                const headers = lines[0].trim().split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(header => header.trim().toLowerCase().replace(/^"|"$/g, ''));
-
-                console.log("Parsed headers: ", headers);  // For debugging purposes
-
-                // List of required headers
-                const requiredFields = ['name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash', 'date_issued'];
-
-                // Check the headers
-                const missingFields = requiredFields.filter(field => !headers.includes(field));
-
-                console.log("Missing fields: ", missingFields); // For debugging purposes
-
-                if (missingFields.length > 0) {
-                    alert('Invalid CSV format. Missing required fields: ' + missingFields.join(', '));
-                    fileInput.value = ''; // Clear the file input
-                    callback(false);
-                    return;
-                } else {
-                    callback(true);
-                }
-            } else {
-                alert('The uploaded CSV seems to be empty.');
-                fileInput.value = ''; // Clear the file input
-                callback(false);
-            }
-        };
-
-        reader.readAsText(fileInput.files[0]);
-    }
-
-    const fileInput = document.getElementById('file');
-    if (fileInput) {
-        fileInput.addEventListener('change', function() {
-            fileValidation(function(isValid) {
-                if (!isValid) {
-                    // Handle invalid file here, e.g., disable the submit button
-                    document.getElementById('create-certificate-button').disabled = true;
-                } else {
-                    document.getElementById('create-certificate-button').disabled = false;
-                }
-            });
-        });
-    }
+{% block scripts %}
+     <script>
 </script>
-
-</body>
-
-</html>
+{% endblock %}
