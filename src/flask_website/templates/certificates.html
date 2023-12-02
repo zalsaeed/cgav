@@ -1,0 +1,67 @@
+<!-- certificates.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Certificates{% endblock %}
+
+{% block body %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Your Events</h1>
+
+    <h2 class="mt-5 mb-4 text-center">Latest Certificates</h2>
+    <div class="row">
+      <!-- Display the latest 3 certificates -->
+      {% for certificate in latest_certificates %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+              <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
+              <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="btn btn-primary">More Info</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div id="all-certificates" class="row">
+      <!-- AJAX will populate this section -->
+    </div>
+
+    <div class="text-center mt-3">
+      <button id="load-all-certificates" class="btn btn-primary">Load All Certificates</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loadAllCertificatesBtn = document.getElementById('load-all-certificates');
+      const allCertificatesContainer = document.getElementById('all-certificates');
+
+      loadAllCertificatesBtn.addEventListener('click', function () {
+        // Make an AJAX request to load all certificates
+        // Use fetch or another AJAX library to make the request
+        fetch('/load_all_certificates')
+          .then(response => response.json())
+          .then(certificates => {
+            // Update the UI with the received certificates
+            certificates.forEach(certificate => {
+              const certificateCard = document.createElement('div');
+              certificateCard.classList.add('col-md-4', 'mb-4');
+              certificateCard.innerHTML = `
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">${certificate.certificate_title}</h5>
+                    <p class="card-text">Presenter: ${certificate.presenter_name}</p>
+                    <a href="/certificate_details/${certificate.certificate_event_id}" class="btn btn-primary">More Info</a>
+                  </div>
+                </div>
+              `;
+              allCertificatesContainer.appendChild(certificateCard);
+            });
+          })
+          .catch(error => console.error('Error loading certificates:', error));
+      });
+    });
+  </script>
+{% endblock %}

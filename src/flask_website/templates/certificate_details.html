@@ -1,0 +1,25 @@
+<!-- certificate_details.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}Certificate Details{% endblock %}
+
+{% block body %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Certificate Details</h1>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+        <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
+        <p class="card-text">Event Date: {{ certificate.event_date }}</p>
+        <p class="card-text">Description: {{ certificate.certificate_description }}</p>
+
+        <!-- Add your buttons here -->
+        <a href="#" class="btn btn-danger">Delete</a>
+        <a href="#" class="btn btn-success">Generate</a>
+        <a href="#" class="btn btn-primary">Download</a>
+        <a href="#" class="btn btn-info">Send</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

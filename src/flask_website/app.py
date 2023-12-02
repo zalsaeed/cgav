@@ -50,6 +50,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 app.config['UPLOAD_FOLDER']='../certificate-templates'
 
+
 # Mail Server Configuration
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
@@ -111,10 +112,6 @@ def load_user(user_id):
 #                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
 #     submit = SubmitField('Login')
-
-class Certificate(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
 
 class NewTemplates(FlaskForm):
     templatesName= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
@@ -267,28 +264,51 @@ def register():
     return render_template('register.html', form=form)
 
 
-# New route to confirm delete from the database
+# route to show certificate
+@app.route('/certificates', methods=['GET'])
+@login_required
+def certificates():
+    # Fetch the latest 3 certificates and all certificates from the database
+    latest_certificates = db_classes.addCertificate.query.limit(3).all()
+    all_certificates = db_classes.addCertificate.query.all()
 
-@app.route('/delete_certificate', methods=['GET', 'POST'])
-def delete_certificate():
-    if request.method == 'POST':
-        certificate_name = request.form.get('certificateName')
+    # Render the 'certificates.html' template with the certificate data
+    return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
 
-        certificate = Certificate.query.filter_by(name=certificate_name).first()
+@app.route('/load_all_certificates', methods=['GET'])
+@login_required
+def load_all_certificates():
+    # Fetch all certificates from the database
+    all_certificates = db_classes.addCertificate.query.all()
 
-        # If certificate is found in the database
-        if certificate:
-            db.session.delete(certificate)
-            db.session.commit()
-            return redirect(url_for(
-                'certificates_content_page'))  # Replace 'certificates_content_page' with the correct route name for certificates content page.
+    # Prepare a list of certificate details for JSON response
+    certificates_list = [
+        {
+            'certificate_title': certificate.certificate_title,
+            'presenter_name': certificate.presenter_name,
+            'certificate_event_id': certificate.certificate_event_id,
+            'secret_key': certificate.secret_key,
+            'event_date': certificate.event_date,
+            'certificate_description': certificate.description,
+            'file_path': certificate.file_path
+        }
+        for certificate in all_certificates
+    ]
 
-        else:
-            # Return back to the same page with an error message
-            return render_template('delete_certificate.html',
-                                   error="Certificate name is incorrect. Please try again and make sure of the correct name.")
+    # Return the list of certificate details as a JSON response
+    return jsonify(certificates_list)
 
-    return render_template('delete_certificate.html')
+@app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
+@login_required
+def certificate_details(certificate_event_id):
+    # Fetch the details of a specific certificate by its event ID
+    certificate = db_classes.addCertificate.query.get_or_404(certificate_event_id)
+
+    # Render the 'certificate_details.html' template with the specific certificate details
+    return render_template('certificate_details.html', certificate=certificate)
+
+# Add routes for other actions (delete, generate, download, send) as needed
+
 
 @app.route("/create_new_template", methods=['GET',"POST"])
 def newtemp():
