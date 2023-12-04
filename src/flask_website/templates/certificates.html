@@ -17,7 +17,8 @@
             <div class="card-body">
               <h5 class="card-title">{{ certificate.certificate_title }}</h5>
               <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
-              <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="btn btn-primary">More Info</a>
+              <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
+              <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button">More Info</a>
             </div>
           </div>
         </div>
@@ -29,7 +30,7 @@
     </div>
 
     <div class="text-center mt-3">
-      <button id="load-all-certificates" class="btn btn-primary">Load All Certificates</button>
+      <button id="load-all-certificates" class="custom-button">Load All Certificates</button>
     </div>
   </div>
 
@@ -53,6 +54,7 @@
                   <div class="card-body">
                     <h5 class="card-title">${certificate.certificate_title}</h5>
                     <p class="card-text">Presenter: ${certificate.presenter_name}</p>
+                    <p class="card-text">Date: ${certificate.event_start_date|date('Y-m-d')}</p>
                     <a href="/certificate_details/${certificate.certificate_event_id}" class="btn btn-primary">More Info</a>
                   </div>
                 </div>

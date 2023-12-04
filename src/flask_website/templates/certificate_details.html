@@ -9,17 +9,59 @@
     <h1 class="mb-4 text-center">Certificate Details</h1>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+        <h5 class="card-title">Title: {{ certificate.certificate_title }}</h5>
         <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
-        <p class="card-text">Event Date: {{ certificate.event_date }}</p>
+        <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
         <p class="card-text">Description: {{ certificate.certificate_description }}</p>
 
-        <!-- Add your buttons here -->
-        <a href="#" class="btn btn-danger">Delete</a>
-        <a href="#" class="btn btn-success">Generate</a>
-        <a href="#" class="btn btn-primary">Download</a>
-        <a href="#" class="btn btn-info">Send</a>
+        <!-- Buttons -->
+        <button id="delete-btn" class="custom-action-button" onclick="handleDelete()">Delete</button>
+        <button id="generate-btn" class="custom-action-button" onclick="handleGenerate()">Generate</button>
+        <button id="download-btn" class="custom-action-button" onclick="handleDownload()">Download</button>
+        <button id="send-btn" class="custom-action-button" onclick="handleSend()">Send</button>
       </div>
     </div>
   </div>
+
+  <style>
+    .custom-action-button {
+      display: inline-block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff;
+      border: 1px solid #007bff;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+      margin-right: 10px; /* Adjust as needed */
+    }
+
+    .custom-action-button:hover {
+      background-color: #0056b3;
+      color: #fff;
+    }
+  </style>
+
+  <script>
+    // JavaScript functions for button actions
+    function handleDelete() {
+      // Implement delete functionality
+      alert('Delete button clicked');
+    }
+
+    function handleGenerate() {
+      // Implement generate functionality
+      alert('Generate button clicked');
+    }
+
+    function handleDownload() {
+      // Implement download functionality
+      alert('Download button clicked');
+    }
+
+    function handleSend() {
+      // Implement send functionality
+      alert('Send button clicked');
+    }
+  </script>
 {% endblock %}
