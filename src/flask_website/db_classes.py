@@ -2,7 +2,7 @@
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, FileField, SubmitField
-from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo
+from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 import os
@@ -16,6 +16,7 @@ class users(db.Model, UserMixin):
     # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
     id = db.Column(db.Integer, primary_key=True, unique=True)
     user_name = db.Column(db.String(20), nullable=False, unique=True)
+    email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
     user_role = db.Column(db.Integer, nullable=False)
 
@@ -23,8 +24,8 @@ class RegisterForm(FlaskForm):
     user_name = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
     
-    # id = StringField(validators=[
-    #                        InputRequired()], render_kw={"placeholder": "user_id"})
+    email = StringField(validators=[
+                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
     
     user_role = StringField(validators=[
                            InputRequired()], render_kw={"placeholder": "user_role"})
