@@ -1,13 +1,19 @@
+html{
+  height: 100%;
+  box-sizing: border-box;
+}
 body {
     margin: 0;
     font-family: 'IBM Plex Sans Thai', sans-serif;
     background-color: #f8f8f8;
-
+    position: relative;        /* for the footer to move with the page size */
+    min-height: 100%;          /* for the footer to be at the bottom */
+    padding-bottom: 6rem;
 }
 
 /* Footer */
 footer {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     width: 100%;
     background-color: #ccc;

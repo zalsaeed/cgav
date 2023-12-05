@@ -63,10 +63,11 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 # Certificates classes
-class Template(db.Model):
-    template_id = db.Column(db.String(255), primary_key=True)
-    template_name = db.Column(db.String(255))
-    template_image = db.Column(db.String(320))
+class template(db.Model):
+    template_id = db.Column(db.Integer, primary_key=True, unique=True )
+    template_name = db.Column(db.String(30), nullable=False)
+    template_image = db.Column(db.String(300), nullable=False)
+
 
 class Event_type(db.Model):
     event_type_id = db.Column(db.String(50), primary_key=True)
@@ -99,7 +100,7 @@ class CertificateCustomizations(db.Model):
     title_position_y = db.Column(db.Integer)
     # Add other customization fields as needed
     # ...
-    template = db.relationship('Template', backref='customizations')
+    template = db.relationship('template', backref='customizations')
     user = db.relationship('users', backref='customizations')
 
 class addCertificate(db.Model):
@@ -125,10 +126,10 @@ class addCertificate(db.Model):
     event_type = db.relationship('Event_type', backref='certificates')
     recipient = db.relationship('recipient', backref='certificates')
     customization = db.relationship('CertificateCustomizations', backref='certificates')
-    template = db.relationship('Template', backref='certificates')
+    template = db.relationship('template', backref='certificates')
     instructor = db.relationship('instructor', backref='certificates')
 
 class NewTemplates(FlaskForm):
-    templatesName = StringField('*Template Name', validators=[InputRequired(), Length(min=2, max=30)])
-    templatesImage = FileField('*Upload Background', validators=[InputRequired()])
-    submit = SubmitField('Add')
+    template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
+    template_image= FileField('*Upload Background', validators=[DataRequired()])
+    submit= SubmitField('Add')

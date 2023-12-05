@@ -14,9 +14,9 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
-CREATE TABLE Template
+CREATE TABLE template
 (
-    template_id VARCHAR(255) NOT NULL,
+    template_id INT(255) NOT NULL AUTO_INCREMENT,
     template_name VARCHAR(255),
     template_image VARCHAR(320),
     PRIMARY KEY (template_id)
@@ -65,7 +65,7 @@ CREATE TABLE signs
 CREATE TABLE CertificateCustomizations
 (
     customization_id VARCHAR(255) NOT NULL,
-    template_id VARCHAR(255),
+    template_id INT(255),
     id INT(255),
     title_position_x INT,
     title_position_y INT,
@@ -77,7 +77,7 @@ CREATE TABLE CertificateCustomizations
     logo_position_y INT,
     signs JSON,
     PRIMARY KEY (customization_id),
-    FOREIGN KEY (template_id) REFERENCES Template(template_id),
+    FOREIGN KEY (template_id) REFERENCES template(template_id),
     FOREIGN KEY (id) REFERENCES users(id)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE addCertificate
     event_type_id VARCHAR(255) NULL, -- Allow NULL values for event_type_id
     recipient_id VARCHAR(255),
     customization_id VARCHAR(255),
-    template_id VARCHAR(255),
+    template_id INT(255),
     instructor_id VARCHAR(255),
     event_start_date DATETIME,
     event_end_date DATETIME,
@@ -100,7 +100,7 @@ CREATE TABLE addCertificate
     certificate_description TEXT,      -- Changed from VARCHAR to TEXT
     file_path VARCHAR(255),            -- Added column
     PRIMARY KEY (certificate_event_id),
-    FOREIGN KEY (template_id) REFERENCES Template(template_id),
+    FOREIGN KEY (template_id) REFERENCES template(template_id),
     FOREIGN KEY (event_type_id) REFERENCES Event_type(event_type_id), -- This constraint will remain, but can now reference NULL
     FOREIGN KEY (recipient_id) REFERENCES recipient(recipient_id),
     FOREIGN KEY (customization_id) REFERENCES CertificateCustomizations(customization_id),

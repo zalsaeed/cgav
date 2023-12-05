@@ -113,16 +113,9 @@ def load_user(user_id):
 
 #     submit = SubmitField('Login')
 
-class NewTemplates(FlaskForm):
-    templatesName= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
-    templatesImage= FileField('*Upload Background', validators=[DataRequired()])
-    submit= SubmitField('Add')
 
 # Global variable to store existing event types
 existing_event_types = []
-# Global variable to store existing templates
-templates=[]
-
 # Existing route
 
 
@@ -312,22 +305,26 @@ def certificate_details(certificate_event_id):
 
 @app.route("/create_new_template", methods=['GET',"POST"])
 def newtemp():
-    form=NewTemplates()
+    form=db_classes.NewTemplates()
     if form.validate_on_submit():
-        file = form.templatesImage.data
+        file = form.template_image.data
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
-        template = {
-            'name': form.templatesName.data,
-            'image_path': os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
-        }
-        templates.append(template)
-        # For test only
-        # print(templates)
+        new_template = db_classes.template(template_name=form.template_name.data,template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        db.session.add(new_template)
+        db.session.commit()
 
         return "You Add New Templates Successfully."
 
     return render_template('create_new_template.html',form=form)
 
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route("/Select_template", methods=['GET',"POST"])
+def selectTemp():
+    templates=db_classes.template.query.all()
+    return render_template("select_template.html",templates=templates)
 
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required

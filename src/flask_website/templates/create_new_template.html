@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
 {% block title %}CGAV-New Template{% endblock %}
 {% block body %}
+<style>
+input[type="submit"]:hover {
+    --tw-bg-opacity: 1 !important;
+    background-color: rgb(59 130 246 / var(--tw-bg-opacity)) !important;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity)) !important;
+}
+</style>
 <div class="body">
 <div class="card">
     <h1 class="text-center" style="color:#2C4E71; margin-bottom: 1px;">Add New Template</h1>
     <form id="myForm" method="POST" enctype="multipart/form-data">
         {{form.hidden_tag()}}
         <div class="mb-6">
-            {{ form.templatesName.label(class='block mb-2 text-sm font-small', style='color:#2C4E71;')}}
-            {% if form.templatesName.errors%}
-            {{ form.templatesName(class="input1  border border-red-500  text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5  dark:placeholder-gray-400  dark:bg-red-100 dark:border-red-400",placeholder="Type template name...")}}
+            {{ form.template_name.label(class='block mb-2 text-sm font-small', style='color:#2C4E71;')}}
+            {% if form.template_name.errors%}
+            {{ form.template_name(class="input1  border border-red-500  text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5  dark:placeholder-gray-400  dark:bg-red-100 dark:border-red-400",placeholder="Type template name...")}}
             <div class="mt-2 text-sm text-red-600 dark:text-red-500">
-            {% for error in form.templatesName.errors %}
+            {% for error in form.template_name.errors %}
             <span>{{error}}</span>
             {% endfor %}
             </div>
             {% else %}
-            {{ form.templatesName(class="input1  border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500",placeholder="Type template name...")}}
+            {{ form.template_name(class="input1  border  text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500",placeholder="Type template name...")}}
             {% endif %}
         </div>
             <div id='profile-upload'>
-             {{ form.templatesImage.label(class="text-center",style="color: #2c4e7178;font-size: 17px;margin-top: 66px;")}}
+             {{ form.template_image.label(class="text-center",style="color: #2c4e7178;font-size: 17px;margin-top: 66px;")}}
             <div class="text-center"><svg xmlns="http://www.w3.org/2000/svg" height="1.25em" viewBox="0 0 640 512"><style>svg{fill:#2c4e7178}</style><path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/></svg></div>
-            <div class="hvr-profile-img  ">{{ form.templatesImage(id='getval',accept="image/*",class="upload w180",title="Template Background")}}</div>
+            <div class="hvr-profile-img  ">{{ form.template_image(id='getval',accept="image/*",class="upload w180",title="Template Background")}}</div>
 
             </div>
             
             <div style="margin-top:10px;" class="text-center w-full" id="container">
-                <div><button type="button" style="width: 76px;" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Cancel</button></div>
-                <div>{{form.submit( class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800")}}</div>
+                <div><button  type="button" style="width: 76px;" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Cancel</button></div>
+                <div>{{form.submit( style="border-color:transparent; margin-bottom: 0.5rem;margin-right: 0.5rem; width: 76px; border-radius: 0.5rem;--tw-text-opacity: 1;color: rgb(29 78 216 / var(--tw-text-opacity));font-size: 0.875rem;padding-top: 0.625rem;padding-bottom: 0.625rem;padding-left: 1.25rem;padding-right: 1.25rem; --tw-border-opacity: 1;" ,class="hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm  text-center  dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800")}}</div>
             </div>
     </form>
         </div>
