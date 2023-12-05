@@ -321,6 +321,13 @@ def newtemp():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
+@app.route('/<tempname>')
+def template(tempname):
+    temp = db_classes.template.query.filter_by(template_name=tempname).first()
+    tempid= temp.template_id if temp else None
+    temp = db_classes.template.query.get_or_404(tempid)
+    return temp.template_name
+
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
     templates=db_classes.template.query.all()
