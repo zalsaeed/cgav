@@ -128,7 +128,7 @@ def home():
 def login():
     form = db_classes.LoginForm()
     if form.validate_on_submit():
-        user = db_classes.users.query.filter_by(user_name=form.user_name.data).first()
+        user = db_classes.users.query.filter_by(email=form.email.data).first()
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
@@ -249,7 +249,7 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = db_classes.users(user_name=form.user_name.data, password=hashed_password, user_role= form.user_role.data, email=form.email.data)
+        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))

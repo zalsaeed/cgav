@@ -7,9 +7,10 @@ USE cgav;
 CREATE TABLE users
 (
     id INT(255) NOT NULL AUTO_INCREMENT,
-    user_name VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(80),
+    Fname VARCHAR(100),
+    Lname VARCHAR(100),
     user_role INT,
     PRIMARY KEY (id)
 );

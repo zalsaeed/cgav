@@ -15,20 +15,23 @@ db = app.db
 class users(db.Model, UserMixin):
     # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    user_name = db.Column(db.String(20), nullable=False, unique=True)
+    Fname = db.Column(db.String(40), nullable=False)
+    Lname = db.Column(db.String(40), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
-    user_role = db.Column(db.Integer, nullable=False)
+    user_role = db.Column(db.Integer, nullable=True)
 
 class RegisterForm(FlaskForm):
-    user_name = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
+    Fname = StringField(validators=[
+                           InputRequired()], render_kw={"placeholder": "first name"})
+    Lname = StringField(validators=[
+                           InputRequired()], render_kw={"placeholder": "last name"})
     
     email = StringField(validators=[
                            InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
     
     user_role = StringField(validators=[
-                           InputRequired()], render_kw={"placeholder": "user_role"})
+                           ], render_kw={"placeholder": "user_role"})
 
     password = PasswordField(validators=[
                              InputRequired(),EqualTo('confirm_password','miss match'), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
@@ -38,10 +41,10 @@ class RegisterForm(FlaskForm):
 
     submit = SubmitField('Register')
 
-    def validate_user_name(self, user_name):
-        existing_user_user_name = users.query.filter_by(
-            user_name=user_name.data).first()
-        if existing_user_user_name:
+    def validate_email(self, email):
+        existing_email = users.query.filter_by(
+            email=email.data).first()
+        if existing_email:
             raise ValidationError(
                 'That user_name already exists. Please choose a different one.')
     def validate_id(self, id):
@@ -54,8 +57,8 @@ class RegisterForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    user_name = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
+    email = StringField(validators=[
+                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
 
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
