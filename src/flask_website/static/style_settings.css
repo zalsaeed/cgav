@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap');
+
 /* General styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -9,8 +11,8 @@ body {
 /* Sidebar styling */
 .sidebar {
     width: 250px;
-    background-color: #fffffff;
-    color: #264653;
+    background-color: #111827;
+    color: #ffffff;
     height: 100vh;
     padding: 20px 0;
     position: fixed;
@@ -19,25 +21,21 @@ body {
     overflow: auto;
 }
 
-.sidebar img {
-    display: block;
-    margin: 0 auto 15px auto;
-    border-radius: 50%;
-}
-
 .sidebar h2, .sidebar h3 {
     text-align: center;
     margin-bottom: 20px;
+    color: #ffffff;
 }
 
 .sidebar div {
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    color: #ffffff;
 }
 
 .sidebar div:hover {
-    background-color: #353b48;
+    background-color: #1f2937;
 }
 
 /* Content styling */
@@ -51,32 +49,34 @@ body {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 .public-profile-container h2 {
-    margin-top: 0;
-    border-bottom: 2px solid #dcdde1;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    color: #111827;
+    font-size: 24px;
+    margin-bottom: 1em;
 }
 
-.public-profile-container label {
+.profile-field {
+    margin-bottom: 15px;
+}
+
+.profile-field label {
+    font-weight: bold;
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
 }
 
-.public-profile-container input[type="text"],
-.public-profile-container input[type="email"],
-.public-profile-container input[type="tel"] {
-    width: 100%;
+.profile-field span {
+    display: block;
+    background-color: #f4f4f4;
     padding: 10px;
-    margin-bottom: 20px;
     border-radius: 4px;
-    border: 1px solid #dcdde1;
-    font-size: 16px;
-    box-sizing: border-box;
 }
 
 /* Profile picture editing section */
@@ -104,4 +104,74 @@ body {
 
 .profile-pic .edit-btn:hover {
     background-color: #0097e6;
+}
+
+/* Styling for buttons */
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive design styles */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+    }
+
+    .profile-pic img {
+        width: 100px; /* Smaller profile picture on mobile */
+        height: 100px;
+    }
+}
+
+/* Sidebar name styling */
+.sidebar h2 {
+    font-size: 20px; /* Increase the font size */
+    font-weight: bold; /* Make the font weight bold */
+    color: #ffffff; /* Assuming white text on a dark background */
+    margin-top: 30px; /* Add space above the name */
+    margin-bottom: 30px; /* Add space below the name */
+    padding-left: 10px; /* Add some padding to the left */
+}
+
+/* Optional: User icon/avatar */
+.sidebar .user-icon {
+    display: block;
+    width: 50px; /* Example size */
+    height: 50px; /* Example size */
+    border-radius: 50%; /* Make it round */
+    background-color: #ffffff; /* Background color for the icon */
+    margin: 10px auto; /* Center the icon */
+    /* Add a background image if you have one */
+    background-image: url('path-to-user-avatar.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/* If you don't have an avatar image, you could use an icon font like Font Awesome */
+.sidebar i.fa-user {
+    font-size: 50px; /* Large icon size */
+    color: #ffffff; /* White color */
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
 }

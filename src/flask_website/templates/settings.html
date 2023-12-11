@@ -4,8 +4,8 @@
 
 <div class="profile-container">
     <div class="sidebar">
-        <img src="{{ url_for('static', filename='profile_picture.jpg') }}" alt="Profile Picture" onerror="this.onerror=null; this.src='https://via.placeholder.com/80';">
-        <h2>KBAabalkhail</h2>
+        <!-- Sidebar content -->
+        <h2>{{ first_name }} {{ last_name }}</h2>
         <div id="publicProfileTab">Public profile</div>
         <div id="accountTab">Manage Event Types</div>
         <div>Settings4</div>
@@ -14,78 +14,98 @@
         <div>Settings7</div>
     </div>
     <div class="content">
-        <!-- The public profile content will be loaded here -->
+        <div class="public-profile-container">
+            <h2>Public Profile</h2>
+            <div class="profile-field">
+                <label for="displayName">Name:</label>
+                <span id="displayName"></span>
+            </div>
+            <div class="profile-field">
+                <label for="displayEmail">Email:</label>
+                <span id="displayEmail"></span>
+            </div>
+            <!-- Additional profile content can be added here -->
+        </div>
     </div>
 </div>
 
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function loadPublicProfile() {
-    // Define the HTML content for the public profile
-    const profileContent = `
-        <div class="public-profile-container">
-            <h2>Public Profile</h2>
-            <div class="profile-pic">
-                <img id="profileImage" src="https://via.placeholder.com/150" alt="Profile Picture">
-                <!-- Assuming you want to allow users to upload a profile picture -->
-                <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" style="display: none;" />
-                <a href="#" class="edit-btn" onclick="document.getElementById('imageUpload').click(); return false;">Edit Picture</a>
-            </div>
-            <div class="view-mode">
-                <!-- View Mode Content -->
-                <p>Name: <span id="displayName">KBAabalkhail</span></p>
-                <p>Email: <span id="displayEmail">kba@example.com</span></p>
-                <p>Phone Number: <span id="displayPhone">Not provided</span></p>
-                <button id="editModeBtn">Edit ✏️</button>
-            </div>
-            <div class="edit-mode" style="display: none;">
-                <!-- Edit Mode Content -->
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" value="KBAabalkhail">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" value="kba@example.com">
-                <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone" placeholder="Your phone number">
-                <button id="saveBtn">Save 💾</button>
-            </div>
-        </div>
-    `;
-    $(".content").html(profileContent);
+// Function to show a loading indicator
+function showLoading() {
+    $(".content").html('<div class="loading">Loading...</div>');
 }
 
+// Function to hide the loading indicator
+function hideLoading() {
+    $(".loading").remove();
+}
 
-    function saveProfileData() {
-        // Function to save the updated profile data
-        // You need to implement the AJAX request to your backend here
-    }
+// Function to show error message
+function showError(message) {
+    $(".content").html(`<div class="error">${message}</div>`);
+}
 
-    $(document).ready(function() {
-        // Load the public profile section by default
-        loadPublicProfile();
-
-        // Click event for the Public Profile Tab
-        $("#publicProfileTab").click(function() {
-            loadPublicProfile();
-        });
-
-        // Click event for the "Account" button in the sidebar
-        $("#accountTab").click(function() {
-            $(".content").load("/manage_event_types");
-        });
-
-        // Handle the "Edit" button click
-        $(document).on('click', '#editModeBtn', function() {
-            $('.view-mode').hide();
-            $('.edit-mode').show();
-        });
-
-        // Handle the save button click
-        $(document).on('click', '#saveBtn', function() {
-            saveProfileData();
-            $('.edit-mode').hide();
-            $('.view-mode').show();
-        });
-
+function loadPublicProfile() {
+    showLoading(); // Show loading indicator before the request
+    $.ajax({
+        url: '/get_user_info',
+        type: 'GET',
+        success: function(response) {
+            // Assuming response is a JSON object containing user data
+            const profileContent = `
+                <div class="public-profile-container">
+                    <h2>Public Profile</h2>
+                    <div class="profile-field">
+                        <label>Name:</label>
+                        <span>${response.Fname} ${response.Lname}</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>Email:</label>
+                        <span>${response.email}</span>
+                    </div>
+                </div>
+            `;
+            $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
+        },
+        error: function(error) {
+            showError('An error occurred while loading the profile.'); // Show user-friendly error message
+            console.log(error); // Log the error for debugging
+        }
+    }).always(function() {
+        hideLoading(); // Hide loading indicator when the request is complete
     });
+}
+
+function saveProfileData() {
+    // Here you would implement the AJAX request to save the updated profile data
+}
+
+$(document).ready(function() {
+    loadPublicProfile(); // Load the public profile section by default
+
+    $("#publicProfileTab").click(function() {
+        loadPublicProfile();
+    });
+
+    $("#accountTab").click(function() {
+        $(".content").load("/manage_event_types");
+    });
+
+    $(document).on('click', '#editModeBtn', function() {
+        $('.view-mode').hide();
+        $('.edit-mode').fadeIn(500); // Fade in the edit mode
+    });
+
+    $(document).on('click', '#saveBtn', function() {
+        saveProfileData();
+        $('.edit-mode').fadeOut(500, function() { // Fade out the edit mode and then show the view mode
+            $('.view-mode').fadeIn(500);
+        });
+    });
+
+});
 </script>
+
 {% endblock %}

@@ -235,10 +235,23 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1].lower() in {'csv'}
 
 @app.route('/settings')
+@login_required
 def settings():
-    # Your code here
-    return render_template('settings.html')
+    user = current_user
+    # Pass the user's first and last name to the template
+    return render_template('settings.html', first_name=user.Fname, last_name=user.Lname)
 
+
+
+@app.route('/get_user_info')
+@login_required
+def get_user_info():
+    user = current_user
+    return jsonify({
+        'Fname': user.Fname,
+        'Lname': user.Lname,
+        'email': user.email
+    })
 
 
 
