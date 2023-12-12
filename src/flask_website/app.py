@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -334,12 +335,20 @@ def newtemp():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/<tempname>')
+@app.route('/Select_template/<tempname>')
 def template(tempname):
     temp = db_classes.template.query.filter_by(template_name=tempname).first()
     tempid= temp.template_id if temp else None
     temp = db_classes.template.query.get_or_404(tempid)
-    return temp.template_name
+    json_file = os.path.abspath('../src/flask_website/FackDataForAppearance/FackData.json')
+
+    # Read the JSON file
+    with open(json_file, 'r') as file:
+        data = json.load(file)
+
+    # Extract the value of "Field1" from each object in the JSON array
+    first_names = data.get('first_name')
+    return render_template('certificate_appearance.html', temp=temp,data=data.values())
 
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():

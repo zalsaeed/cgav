@@ -18,7 +18,7 @@ class="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-item
 {% for template in templates %}
 <div class="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
         <img src="{{ url_for('uploaded_file', filename=template.template_image.split('/')[-1]) }}"
-                alt="Template" class="h-80 w-72 object-cover rounded-t-xl" />
+                alt="Template" class="h-60 w-72 object-cover rounded-t-xl" />
         <div class="px-4 py-3 w-72">
             <p class="text-lg font-bold text-black truncate block capitalize">{{template.template_name}}</p>
             <button onclick="redirectToTemplate('{{ url_for('template', tempname=template.template_name) }}')" class="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
