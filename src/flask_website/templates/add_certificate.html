@@ -3,94 +3,97 @@
 {% block title %}Create Certificate with File Upload{% endblock %}
 
 {% block body %}
-  <div class="container mt-5">
-    <h1 class="mb-4 text-center">Add Certificate</h1>
-   <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST" enctype="multipart/form-data">
-      {{ form.hidden_tag() }}
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Add Certificate</h1>
+  <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST"
+    enctype="multipart/form-data">
+
+    {{ form.hidden_tag() }}
 
 
-      <div class="form-section">
-        <div class="mb-3">
-          {{ form.certificate_title.label(class="form-label") }}
-          {{ form.certificate_title(class="form-control", placeholder="Enter certificate title") }}
-          {% for error in form.certificate_title.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+    <div class="form-section">
+      <div class="mb-3">
+        {{ form.certificate_title.label(class="form-label") }}
+        {{ form.certificate_title(class="form-control", placeholder="Enter certificate title") }}
+        {% for error in form.certificate_title.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
-        <div class="mb-3">
-          {{ form.presenter_name.label(class="form-label") }}
-          {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
-          {% for error in form.presenter_name.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+      <div class="mb-3">
+        {{ form.presenter_name.label(class="form-label") }}
+        {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
+        {% for error in form.presenter_name.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
-        <div class="mb-3">
-          {{ form.secret_phrase.label(class="form-label") }}
-          {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
-          {% for error in form.secret_phrase.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+      <div class="mb-3">
+        {{ form.secret_phrase.label(class="form-label") }}
+        {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
+        {% for error in form.secret_phrase.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
-        <div class="mb-3">
-          {{ form.event_type.label(class="form-label") }}
-          {{ form.event_type(class="form-control") }}
-          {% for error in form.event_type.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-
-        <div class="mb-3">
-          {{ form.date.label(class="form-label") }}
-          {{ form.date(class="form-control") }}
-          {% for error in form.date.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-
-        <div class="mb-3">
-          {{ form.certificate_description.label(class="form-label") }}
-          {{ form.certificate_description(class="form-control", placeholder="Enter certificate description") }}
-          {% for error in form.certificate_description.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+      <div class="mb-3">
+        {{ form.event_type.label(class="form-label") }}
+        {{ form.event_type(class="form-control") }}
+        {% for error in form.event_type.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
       </div>
 
 
+      <div class="mb-3">
+        {{ form.date.label(class="form-label") }}
+        {{ form.date(class="form-control") }}
+        {% for error in form.date.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
-      <div class="file-upload-section">
-        <h2 class="mt-4 mb-2">Attendance Information:</h2>
-        <div class="mb-3">
-          {{ form.file.label(class="form-label") }}
-          {{ form.file(class="form-control") }}
-          {% for error in form.file.errors %}
-            <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-
-          {% if message %}
-    <div class="error-message">
-        {{ message }}
+      <div class="mb-3">
+        {{ form.certificate_description.label(class="form-label") }}
+        {{ form.certificate_description(class="form-control", placeholder="Enter certificate description") }}
+        {% for error in form.certificate_description.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
     </div>
-{% endif %}
 
 
+
+    <div class="file-upload-section">
+      <h2 class="mt-4 mb-2">Attendance Information:</h2>
+      <div class="mb-3">
+        {{ form.file.label(class="form-label") }}
+        {{ form.file(class="form-control") }}
+        {% for error in form.file.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+
+        {% if message %}
+        <div class="error-message">
+          {{ message }}
         </div>
-        <p>* The file must be in CSV format</p>
+        {% endif %}
+
+
       </div>
+      <p>* The file must be in CSV format</p>
+    </div>
 
-      <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
-  <button type="button" class="button cancel" onclick="window.location.href='{{ url_for('home') }}'">Cancel</button>
-  <input type="submit" value="Submit" class="button">
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
+      <button type="button" class="button cancel" onclick="window.location.href='{{ url_for('home') }}'">Cancel</button>
+      <input type="submit" value="Submit" class="button">
+    </div>
+
+  </form>
 </div>
-
-    </form>
-  </div>
 {% endblock %}
 
 {% block scripts %}
-     <script>
+<script>
 </script>
 {% endblock %}

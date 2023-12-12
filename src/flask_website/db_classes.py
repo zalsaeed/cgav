@@ -73,8 +73,8 @@ class template(db.Model):
 
 
 class Event_type(db.Model):
-    event_type_id = db.Column(db.String(50), primary_key=True)
-    event_type_name = db.Column(db.String(255))
+    event_type_id = db.Column(db.Integer, primary_key=True)
+    event_type_id = db.Column(db.Integer, primary_key=True)
     is_active = db.Column(db.Boolean, default=True)
 
 class recipient(db.Model):
@@ -111,7 +111,7 @@ class addCertificate(db.Model):
 
     certificate_event_id = db.Column(db.String(255), primary_key=True)
     certificate_title = db.Column(db.String(255))
-    event_type_id = db.Column(db.String(255), db.ForeignKey('event_type.event_type_id'))
+    event_type_id = db.Column(db.Integer, db.ForeignKey('event_type.event_type_id'))
     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
     customization_id = db.Column(db.String(255), db.ForeignKey('certificate_customizations.customization_id'))
     template_id = db.Column(db.String(255), db.ForeignKey('template.template_id'))

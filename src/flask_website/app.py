@@ -13,7 +13,7 @@ from certificate_models import CertificateEvent, EventType, CertificateForm
 import uuid
 import csv
 from io import StringIO
-
+from sqlalchemy import update
 
 
 
@@ -115,10 +115,6 @@ def load_user(user_id):
 #     submit = SubmitField('Login')
 
 
-# Global variable to store existing event types
-existing_event_types = []
-# Existing route
-
 
 @app.route('/')
 def home():
@@ -150,24 +146,50 @@ def manage_event_types():
     if request.method == 'POST':
         new_type = request.form.get('newTypeName')
         if new_type:
-            existing_event_types.append(new_type)
+            # Insert the new event type into the database
+            new_event_type = EventType(event_type_name=new_type, is_active=True)
+            db.session.add(new_event_type)
+            db.session.commit()
 
-    return render_template('manage_event_types.html', existing_event_types=existing_event_types)
+    # Fetch existing event types from the database
+    event_types = EventType.query.filter_by(is_active=True)
+    print("---event_types--------",event_types)
+    return render_template('manage_event_types.html', event_types=event_types)
 
-# New route to handle updates from the frontend
 
 @app.route('/update_event_types', methods=['POST'])
 def update_event_types():
-    action = request.form.get('action')
-    type_name = request.form.get('typeName')
-
+    data = request.get_json()
+    action = data.get('action')
+    type_name = data.get('typeName')
+    
     if action == 'add':
-        existing_event_types.append(type_name)
-        return jsonify({'message': f'The type "{type_name}" has been added.'})
-    elif action == 'delete':
-        existing_event_types.remove(type_name)
-        return jsonify({'message': f'The type "{type_name}" has been deleted.'})
+        existing_event_type = EventType.query.filter_by(event_type_name=type_name, is_active=False).first()
 
+        if existing_event_type:
+            # Reactivate the existing event type using update statement
+            stmt = update(EventType).where(EventType.event_type_name == type_name).values(is_active=True)
+            db.session.execute(stmt)
+            db.session.commit()
+            return jsonify({'message': f'The type "{type_name}" has been reactivated.'})
+        else:
+            # Add a new event type
+            new_event_type = EventType(event_type_name=type_name, is_active=True)
+            db.session.add(new_event_type)
+            db.session.commit()
+            return jsonify({'message': f'The type "{type_name}" has been added.'})
+    elif action == 'delete':
+        try:
+            stmt = update(EventType).where(EventType.event_type_name == type_name).values(is_active=False)
+            db.session.execute(stmt)
+            db.session.commit()
+            return jsonify({'message': f'The type "{type_name}" has been deleted.'})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': f'An error occurred while updating the database: {str(e)}'})
+
+    # Default return statement
+    return jsonify({'error': 'Invalid action provided.'})
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -187,6 +209,10 @@ def add_certificate():
     form = CertificateForm()
     message = ""  # Empty message by default
 
+    # Retrieve active event types from the database
+    active_event_types = EventType.query.filter_by(is_active=True).all()
+    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
+
     if form.validate_on_submit():
         file = form.file.data
         if file and allowed_file(file.filename):
@@ -195,8 +221,7 @@ def add_certificate():
             csv_reader = csv.DictReader(file_stream)  # Use DictReader to read the CSV into a dictionary
 
             # Check if CSV has all required headers
-            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash',
-                                'date_issued'}
+            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash', 'date_issued'}
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'
             else:
@@ -223,13 +248,13 @@ def add_certificate():
                 db.session.commit()
 
                 return redirect(url_for('dashboard'))  # Redirect to the dashboard after successful upload
-
         else:
             message = 'Please upload a CSV file.'
 
-    # If it's a GET request or the form is not valid, render the page with the form
+    # Render the page with the form
     return render_template('add_certificate.html', form=form, message=message)
 
+# Ensure you have your CertificateEvent model, EventType model, and CertificateForm form class defined as needed.
 
 def allowed_file(filename):
     return '.' in filename and \

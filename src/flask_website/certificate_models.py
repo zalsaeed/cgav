@@ -23,9 +23,15 @@ class CertificateEvent(db.Model):
     file_path = db.Column(db.String(255))  # New field, to store file path if needed
     # ... any additional fields ...
 
+# class EventType(db.Model):
+#     __tablename__ = 'Event_type' 
+#     event_type_id = db.Column(db.String(50), primary_key=True)
+#     event_type_name = db.Column(db.String(255))
+#     is_active = db.Column(db.Boolean, default=True)
+
 class EventType(db.Model):
     __tablename__ = 'Event_type'  # Ensure this matches the table name in the database
-    event_type_id = db.Column(db.String(50), primary_key=True)
+    event_type_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     event_type_name = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)
 
@@ -33,11 +39,13 @@ class CertificateForm(FlaskForm):
     certificate_title = StringField('Certificate Title', validators=[DataRequired()])
     presenter_name = StringField('Presenter Name', validators=[DataRequired()])
     secret_phrase = StringField('Secret Phrase', validators=[DataRequired()])
-    event_type = SelectField('Event Type', choices=[
-        ('type1', 'Event Type 1'),
-        ('type2', 'Event Type 2'),
-        ('type3', 'Event Type 3')
-    ], validators=[DataRequired()])
+    # event_type = SelectField('Event Type', choices=[
+    #     ('type1', 'Event Type 1'),
+    #     ('type2', 'Event Type 2'),
+    #     ('type3', 'Event Type 3')
+    # ], validators=[DataRequired()])
+    # Modify the choices attribute to dynamically load event types from the database
+    event_type = SelectField('Event Type', validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
     certificate_description = TextAreaField('Certificate Description', validators=[DataRequired()])
     file = FileField('Attendance File', validators=[
