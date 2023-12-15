@@ -8,7 +8,7 @@
   <div class="container mt-5">
     <h1 class="mb-4 text-center">Your Events</h1>
 
-    <h2 class="mt-5 mb-4 text-center latest-certificates-title">Latest Certificates</h2>
+    <h2 class="mt-5 mb-4 text-center" id="certificates-title">Latest Certificates</h2>
     <div class="row">
       <!-- Display the latest 3 certificates -->
       {% for certificate in latest_certificates %}
@@ -30,51 +30,56 @@
     </div>
 
     <div class="text-center mt-3">
-      <button id="load-all-certificates" class="custom-button">Load All Certificates</button>
+      <button id="load-certificates-btn" class="custom-button">Load All Certificates</button>
     </div>
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const loadAllCertificatesBtn = document.getElementById('load-all-certificates');
       const allCertificatesContainer = document.getElementById('all-certificates');
-      const latestCertificatesTitle = document.querySelector('.latest-certificates-title');
+      const certificatesTitle = document.getElementById('certificates-title');
+      const loadCertificatesBtn = document.getElementById('load-certificates-btn');
 
-      loadAllCertificatesBtn.addEventListener('click', function () {
-        // Remove existing cards for the latest certificates
-        const latestCertificates = document.querySelectorAll('.latest-certificate');
-        latestCertificates.forEach(card => card.remove());
+      loadCertificatesBtn.addEventListener('click', function () {
+        // Toggle between "Latest Certificates" and "All Certificates"
+        const isLatest = certificatesTitle.textContent === 'Latest Certificates';
+        certificatesTitle.textContent = isLatest ? 'All Certificates' : 'Latest Certificates';
 
-        // Make an AJAX request to load all certificates
-        // Use fetch or another AJAX library to make the request
-        fetch('/load_all_certificates')
-          .then(response => response.json())
-          .then(certificates => {
-            // Update the UI with the received certificates
-            certificates.forEach(certificate => {
-              const certificateCard = document.createElement('div');
-              certificateCard.classList.add('col-md-4', 'mb-4', 'latest-certificate');
-              certificateCard.innerHTML = `
-                <div class="card">
-                  <div class="card-body">
-                    <h5 class="card-title">${certificate.certificate_title}</h5>
-                    <p class="card-text">Presenter: ${certificate.presenter_name}</p>
-                    <p class="card-text">Date: ${new Date(certificate.event_date).toLocaleDateString('en-US')}</p>
-                    <a href="/certificate_details/${certificate.certificate_event_id}" class="custom-button">More Info</a>
+        // Toggle between "Load All Certificates" and "Back"
+        loadCertificatesBtn.textContent = isLatest ? 'Back' : 'Load All Certificates';
+
+        if (isLatest) {
+          // Make an AJAX request to load all certificates
+          fetch('/load_all_certificates')
+            .then(response => response.json())
+            .then(certificates => {
+              // Update the UI with the received certificates
+              allCertificatesContainer.innerHTML = ''; // Clear existing certificates
+
+              certificates.forEach(certificate => {
+                const certificateCard = document.createElement('div');
+                certificateCard.classList.add('col-md-4', 'mb-4');
+                certificateCard.innerHTML = `
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">${certificate.certificate_title}</h5>
+                      <p class="card-text">Presenter: ${certificate.presenter_name}</p>
+                      <p class="card-text">Date: ${new Date(certificate.event_date).toLocaleDateString('en-US')}</p>
+                      <a href="/certificate_details/${certificate.certificate_event_id}" class="custom-button">More Info</a>
+                    </div>
                   </div>
-                </div>
-              `;
-              allCertificatesContainer.appendChild(certificateCard);
-            });
+                `;
+                allCertificatesContainer.appendChild(certificateCard);
+              });
+            })
+            .catch(error => console.error('Error loading certificates:', error));
+        } else {
+          // Implement the logic to load the latest certificates or reload the page
+          // ...
 
-            // Update the title to "All Certificates"
-            if (latestCertificatesTitle) {
-              latestCertificatesTitle.textContent = 'All Certificates';
-            } else {
-              console.error('Title element not found.');
-            }
-          })
-          .catch(error => console.error('Error loading certificates:', error));
+          // Example: Reloading the page
+          location.reload();
+        }
       });
     });
   </script>
