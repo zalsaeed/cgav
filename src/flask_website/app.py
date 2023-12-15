@@ -311,8 +311,9 @@ def certificates():
 @app.route('/load_all_certificates', methods=['GET'])
 @login_required
 def load_all_certificates():
-    # Fetch all certificates from the database
-    all_certificates = db_classes.addCertificate.query.all()
+    # Fetch all certificates from the database excluding the latest ones
+    latest_certificates_count = 3
+    all_certificates = db_classes.addCertificate.query.offset(latest_certificates_count).all()
 
     # Prepare a list of certificate details for JSON response
     certificates_list = [
