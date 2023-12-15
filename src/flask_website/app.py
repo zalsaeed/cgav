@@ -17,10 +17,6 @@ from sqlalchemy import update
 
 
 
-
-
-
-
 from werkzeug.utils import secure_filename
 
 # Import for custom email handling

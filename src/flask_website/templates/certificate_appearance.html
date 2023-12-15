@@ -1,39 +1,198 @@
 {% extends 'base.html' %}
 {% block title %}CGAV-Templates{% endblock %}
 {% block body %}
-<body>
-<div class="text-center p-5" style="display: flow;" >
-    <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;">Certificate Appearance</h1>
-</div>
-<div class="grid grid-cols-2 gap-4 p-5">
-    <img src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}"
-                alt="Template" class="h-auto max-w-lg " />
-                <div style="margin-right:100px;"><h1 class=" text-3xl mb-4" style="color:#2C4E71;">{{temp.template_name}}</h1>
-                <div>
+
+<body class="bg-gray-100 font-sans">
+    <div class="text-center p-5">
+        <h1 class="font-bold text-4xl mb-4 text-blue-700">Certificate Appearance</h1>
+    </div>
+    <div class="grid grid-cols-2 gap-4 p-5">
+        <div id="template-container" class="relative">
+            <img id="template-image" src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}"
+                alt="Template" class="h-auto max-w-full mx-auto" />
+
+            <div id="move-buttons" class="mt-4 flex gap-2 justify-center">
+                <button id="move-up" class="bg-blue-500 text-white hover:bg-blue-700 rounded px-4 py-2">Up</button>
+                <button id="move-down" class="bg-blue-500 text-white hover:bg-blue-700 rounded px-4 py-2">Down</button>
+                <button id="move-left" class="bg-blue-500 text-white hover:bg-blue-700 rounded px-4 py-2">Left</button>
+                <button id="move-right"
+                    class="bg-blue-500 text-white hover:bg-blue-700 rounded px-4 py-2">Right</button>
+            </div>
+        </div>
+        <div id="drag-container" class="bg-white p-6 rounded-lg shadow-lg">
+            <h2 class="text-lg font-semibold mb-2">Choose an item to drag:</h2>
+            <ul id="draggable-list" class="list-disc pl-5">
                 {% for item in data %}
-                     <button type="button"  style="border-style: solid;" class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">{{ item }}</button>
-                 {% endfor %}
-                </div>
-                <div >
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
-                        </button>
-                   <div style="position: relative;right: 59px;display: flex;">
-                     <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="32" width="28" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
-                     </button>
-                     <button style=" margin-left: 60px;" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="32" width="28" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
-                     </button>
-                    </div>
+                <li class="cursor-pointer mb-2" ondragstart="drag(event, '{{ item }}')" draggable="true">
+                    {{ item }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="32" width="24" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M169.4 470.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 370.8 224 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 306.7L54.6 265.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
-                        </button>
+    <div id="controls" class="mt-4 flex gap-2 justify-center" style="display: none;">
+        <button id="delete" class="bg-red-500 text-white hover:bg-red-700 rounded px-4 py-2">Delete</button>
+    </div>
+    <script>
+        var selectedDraggable = null;
 
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
 
-                </div>
-                </div>
-</div>
+        function drag(ev, text) {
+            ev.dataTransfer.setData("text", text);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var text = ev.dataTransfer.getData("text");
+
+            // Create a new div for the dropped text on the image
+            var textDiv = document.createElement("div");
+            textDiv.classList.add("draggable-item", "bg-transparent", "p-4", "rounded-md", "absolute");
+            textDiv.style.top = (ev.offsetY - textDiv.offsetHeight / 2) + "px";
+            textDiv.style.left = (ev.offsetX - textDiv.offsetWidth / 2) + "px";
+            textDiv.innerText = text;
+
+            // Append the text div to the template container
+            document.getElementById("template-container").appendChild(textDiv);
+
+            // Remove the dragged item from the list
+            var listItems = document.querySelectorAll("#draggable-list li");
+            listItems.forEach(function (item) {
+                if (item.textContent.trim() === text) {
+                    item.remove();
+                }
+            });
+
+            // Reset move buttons position
+            resetMoveButtonsPosition();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var templateContainer = document.getElementById("template-container");
+            var dragContainer = document.getElementById("drag-container");
+
+            templateContainer.addEventListener("dragover", allowDrop);
+            templateContainer.addEventListener("drop", drop);
+
+            dragContainer.addEventListener("dragover", function (ev) {
+                // Prevent dropping outside the template container
+                if (ev.target === templateContainer) {
+                    allowDrop(ev);
+                }
+            });
+
+            // Move buttons functionality
+            document.getElementById("move-up").addEventListener("click", function () {
+                moveElement("top", -1);
+            });
+
+            document.getElementById("move-down").addEventListener("click", function () {
+                moveElement("top", 1);
+            });
+
+            document.getElementById("move-left").addEventListener("click", function () {
+                moveElement("left", -1);
+            });
+
+            document.getElementById("move-right").addEventListener("click", function () {
+                moveElement("left", 1);
+            });
+
+            // Delete button functionality
+            document.getElementById("delete").addEventListener("click", function () {
+                if (selectedDraggable) {
+                    // Remove the selected item from the template container
+                    selectedDraggable.remove();
+
+                    // Add the deleted item back to the draggable list
+                    var text = selectedDraggable.innerText.trim();
+                    var list = document.getElementById("draggable-list");
+                    var listItem = document.createElement("li");
+                    listItem.draggable = true;
+                    listItem.ondragstart = function (event) {
+                        drag(event, text);
+                    };
+                    listItem.innerText = text;
+                    list.appendChild(listItem);
+
+                    // Deselect the item and hide controls
+                    selectedDraggable.classList.remove("selected");
+                    selectedDraggable.style.border = "none";
+                    selectedDraggable = null;
+                    hideControls();
+                }
+            });
+
+            // Add functionality to select and control a dragged item
+            templateContainer.addEventListener("click", function (event) {
+                // Deselect the previously selected item
+                if (selectedDraggable) {
+                    selectedDraggable.classList.remove("selected");
+                    // selectedDraggable.style.border = "none";  // Remove this line
+                }
+
+                // Select the clicked item
+                if (event.target.classList.contains("draggable-item")) {
+                    selectedDraggable = event.target;
+                    selectedDraggable.classList.add("selected");
+
+                    // Apply border to the selected item
+                    selectedDraggable.style.border = "2px solid red";
+
+                    // Show controls for the selected item (e.g., delete button)
+                    showControls();
+                } else {
+                    // No item clicked, hide controls
+                    hideControls();
+                }
+            });
+
+            // Function to show controls for the selected item
+            function showControls() {
+                var controls = document.getElementById("controls");
+                if (controls) {
+                    controls.style.display = "flex";
+                }
+            }
+
+            // Function to hide controls
+            function hideControls() {
+                var controls = document.getElementById("controls");
+                if (controls) {
+                    controls.style.display = "none";
+                }
+            }
+
+            // Function to move the selected item
+            function moveElement(property, value) {
+                if (selectedDraggable) {
+                    var newPosition = parseFloat(selectedDraggable.style[property]) + value;
+
+                    // Ensure the new position is within the boundaries of the image
+                    var minPosition = 0;
+                    var maxPositionX = templateContainer.offsetWidth - selectedDraggable.offsetWidth;
+                    var maxPositionY = templateContainer.offsetHeight - selectedDraggable.offsetHeight;
+
+                    newPosition = Math.max(minPosition, Math.min(newPosition, maxPositionX, maxPositionY));
+
+                    selectedDraggable.style[property] = newPosition + "px";
+                }
+            }
+
+            // Function to reset move buttons position
+            function resetMoveButtonsPosition() {
+                var moveButtons = document.getElementById("move-buttons");
+                if (moveButtons) {
+                    moveButtons.style.top = templateContainer.offsetHeight + "px";
+                }
+            }
+
+            resetMoveButtonsPosition();
+        });
+    </script>
 </body>
 {% endblock %}

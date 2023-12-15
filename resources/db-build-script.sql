@@ -37,11 +37,11 @@ CREATE TABLE users
         (
             event_type_id INT(255) NOT NULL
             AUTO_INCREMENT,
-            event_type_name VARCHAR
+    event_type_name VARCHAR
             (255),
-            is_active BOOLEAN DEFAULT true,
-            PRIMARY KEY
-            (event_type_id)        
+    is_active BOOLEAN DEFAULT true,
+    PRIMARY KEY
+            (event_type_id)
 );
 
             CREATE TABLE recipient
@@ -79,7 +79,7 @@ CREATE TABLE users
             CREATE TABLE CertificateCustomizations
             (
                 customization_id VARCHAR(255) NOT NULL,
-                template_id VARCHAR(255),
+                template_id INT(255),
                 id INT(255),
                 title_position_x INT,
                 title_position_y INT,
@@ -91,7 +91,7 @@ CREATE TABLE users
                 logo_position_y INT,
                 signs JSON,
                 PRIMARY KEY (customization_id),
-                FOREIGN KEY (template_id) REFERENCES Template(template_id),
+                FOREIGN KEY (template_id) REFERENCES template(template_id),
                 FOREIGN KEY (id) REFERENCES users(id)
             );
 
