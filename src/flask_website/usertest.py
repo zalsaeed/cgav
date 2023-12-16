@@ -39,8 +39,9 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
 
         info = {
             "id": "1",
-            "user_name": "test",
-            "email": "test@test.com2",
+            "Fname": "omar",
+            "Lname": "khalid",
+            "email": "test@test.com",
             "password": "12345678",
             "user_role": 2
         }
