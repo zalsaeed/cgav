@@ -119,7 +119,7 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return render_template('login_register.html')
+    return redirect(url_for('login'))
 
 # login 
 @app.route('/login', methods=['GET', 'POST'])
