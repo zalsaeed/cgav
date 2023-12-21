@@ -308,29 +308,42 @@ def certificates():
     # Render the 'certificates.html' template with the certificate data
     return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
 
-@app.route('/load_all_certificates', methods=['GET'])
+
+@app.route('/load_more_certificates', methods=['GET'])
 @login_required
-def load_all_certificates():
-    # Fetch all certificates from the database excluding the latest ones
-    latest_certificates_count = 3
-    all_certificates = db_classes.addCertificate.query.offset(latest_certificates_count).all()
+def load_more_certificates():
+    try:
+        # Get the number of certificates to load and the excluded IDs from the query parameters
+        loaded_count = int(request.args.get('loaded_count', 0))
+        exclude_ids = request.args.get('exclude_ids', '').split(',')
 
-    # Prepare a list of certificate details for JSON response
-    certificates_list = [
-        {
-            'certificate_title': certificate.certificate_title,
-            'presenter_name': certificate.presenter_name,
-            'certificate_event_id': certificate.certificate_event_id,
-            'secret_key': certificate.secret_key,
-            'event_date': certificate.event_date,
-            'certificate_description': certificate.description,
-            'file_path': certificate.file_path
-        }
-        for certificate in all_certificates
-    ]
+        # Fetch additional certificates from the database, excluding the ones already loaded
+        additional_certificates = db_classes.addCertificate.query \
+            .filter(db_classes.addCertificate.certificate_event_id.notin_(exclude_ids)) \
+            .offset(loaded_count) \
+            .limit(3) \
+            .all()
 
-    # Return the list of certificate details as a JSON response
-    return jsonify(certificates_list)
+        # Prepare a list of additional certificate details for JSON response
+        additional_certificates_list = [
+            {
+                'certificate_title': certificate.certificate_title,
+                'presenter_name': certificate.presenter_name,
+                'certificate_event_id': certificate.certificate_event_id,
+                'secret_key': certificate.secret_key,
+                'event_date': certificate.event_date,
+                'certificate_description': certificate.description,
+                'file_path': certificate.file_path
+            }
+            for certificate in additional_certificates
+        ]
+
+        # Return the list of additional certificate details as a JSON response
+        return jsonify(additional_certificates_list)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
 @login_required
