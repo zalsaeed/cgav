@@ -2,6 +2,19 @@
 {% block title %}CGAV-Templates{% endblock %}
 {% block body %}
 <body>
+{% for mesg in get_flashed_messages() %}
+  <!-- Alert Success  -->
+  <div
+    class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
+  >
+    <p class="self-center">
+      {{ mesg }}
+    </p>
+    <strong class="text-xl align-center cursor-pointer alert-del"
+      >&times;</strong
+    >
+  </div>
+{% endfor %}
 <div class="text-center p-5" style="display: flow;" >
     <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;">Certificate Templates</h1>
 
@@ -35,6 +48,14 @@ class="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-item
     function redirectToTemplate(url) {
         window.location.href = url;
     }
+  // Script For Close alert
+
+  var alert_del = document.querySelectorAll('.alert-del');
+  alert_del.forEach((x) =>
+    x.addEventListener('click', function () {
+      x.parentElement.classList.add('hidden');
+    })
+  );
 </script>
 
 {% endblock %}
