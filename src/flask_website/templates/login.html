@@ -37,6 +37,15 @@
     <title>Login Form</title>
   </head>
   <body>
+    {% for mesg in get_flashed_messages() %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      
+      <h1>{{ mesg }}</h1>
+      
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    
     <div class="container-fluid">
         <form class="mx-auto" method="POST" action="">
             {{ form.hidden_tag() }}
