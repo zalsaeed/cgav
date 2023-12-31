@@ -292,6 +292,7 @@ def register():
         new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
         db.session.add(new_user)
         db.session.commit()
+        flash('success')
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
@@ -367,7 +368,8 @@ def newtemp():
         db.session.add(new_template)
         db.session.commit()
 
-        return "You Add New Templates Successfully."
+        flash('You Add New Templates Successfully.')
+        return redirect('Select_template')
 
     return render_template('create_new_template.html',form=form)
 
