@@ -43,7 +43,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
             "Lname": "khalid",
             "email": "test@test.com",
             "password": "12345678",
-            "user_role": 2
+            "user_role": 1
         }
 
         hashed_password = self.bcrypt.generate_password_hash(info["password"])
@@ -53,7 +53,8 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         session = self.db.session
 
         session.add(users_table(id=info["id"],
-                                user_name=info['user_name'],
+                                Fname=info['Fname'],
+                                Lname=info['Lname'],
                                 email=info["email"],
                                 password=hashed_password,
                                 user_role=info["user_role"]))
