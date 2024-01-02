@@ -2,6 +2,35 @@
 
 {% block title %}Home{% endblock %}
 
-{% block content %}
+{% block body %}
+<body>
+  
+
+
+{% for mesg in get_flashed_messages() %}
+  <!-- Alert Success  -->
+  <div
+    class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600"
+  >
+    <p class="self-center">
+      {{ mesg }}
+    </p>
+    <strong class="text-xl align-center cursor-pointer alert-del"
+      >&times;</strong
+    >
+  </div>
+{% endfor %}
+</body>
+<script>
+    // Script For Close alert
+
+    var alert_del = document.querySelectorAll('.alert-del');
+  alert_del.forEach((x) =>
+    x.addEventListener('click', function () {
+      x.parentElement.classList.add('hidden');
+    })
+  );
+</script>
+
 
 {% endblock %}
