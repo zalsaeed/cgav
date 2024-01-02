@@ -74,48 +74,6 @@ def load_user(user_id):
     return db_classes.users.query.get(int(user_id))
 
 
-# class users(db.Model, UserMixin):
-#     # this variable(id) we cant change the name to (user_id) because it will conflict with UserMixin
-#     id = db.Column(db.Integer, primary_key=True, unique=True)
-#     user_name = db.Column(db.String(20), nullable=False, unique=True)
-#     password = db.Column(db.String(80), nullable=False)
-    
-
-
-# class RegisterForm(FlaskForm):
-#     user_name = StringField(validators=[
-#                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
-    
-#     id = StringField(validators=[
-#                            InputRequired()], render_kw={"placeholder": "user_id"})
-
-#     password = PasswordField(validators=[
-#                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-#     submit = SubmitField('Register')
-
-#     def validate_user_name(self, user_name):
-#         existing_user_user_name = users.query.filter_by(
-#             user_name=user_name.data).first()
-#         if existing_user_user_name:
-#             raise ValidationError(
-#                 'That user_name already exists. Please choose a different one.')
-#     def validate_id(self, id):
-#         existing_user_id = users.query.filter_by(id=id.data).first()
-#         if existing_user_id:
-#             raise ValidationError('chose different ID')
-
-
-# class LoginForm(FlaskForm):
-#     user_name = StringField(validators=[
-#                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "user_name"})
-
-#     password = PasswordField(validators=[
-#                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
-
-#     submit = SubmitField('Login')
-
-
 
 @app.route('/')
 def home():
@@ -138,6 +96,17 @@ def login():
 @login_required
 def dashboard():
     return render_template('index.html')
+
+#Admin route
+@app.route('/admin')
+@login_required
+def admin():
+    user_role = current_user.user_role
+    if user_role == 1:
+        return render_template('admin.html')
+    else:
+        flash('Access denied')
+        return redirect(url_for('dashboard'))
 
 # New route for Manage Event Types
 
