@@ -45,8 +45,8 @@
   <script>
     // JavaScript functions for button actions
     function handleDelete() {
-      // Implement delete functionality
-      alert('Delete button clicked');
+      // Redirect to the delete confirmation page
+      window.location.href = '/delete_confirmation/{{ certificate.certificate_event_id }}';
     }
 
     function handleGenerate() {

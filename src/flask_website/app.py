@@ -14,7 +14,7 @@ import uuid
 import csv
 from io import StringIO
 from sqlalchemy import update
-
+from sqlalchemy.orm.session import object_session
 
 
 from werkzeug.utils import secure_filename
@@ -324,7 +324,31 @@ def certificate_details(certificate_event_id):
     # Render the 'certificate_details.html' template with the specific certificate details
     return render_template('certificate_details.html', certificate=certificate)
 
-# Add routes for other actions (delete, generate, download, send) as needed
+# Add routes for other actions ( generate, download, send) as needed
+
+# Route for the delete confirmation page(from database)
+@app.route('/delete_confirmation/<certificate_event_id>', methods=['GET', 'POST'])
+@login_required
+def delete_confirmation(certificate_event_id):
+    certificate = db_classes.addCertificate.query.get_or_404(certificate_event_id)
+
+    # Check if the certificate is already attached to a session
+    existing_session = object_session(certificate)
+
+    if existing_session:
+        existing_session.expunge(certificate)
+
+    if request.method == 'POST':
+        # Delete the certificate
+        db.session.delete(certificate)
+        db.session.commit()
+
+        flash('Certificate deleted successfully', 'success')
+
+        return redirect(url_for('certificates'))
+
+    return render_template('delete_confirmation.html', certificate=certificate)
+
 
 
 @app.route("/create_new_template", methods=['GET',"POST"])
