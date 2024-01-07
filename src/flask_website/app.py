@@ -414,7 +414,7 @@ def template(tempname):
 
     # Extract the value of "Field1" from each object in the JSON array
     first_names = data.get('first_name')
-    return render_template('certificate_appearance.html', temp=temp,data=data.values())
+    return render_template('anotherAppearance.html', temp=temp,data=data.values())
 
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
