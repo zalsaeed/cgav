@@ -248,6 +248,37 @@ def get_user_info():
         'Lname': user.Lname,
         'email': user.email
     })
+class Certificate(db.Model):
+    __tablename__ = 'Certificate'
+    hash = db.Column(db.String(25), primary_key=True)
+    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+
+class VerifyCertificateForm(FlaskForm):
+    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
+    submit = SubmitField('Verify')
+
+
+@app.route('/api/verify_certificate', methods=['POST'])
+def verify_certificate_api():
+    data = request.get_json()
+
+    certificate_hash = data.get('certificate_hash')
+    if not certificate_hash:
+        return jsonify({'error': 'Missing certificate hash'}), 400
+
+    certificate = Certificate.query.filter_by(hash=certificate_hash).first()
+    if certificate:
+        return jsonify({
+            'message': 'Certificate is valid.',
+            'certificate_details': {
+                'recipient_id': certificate.recipient_id,
+                'certificate_event_id': certificate.certificate_event_id
+            }
+        }), 200
+    else:
+        return jsonify({'error': 'Certificate is invalid or not found.'}), 404
+
 
 
 
