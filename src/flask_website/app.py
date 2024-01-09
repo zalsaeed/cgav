@@ -370,11 +370,24 @@ def delete_confirmation(certificate_event_id):
         existing_session.expunge(certificate)
 
     if request.method == 'POST':
-        # Delete the certificate
-        db.session.delete(certificate)
-        db.session.commit()
+        try:
+            # Verify the event name for confirmation
+            event_name = request.json.get('event_name', '')
 
-        return redirect(url_for('certificates'))
+            if event_name == certificate.certificate_title:
+                # Delete the certificate
+                db.session.delete(certificate)
+                db.session.commit()
+
+                # Provide a success response
+                return jsonify({'success': True}), 200
+            else:
+                # Provide an error response (incorrect event name)
+                return jsonify({'success': False, 'error': 'Incorrect event name'}), 400
+
+        except Exception as e:
+            # Provide an error response (server error)
+            return jsonify({'success': False, 'error': str(e)}), 500
 
     return render_template('delete_confirmation.html', certificate=certificate)
 
