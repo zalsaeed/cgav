@@ -79,6 +79,22 @@ def load_user(user_id):
 def home():
     return redirect(url_for('login'))
 
+# register route
+@ app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = db_classes.RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html', form=form)
+
+
 # login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -101,16 +117,31 @@ def dashboard():
 @app.route('/admin')
 @login_required
 def admin():
+    users_list = db_classes.users.query.all()
     user_role = current_user.user_role
     if user_role == 1:
-        return render_template('admin.html')
+        return render_template('admin.html',users_list=users_list)
     else:
         flash('Access denied')
         return redirect(url_for('dashboard'))
+    
+#update user
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+@login_required
+def update_user(id):
+    form = db_classes.UpdateForm()
+    user_to_edit = db_classes.users.query.get(id)
+    if form.validate_on_submit():
+        user_to_edit = db_classes.users.query.filter_by(id=id).update(dict(Fname=form.Fname.data, email=form.email.data, user_role=form.user_role.data))
+        db.session.commit()
+        flash('success')
+        return render_template('update.html',form=form,user_to_edit=user_to_edit)
+    else:
+        return render_template('update.html',form=form,user_to_edit=user_to_edit)
+        
+
 
 # New route for Manage Event Types
-
-
 @app.route('/manage_event_types', methods=['GET', 'POST'])
 def manage_event_types():
     if request.method == 'POST':
@@ -280,22 +311,6 @@ def verify_certificate_api():
         return jsonify({'error': 'Certificate is invalid or not found.'}), 404
 
 
-
-
-# register route
-@ app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = db_classes.RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('success')
-        return redirect(url_for('login'))
-
-    return render_template('register.html', form=form)
 
 
 # route to show certificate

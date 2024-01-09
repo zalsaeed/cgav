@@ -4,9 +4,45 @@
 
 {% block body %}
 <body>
-    <h1><strong>hello</strong> {{ current_user.Fname }}</h1><br>
-    <h3>this is admin area</h3>
+<!-- component -->
+<div class="text-gray-900 bg-gray-200">
+    <div class="p-4 flex">
+        <h1 class="text-3xl">Users</h1>
+    </div>
+    <div class="px-3 py-4 flex justify-center">
+        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+                <tr class="border-b">
+                    <th class="text-left p-3 px-5">ID</th>
+                    <th class="text-left p-3 px-5">First Name</th>
+                    <th class="text-left p-3 px-5">Email</th>
+                    <th class="text-left p-3 px-5">Role</th>
+                    <th></th>
+                </tr>
+                {% for list in users_list %}
+                <tr class="border-b hover:bg-orange-100 bg-gray-100">
+                    <td class="p-3 px-5">
+                        {{ list.id }}
+                    </td>
+                    <td class="p-3 px-5">
+                        {{ list.Fname }}
+                    </td>
+                    <td class="p-3 px-5">
+                        {{ list.email }}
+                    </td>
+                    <td class="p-3 px-5">
+                        {{ list.user_role }}
+                    </td>
+                    <td class="p-3 px-5 flex justify-end">
+                        <a href="{{ url_for('update_user', id=list.id) }}" class="mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
+    </div>
+</div>
 </body>
 
 {% endblock %}
