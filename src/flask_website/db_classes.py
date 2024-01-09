@@ -65,6 +65,18 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
+#update user
+class UpdateForm(FlaskForm):
+    Fname = StringField(validators=[
+                           InputRequired()], render_kw={"placeholder": "first name"})
+    email = StringField(validators=[
+                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
+    
+    user_role = StringField(validators=[
+                           ], render_kw={"placeholder": "user_role"})
+
+    submit = SubmitField('save')
+
 # Certificates classes
 class template(db.Model):
     template_id = db.Column(db.Integer, primary_key=True, unique=True )

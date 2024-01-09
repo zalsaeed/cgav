@@ -38,7 +38,6 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
     def test_insert_row_in_users_table(self):
 
         info = {
-            "id": "1",
             "Fname": "omar",
             "Lname": "khalid",
             "email": "test@test.com",
@@ -52,7 +51,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         users_table = self.base.classes.users
         session = self.db.session
 
-        session.add(users_table(id=info["id"],
+        session.add(users_table(
                                 Fname=info['Fname'],
                                 Lname=info['Lname'],
                                 email=info["email"],
