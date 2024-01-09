@@ -46,7 +46,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
     f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 
 # TimeoutError Database need to change
-app.config['SQLALCHEMY_POOL_SIZE'] = 100 # you allow up to 100 concurrent connections to the database.
+app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
 
 app.config['SECRET_KEY'] = 'thisisasecretkey'
@@ -373,8 +373,6 @@ def delete_confirmation(certificate_event_id):
         # Delete the certificate
         db.session.delete(certificate)
         db.session.commit()
-
-        flash('Certificate deleted successfully', 'success')
 
         return redirect(url_for('certificates'))
 
