@@ -36,9 +36,9 @@ MYSQL_USER = os.environ.get('MYSQL_USER')
 MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
 SCHEMA = os.environ.get("SCHEMA")
 
-app = Flask(__name__)
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+app = db_classes.app
+db = db_classes.db
+bcrypt = db_classes.bcrypt
 # old uri 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 # new uri
@@ -140,6 +140,22 @@ def update_user(id):
         return redirect(url_for('settings'))
     else:
         return render_template('update.html',form=form,user_to_edit=user_to_edit)
+    
+#delete user
+@app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_user(id):
+    if current_user.id == id :
+        flash('you are currently using this user')
+        return redirect(url_for('settings'))
+    else:
+
+        user_to_delete = db_classes.users.query.get(id)
+        uname = user_to_delete.Fname
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash(f'you deleted {uname} successfuly')
+        return redirect(url_for('settings'))
         
 
 
