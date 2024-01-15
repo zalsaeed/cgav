@@ -9,7 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 import os
 import db_classes
-from certificate_models import CertificateEvent, EventType, CertificateForm
+from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations
 import uuid
 import csv
 from io import StringIO
@@ -104,14 +104,14 @@ def login():
         if user:
             if bcrypt.check_password_hash(user.password, form.password.data):
                 login_user(user)
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('certificates'))
     return render_template('login.html', form=form)
 
 
-@app.route('/dashboard', methods=['GET', 'POST'])
-@login_required
-def dashboard():
-    return render_template('index.html')
+# @app.route('/dashboard', methods=['GET', 'POST'])
+# @login_required
+# def dashboard():
+#     return render_template('index.html')
 
 #Admin route
 @app.route('/admin')
@@ -123,7 +123,7 @@ def admin():
         return render_template('admin.html',users_list=users_list)
     else:
         flash('Access denied')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('certificates'))
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -248,7 +248,7 @@ def add_certificate():
                 db.session.add(new_certificate_event)
                 db.session.commit()
 
-                return redirect(url_for('dashboard'))  # Redirect to the dashboard after successful upload
+                return redirect(url_for('certificates'))  # Redirect to the dashboard after successful upload
         else:
             message = 'Please upload a CSV file.'
 
@@ -318,8 +318,8 @@ def verify_certificate_api():
 @login_required
 def certificates():
     # Fetch the latest 3 certificates and all certificates from the database
-    latest_certificates = db_classes.addCertificate.query.limit(3).all()
-    all_certificates = db_classes.addCertificate.query.all()
+    latest_certificates = CertificateEvent.query.limit(3).all()
+    all_certificates = CertificateEvent.query.all()
 
     # Render the 'certificates.html' template with the certificate data
     return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
@@ -334,8 +334,8 @@ def load_more_certificates():
         exclude_ids = request.args.get('exclude_ids', '').split(',')
 
         # Fetch additional certificates from the database, excluding the ones already loaded
-        additional_certificates = db_classes.addCertificate.query \
-            .filter(db_classes.addCertificate.certificate_event_id.notin_(exclude_ids)) \
+        additional_certificates = CertificateEvent.query \
+            .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
             .offset(loaded_count) \
             .limit(3) \
             .all()
@@ -365,7 +365,7 @@ def load_more_certificates():
 @login_required
 def certificate_details(certificate_event_id):
     # Fetch the details of a specific certificate by its event ID
-    certificate = db_classes.addCertificate.query.get_or_404(certificate_event_id)
+    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
 
     # Render the 'certificate_details.html' template with the specific certificate details
     return render_template('certificate_details.html', certificate=certificate)
@@ -376,7 +376,7 @@ def certificate_details(certificate_event_id):
 @app.route('/delete_confirmation/<certificate_event_id>', methods=['GET', 'POST'])
 @login_required
 def delete_confirmation(certificate_event_id):
-    certificate = db_classes.addCertificate.query.get_or_404(certificate_event_id)
+    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
 
     # Check if the certificate is already attached to a session
     existing_session = object_session(certificate)
@@ -432,15 +432,31 @@ def template(tempname):
     temp = db_classes.template.query.filter_by(template_name=tempname).first()
     tempid= temp.template_id if temp else None
     temp = db_classes.template.query.get_or_404(tempid)
-    json_file = os.path.abspath('../src/flask_website/FackDataForAppearance/FackData.json')
+    json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
+    ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
+    custom_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/customization.json')
 
     # Read the JSON file
     with open(json_file, 'r') as file:
         data = json.load(file)
+    
+    with open(ar_json_file, 'r') as file:
+        arData = json.load(file)
+    
+    # with open(custom_file,'r') as file:
+    #   customization_data = json.load(file)
+    
+    # # Create a new CertificateCustomizations instance and save it to the database
+    # new_customization = CertificateCustomizations(
+    #       customization_id=str(uuid.uuid4()),
+    #       items_positions = customization_data )
+    # # Add and commit the new record to the database
+    # db.session.add(new_customization)
+    # db.session.commit()
 
     # Extract the value of "Field1" from each object in the JSON array
     first_names = data.get('first_name')
-    return render_template('anotherAppearance.html', temp=temp,data=data.values())
+    return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData)
 
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
