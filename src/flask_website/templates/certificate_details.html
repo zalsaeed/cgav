@@ -10,6 +10,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title">Title: {{ certificate.certificate_title }}</h5>
+        <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
         <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
         <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
         <p class="card-text">Description: {{ certificate.certificate_description }}</p>
@@ -145,6 +146,10 @@
       document.getElementById('loading-popup').style.display = 'none';
       document.getElementById('success-popup').style.display = 'none';
       document.getElementById('error-popup').style.display = 'none';
+    }
+    function handleSend(){
+      // Implement send functionality
+      window.location.href = '/send_email';
     }
   // Other buttons (Generate, downloud, send)
   </script>
