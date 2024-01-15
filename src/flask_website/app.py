@@ -346,10 +346,9 @@ def load_more_certificates():
                 'certificate_title': certificate.certificate_title,
                 'presenter_name': certificate.presenter_name,
                 'certificate_event_id': certificate.certificate_event_id,
-                'secret_key': certificate.secret_key,
-                'event_date': certificate.event_date,
-                'certificate_description': certificate.description,
-                'file_path': certificate.file_path
+                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+                'certificate_description': certificate.certificate_description,
+                'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
             }
             for certificate in additional_certificates
         ]

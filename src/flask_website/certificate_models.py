@@ -6,6 +6,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, SelectField, DateField
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileRequired, FileAllowed
+from sqlalchemy.orm import relationship
 
 # Assuming the db object will be imported from elsewhere, like your main app.py
 # This import line is assuming the db instance is initialized in a file named 'extensions.py'
@@ -16,7 +17,9 @@ class CertificateEvent(db.Model):
     certificate_event_id = db.Column(db.String(255), primary_key=True)
     customization_id = db.Column(db.String(255))
     certificate_title = db.Column(db.String(255))
-    event_type_id = db.Column(db.String(255))  # Make sure this references an existing event type
+    event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
+    # Define the relationship to EventType
+    event_type = relationship('EventType', backref='certificates')
     presenter_name = db.Column(db.String(255))  # New field
     secret_phrase = db.Column(db.String(255))  # New field
     event_date = db.Column(db.DateTime)  # New field
