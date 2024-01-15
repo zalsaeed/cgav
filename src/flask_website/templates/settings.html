@@ -6,6 +6,9 @@
     <div class="sidebar">
         <!-- Sidebar content -->
         <h2>{{ first_name }} {{ last_name }}</h2>
+        {% if current_user.user_role ==1 %}
+        <div id="admin">Admin page</div>
+        {% endif %}
         <div id="publicProfileTab">Public profile</div>
         <div id="accountTab">Manage Event Types</div>
         <div>Settings4</div>
@@ -87,6 +90,10 @@ $(document).ready(function() {
 
     $("#publicProfileTab").click(function() {
         loadPublicProfile();
+    });
+
+    $("#admin").click(function() {
+        $(".content").load("/admin");
     });
 
     $("#accountTab").click(function() {

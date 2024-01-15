@@ -1,13 +1,36 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Admin{% endblock %}
+<head>
 
-{% block body %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin page</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}">
+        <link
+            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
+            rel="stylesheet">
+        <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Flowbite -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+        <!-- font-awesome -->
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Link to the external style.css -->
+        <link rel="stylesheet" href="static/css/style.css">
+    </head>
+</head>
 <body>
     {% for mesg in get_flashed_messages() %}
   <!-- Alert Success  -->
   <div
-    class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600"
+    class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
   >
     <p class="self-center">
       {{ mesg }}
@@ -68,4 +91,3 @@
   );
 </script>
 
-{% endblock %}

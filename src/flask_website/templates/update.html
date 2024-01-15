@@ -1,49 +1,71 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
-{% block title %}Home{% endblock %}
+{% block title %}Update User{% endblock %} 
 
 {% block body %}
 <body>
-  
-
-
-{% for mesg in get_flashed_messages() %}
+  {% for mesg in get_flashed_messages() %}
   <!-- Alert Success  -->
   <div
-    class="flex justify-between text-red-200 shadow-inner rounded p-3 bg-red-600"
+    class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
   >
-    <p class="self-center">
-      {{ mesg }}
-    </p>
+    <p class="self-center">{{ mesg }}</p>
     <strong class="text-xl align-center cursor-pointer alert-del"
       >&times;</strong
     >
   </div>
-{% endfor %}
+  {% endfor %}
 
-<form action="/update/{{ user_to_edit.id }}" method="POST">
-    {{ form.hidden_tag() }}
-    {{form.Fname(class="form-control", value=user_to_edit.Fname)}}
-    {{form.email(class="form-control", value=user_to_edit.email)}}
-    {{form.user_role(class="form-control", value=user_to_edit.user_role)}}
-    {{form.submit(class="btn btn-primary")}}
+  <div class="text-gray-900 bg-gray-200">
+    <div class="p-4 flex">
+      <h1 class="text-3xl">Update User</h1>
+    </div>
+    <form action="/update/{{ user_to_edit.id }}" method="POST">
+      {{ form.hidden_tag() }}
+      <div class="px-3 py-4 flex justify-center">
+        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+          <tbody>
+            <tr class="border-b">
+              <th class="text-left p-3 px-5">First Name</th>
+              <th class="text-left p-3 px-5">Email</th>
+              <th class="text-left p-3 px-5">Password</th>
+              <th class="text-left p-3 px-5">Role</th>
+              <th></th>
+            </tr>
 
-</form>
-
-
-
-
+            <tr class="border-b hover:bg-orange-100 bg-gray-100">
+              <td class="p-3 px-5">
+                {{form.Fname(class="form-control", value=user_to_edit.Fname)}}
+              </td>
+              <td class="p-3 px-5">
+                {{form.email(class="form-control", value=user_to_edit.email)}}
+              </td>
+              <td class="p-3 px-5">
+                {{form.password(class="form-control", value=user_to_edit.password)}}
+              </td>
+              <td class="p-3 px-5">
+                {{form.user_role(class="form-control",
+                value=user_to_edit.user_role)}}
+              </td>
+              <td class="p-3 px-5 flex justify-end">
+                {{form.submit(class="form-control mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline")}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
 </body>
 <script>
-    // Script For Close alert
+  // Script For Close alert
 
-    var alert_del = document.querySelectorAll('.alert-del');
+  var alert_del = document.querySelectorAll(".alert-del");
   alert_del.forEach((x) =>
-    x.addEventListener('click', function () {
-      x.parentElement.classList.add('hidden');
+    x.addEventListener("click", function () {
+      x.parentElement.classList.add("hidden");
     })
   );
 </script>
-
 
 {% endblock %}
