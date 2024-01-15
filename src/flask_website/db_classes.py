@@ -107,42 +107,42 @@ class instructor(db.Model):
     email = db.Column(db.String(255))
     phone_number = db.Column(db.String(20))
 
-class CertificateCustomizations(db.Model):
-    customization_id = db.Column(db.String(255), primary_key=True)
-    template_id = db.Column(db.String(255), db.ForeignKey('template.template_id'))
-    id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    title_position_x = db.Column(db.Integer)
-    title_position_y = db.Column(db.Integer)
-    # Add other customization fields as needed
-    # ...
-    template = db.relationship('template', backref='customizations')
-    user = db.relationship('users', backref='customizations')
+# class CertificateCustomizations(db.Model):
+#     customization_id = db.Column(db.String(255), primary_key=True)
+#     template_id = db.Column(db.String(255), db.ForeignKey('template.template_id'))
+#     id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     title_position_x = db.Column(db.Integer)
+#     title_position_y = db.Column(db.Integer)
+#     # Add other customization fields as needed
+#     # ...
+#     template = db.relationship('template', backref='customizations')
+#     user = db.relationship('users', backref='customizations')
 
-class addCertificate(db.Model):
-    __tablename__ = 'addCertificate'
+# class addCertificate(db.Model):
+#     __tablename__ = 'addCertificate'
 
-    certificate_event_id = db.Column(db.String(255), primary_key=True)
-    certificate_title = db.Column(db.String(255))
-    event_type_id = db.Column(db.Integer, db.ForeignKey('event_type.event_type_id'))
-    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    customization_id = db.Column(db.String(255), db.ForeignKey('certificate_customizations.customization_id'))
-    template_id = db.Column(db.String(255), db.ForeignKey('template.template_id'))
-    instructor_id = db.Column(db.String(255), db.ForeignKey('instructor.instructor_id'))
-    event_start_date = db.Column(db.DateTime)
-    event_end_date = db.Column(db.DateTime)
-    description = db.Column(db.String(320))
-    secret_key = db.Column(db.String(255))
-    presenter_name = db.Column(db.String(255))
-    secret_phrase = db.Column(db.String(255))
-    event_date = db.Column(db.DateTime)
-    certificate_description = db.Column(db.String(255))
-    file_path = db.Column(db.String(255))  # Assuming the file path is a string
+#     certificate_event_id = db.Column(db.String(255), primary_key=True)
+#     certificate_title = db.Column(db.String(255))
+#     event_type_id = db.Column(db.Integer, db.ForeignKey('event_type.event_type_id'))
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     customization_id = db.Column(db.String(255), db.ForeignKey('certificate_customizations.customization_id'))
+#     template_id = db.Column(db.String(255), db.ForeignKey('template.template_id'))
+#     instructor_id = db.Column(db.String(255), db.ForeignKey('instructor.instructor_id'))
+#     event_start_date = db.Column(db.DateTime)
+#     event_end_date = db.Column(db.DateTime)
+#     description = db.Column(db.String(320))
+#     secret_key = db.Column(db.String(255))
+#     presenter_name = db.Column(db.String(255))
+#     secret_phrase = db.Column(db.String(255))
+#     event_date = db.Column(db.DateTime)
+#     certificate_description = db.Column(db.String(255))
+#     file_path = db.Column(db.String(255))  # Assuming the file path is a string
 
-    event_type = db.relationship('Event_type', backref='certificates')
-    recipient = db.relationship('recipient', backref='certificates')
-    customization = db.relationship('CertificateCustomizations', backref='certificates')
-    template = db.relationship('template', backref='certificates')
-    instructor = db.relationship('instructor', backref='certificates')
+#     event_type = db.relationship('Event_type', backref='certificates')
+#     recipient = db.relationship('recipient', backref='certificates')
+#     customization = db.relationship('CertificateCustomizations', backref='certificates')
+#     template = db.relationship('template', backref='certificates')
+#     instructor = db.relationship('instructor', backref='certificates')
 
 class NewTemplates(FlaskForm):
     template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
