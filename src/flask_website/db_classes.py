@@ -1,4 +1,5 @@
-
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, FileField, SubmitField
@@ -6,10 +7,10 @@ from wtforms.validators import InputRequired,DataRequired , Length, ValidationEr
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 import os
-import app
 
-db = app.db
-
+app = Flask(__name__)
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 # app = Flask(__name__)
 
 class users(db.Model, UserMixin):
