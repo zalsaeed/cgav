@@ -132,10 +132,11 @@ def update_user(id):
     form = db_classes.UpdateForm()
     user_to_edit = db_classes.users.query.get(id)
     if form.validate_on_submit():
-        user_to_edit = db_classes.users.query.filter_by(id=id).update(dict(Fname=form.Fname.data, email=form.email.data, user_role=form.user_role.data))
+        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = form.email.data, Fname = form.Fname.data)
+        db.session.execute(user_to_edit)
         db.session.commit()
         flash('success')
-        return render_template('update.html',form=form,user_to_edit=user_to_edit)
+        return redirect(url_for('admin'))
     else:
         return render_template('update.html',form=form,user_to_edit=user_to_edit)
         
