@@ -71,6 +71,8 @@ class UpdateForm(FlaskForm):
                            InputRequired()], render_kw={"placeholder": "first name"})
     email = StringField(validators=[
                            InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
+    password = PasswordField(validators=[
+                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
     
     user_role = StringField(validators=[
                            ], render_kw={"placeholder": "user_role"})
