@@ -1,71 +1,113 @@
-{% extends 'base.html' %} 
-
-{% block title %}Update User{% endblock %} 
-
-{% block body %}
-<body>
-  {% for mesg in get_flashed_messages() %}
-  <!-- Alert Success  -->
-  <div
-    class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
-  >
-    <p class="self-center">{{ mesg }}</p>
-    <strong class="text-xl align-center cursor-pointer alert-del"
-      >&times;</strong
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Admin page</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="/static/styles_certificate.css"
+      />
+      <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style_settings.css') }}"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
+        rel="stylesheet"
+      />
+      <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      />
+      <script src="https://cdn.tailwindcss.com"></script>
+      <!-- Flowbite -->
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css"
+        rel="stylesheet"
+      />
+      <!-- font-awesome -->
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      />
+      <!-- Link to the external style.css -->
+      <link rel="stylesheet" href="static/css/style.css" />
+    </head>
+  </head>
+  <body>
+    {% for mesg in get_flashed_messages() %}
+    <!-- Alert Success  -->
+    <div
+      class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
     >
-  </div>
-  {% endfor %}
-
-  <div class="text-gray-900 bg-gray-200">
-    <div class="p-4 flex">
-      <h1 class="text-3xl">Update User</h1>
+      <p class="self-center">{{ mesg }}</p>
+      <strong class="text-xl align-center cursor-pointer alert-del"
+        >&times;</strong
+      >
     </div>
-    <form action="/update/{{ user_to_edit.id }}" method="POST">
-      {{ form.hidden_tag() }}
-      <div class="px-3 py-4 flex justify-center">
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
-          <tbody>
-            <tr class="border-b">
-              <th class="text-left p-3 px-5">First Name</th>
-              <th class="text-left p-3 px-5">Email</th>
-              <th class="text-left p-3 px-5">Password</th>
-              <th class="text-left p-3 px-5">Role</th>
-              <th></th>
-            </tr>
+    {% endfor %}
 
-            <tr class="border-b hover:bg-orange-100 bg-gray-100">
-              <td class="p-3 px-5">
-                {{form.Fname(class="form-control", value=user_to_edit.Fname)}}
-              </td>
-              <td class="p-3 px-5">
-                {{form.email(class="form-control", value=user_to_edit.email)}}
-              </td>
-              <td class="p-3 px-5">
-                {{form.password(class="form-control", value=user_to_edit.password)}}
-              </td>
-              <td class="p-3 px-5">
-                {{form.user_role(class="form-control",
-                value=user_to_edit.user_role)}}
-              </td>
-              <td class="p-3 px-5 flex justify-end">
-                {{form.submit(class="form-control mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline")}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="text-gray-900 bg-gray-200">
+      <div class="p-4 flex">
+        <h1 class="text-3xl">Update User</h1>
       </div>
-    </form>
-  </div>
-</body>
-<script>
-  // Script For Close alert
+      <form action="/update/{{ user_to_edit.id }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="px-3 py-4 flex justify-center">
+          <table class="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+              <tr class="border-b">
+                <th class="text-left p-3 px-5">First Name</th>
+                <th class="text-left p-3 px-5">Email</th>
+                <th class="text-left p-3 px-5">Password</th>
+                <th class="text-left p-3 px-5">Role</th>
+                <th></th>
+              </tr>
 
-  var alert_del = document.querySelectorAll(".alert-del");
-  alert_del.forEach((x) =>
-    x.addEventListener("click", function () {
-      x.parentElement.classList.add("hidden");
-    })
-  );
-</script>
+              <tr class="border-b hover:bg-orange-100 bg-gray-100">
+                <td class="p-3 px-5">
+                  {{form.Fname(class="form-control", value=user_to_edit.Fname)}}
+                </td>
+                <td class="p-3 px-5">
+                  {{form.email(class="form-control", value=user_to_edit.email)}}
+                </td>
+                <td class="p-3 px-5">
+                  {{form.password(class="form-control",
+                  value=user_to_edit.password)}}
+                </td>
+                <td class="p-3 px-5">
+                  {{form.user_role(class="form-control",
+                  value=user_to_edit.user_role)}}
+                </td>
+                <td class="p-3 px-5 flex justify-end">
+                  {{form.submit(class="form-control mr-3 text-sm bg-blue-500
+                  hover:bg-blue-700 text-white py-1 px-2 rounded
+                  focus:outline-none focus:shadow-outline")}}
+                </td>
+                <td class="p-3 px-5 flex justify-end">
+                  <a href="{{ url_for('settings') }}" class="mr-3 text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">cancel</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </form>
+    </div>
+  </body>
+  <script>
+    // Script For Close alert
 
-{% endblock %}
+    var alert_del = document.querySelectorAll(".alert-del");
+    alert_del.forEach((x) =>
+      x.addEventListener("click", function () {
+        x.parentElement.classList.add("hidden");
+      })
+    );
+  </script>
+</html>
