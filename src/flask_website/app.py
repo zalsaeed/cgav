@@ -131,9 +131,12 @@ def admin():
 def update_user(id):
     form = db_classes.UpdateForm()
     user_to_edit = db_classes.users.query.get(id)
-    if form.validate_on_submit():
-        pass_to_edit = bcrypt.generate_password_hash(form.password.data)
-        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = form.email.data, Fname = form.Fname.data, password = pass_to_edit)
+    if request.method == 'POST':
+        if form.password.data == user_to_edit.password:
+            password_to_save = form.password.data
+        else:
+            password_to_save = bcrypt.generate_password_hash(form.password.data)
+        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = form.email.data, Fname = form.Fname.data, password = password_to_save)
         db.session.execute(user_to_edit)
         db.session.commit()
         flash('success')
