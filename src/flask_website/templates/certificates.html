@@ -2,13 +2,13 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Certificates{% endblock %}
+{% block title %}Event{% endblock %}
 
 {% block body %}
   <div class="container mt-5">
     <h1 class="mb-4 text-center">Your Events</h1>
 
-    <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Certificates</h2>
+    <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Event</h2>
     <div class="row">
       <!-- Display the latest 3 certificates -->
       {% for certificate in latest_certificates %}
@@ -31,7 +31,7 @@
 
     <div class="text-center mt-3">
       <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
-      <a href="/add_certificate"><button  class="m-2 custom-button">Add certificates</button></a>
+      <a href="/add_certificate"><button  class="m-2 custom-button">Add Events</button></a>
     </div>
   </div>
 
@@ -82,8 +82,8 @@
   
               // If no more certificates to load, update the button and notify the user
               if (certificates.length === 0) {
-                certificatesHeader.textContent = 'All Certificates';
-                loadMoreCertificatesBtn.textContent = 'No More Certificates';
+                certificatesHeader.textContent = 'All Event';
+                loadMoreCertificatesBtn.textContent = 'No More Events';
                 loadMoreCertificatesBtn.disabled = true;
               }
             } else {

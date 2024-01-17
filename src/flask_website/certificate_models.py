@@ -48,7 +48,7 @@ class EventType(db.Model):
     is_active = db.Column(db.Boolean, default=True)
 
 class CertificateForm(FlaskForm):
-    certificate_title = StringField('Certificate Title', validators=[DataRequired()])
+    certificate_title = StringField('Event Title', validators=[DataRequired()])
     presenter_name = StringField('Presenter Name', validators=[DataRequired()])
     secret_phrase = StringField('Secret Phrase', validators=[DataRequired()])
     # event_type = SelectField('Event Type', choices=[
@@ -59,7 +59,7 @@ class CertificateForm(FlaskForm):
     # Modify the choices attribute to dynamically load event types from the database
     event_type = SelectField('Event Type', validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
-    certificate_description = TextAreaField('Certificate Description', validators=[DataRequired()])
+    certificate_description = TextAreaField('Event Description', validators=[DataRequired()])
     file = FileField('Attendance File', validators=[
         FileRequired(),
         FileAllowed(['csv'], 'CSV files only!')])

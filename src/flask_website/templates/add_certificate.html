@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Create Certificate with File Upload{% endblock %}
+{% block title %}Create Event with File Upload{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-  <h1 class="mb-4 text-center">Add Certificate</h1>
+  <h1 class="mb-4 text-center">Add Event</h1>
   <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST"
     enctype="multipart/form-data">
 
@@ -14,7 +14,7 @@
     <div class="form-section">
       <div class="mb-3">
         {{ form.certificate_title.label(class="form-label") }}
-        {{ form.certificate_title(class="form-control", placeholder="Enter certificate title") }}
+        {{ form.certificate_title(class="form-control", placeholder="Enter event title") }}
         {% for error in form.certificate_title.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
@@ -55,7 +55,7 @@
 
       <div class="mb-3">
         {{ form.certificate_description.label(class="form-label") }}
-        {{ form.certificate_description(class="form-control", placeholder="Enter certificate description") }}
+        {{ form.certificate_description(class="form-control", placeholder="Enter event description") }}
         {% for error in form.certificate_description.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
