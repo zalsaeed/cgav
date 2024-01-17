@@ -9,11 +9,14 @@
     <h1 class="mb-4 text-center">Event Details</h1>
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title">Title: {{ certificate.certificate_title }}</h5>
+        <h5 class="card-title">Event Title: {{ certificate.certificate_title }}</h5>
         <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
-        <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
+        <p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>
         <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
+        <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
+        <p class="card-text">File Path: {{ certificate.file_path }}</p>
         <p class="card-text">Description: {{ certificate.certificate_description }}</p>
+        
 
         <!-- Buttons -->
         <button id="delete-btn" class="custom-action-button" onclick="handleDelete()">Delete</button>
