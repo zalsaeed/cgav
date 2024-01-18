@@ -1,49 +1,67 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
-*{
+
+* {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-  
 }
 
-body{
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%);
+body {
+    background-color: #f8f8f8; /* Match the background color from main CSS */
     font-family: 'Poppins', sans-serif;
-
 }
-form{
+
+form {
     border-radius: 20px;
-    margin-top: 150px !important;
-    width: 24% !important;
-    background-color: white !important;
-    padding: 50px;
+    margin: 50px auto; /* Center the form */
+    width: 50%; /* Adjusted width for better responsiveness */
+    max-width: 400px; /* Set a maximum width for larger screens */
+    background-color: #fff; /* Match the background color from main CSS */
+    padding: 30px; /* Reduced padding for a cleaner look */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added a subtle box shadow for depth */
 }
 
-.btn-primary{
+.btn-primary {
     width: 100%;
-    border: none;
-    border-radius: 50px;
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(75,14,154,1) 35%, rgba(0,212,255,1) 100%);
-    
+    border: 1px solid #427AA1; /* Added border for a cleaner look */
+    border-radius: 3px; /* Adjusted border-radius */
+    background-color: #427AA1; /* Match the background color from main CSS */
+    color: white; /* Adjusted text color to match the button style in main CSS */
+    padding: 10px 16px; /* Adjusted padding for a more comfortable button size */
+    cursor: pointer;
+    font-size: 16px; /* Adjusted font size for better readability */
+    transition: background-color 0.3s, color 0.3s, border 0.3s; /* Added transition for a smooth hover effect */
 }
 
-.form-control{
-    color: rgba(0,0,0,.87);
-    border-bottom-color: rgba(0,0,0,.42);
-    box-shadow: none !important;
-    border: none;
-    border-bottom: 1px solid;
-    border-radius: 4px 4px 0 0;
-    }
- h4{
-    font-size: 2rem !important;
+.btn-primary:hover {
+    background-color: #2c4e71; /* Darken the color on hover */
+    color: white;
+    border-color: #2c4e71; /* Darken the border on hover */
+}
+
+.form-control {
+    color: rgba(0, 0, 0, .87);
+    border: 1px solid #ccc; /* Improved border style for better visibility */
+    border-radius: 4px; /* Adjusted border-radius for a softer look */
+    padding: 10px; /* Adjusted padding for better spacing */
+    width: 100%;
+    font-size: 14px; /* Adjusted font size to match the main CSS */
+}
+
+h4 {
+    font-size: 24px; /* Adjusted font size for better readability */
     font-weight: 700;
- }  
- .form-label{
-    font-weight: 800 !important;
- }
+    margin-bottom: 20px; /* Added margin for better spacing */
+}
+
+.form-label {
+    font-weight: 700;
+    margin-bottom: 5px; /* Added margin for better spacing */
+}
+
 @media only screen and (max-width: 600px) {
     form {
-        width: 100% !important;
+        width: 100%; /* Full width on smaller screens */
+        max-width: none; /* No maximum width on smaller screens */
     }
-  }
+}
