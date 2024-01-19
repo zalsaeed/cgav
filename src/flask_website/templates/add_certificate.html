@@ -62,6 +62,64 @@
       </div>
     </div>
 
+<!-- Signature Section -->
+<div class="form-section">
+  <h2 class="mt-4 mb-2">Signature Information</h2>
+
+  <!-- First Signatory Fields -->
+  <div class="mb-3">
+    {{ form.signatory_name_1.label(class="form-label") }}
+    {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
+    {% for error in form.signatory_name_1.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.signatory_position_1.label(class="form-label") }}
+    {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
+    {% for error in form.signatory_position_1.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.signature_image_1.label(class="form-label") }}
+    {{ form.signature_image_1(class="form-control") }}
+    {% for error in form.signature_image_1.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+
+  <div class="mb-3">
+    <a href="{{ url_for('add_certificate', second_signatory='true') }}" class="btn btn-primary">Add Second Signatory</a>
+  </div>
+
+  <!-- Second Signatory Fields (conditionally shown) -->
+  {% if show_second_signatory %}
+  <div class="mb-3">
+    {{ form.signatory_name_2.label(class="form-label") }}
+    {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
+    {% for error in form.signatory_name_2.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.signatory_position_2.label(class="form-label") }}
+    {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
+    {% for error in form.signatory_position_2.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+  <div class="mb-3">
+    {{ form.signature_image_2.label(class="form-label") }}
+    {{ form.signature_image_2(class="form-control") }}
+    {% for error in form.signature_image_2.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+
 
 
     <div class="file-upload-section">
@@ -92,8 +150,7 @@
   </form>
 </div>
 {% endblock %}
-
 {% block scripts %}
-<script>
-</script>
 {% endblock %}
+
+

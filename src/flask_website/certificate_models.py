@@ -60,7 +60,33 @@ class CertificateForm(FlaskForm):
     event_type = SelectField('Event Type', validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
     certificate_description = TextAreaField('Event Description', validators=[DataRequired()])
+    signatory_name_1 = StringField('First Signatory Name', validators=[DataRequired()])
+    signatory_position_1 = StringField('First Signatory Position', validators=[DataRequired()])
+    signature_image_1 = FileField('First Signature Image', validators=[
+        FileRequired(message='First signature image is required.'),
+        FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
+    ])
+
+    # Fields for the second signatory
+    signatory_name_2 = StringField('Second Signatory Name')
+    signatory_position_2 = StringField('Second Signatory Position')
+    signature_image_2 = FileField('Second Signature Image', validators=[
+        FileRequired(message='Second signature image is required.'),
+        FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
+    ])
+
+    submit = SubmitField('Submit')
     file = FileField('Attendance File', validators=[
         FileRequired(),
         FileAllowed(['csv'], 'CSV files only!')])
     submit = SubmitField('Submit')
+
+class Signature(db.Model):
+    __tablename__ = 'signatures'
+    id = db.Column(db.Integer, primary_key=True)
+    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+    signatory_name = db.Column(db.String(255))
+    signatory_position = db.Column(db.String(255))
+    signature_image_path = db.Column(db.String(255))  # Path to the stored signature image file
+
+    certificate_event = relationship('CertificateEvent', backref='signatures')

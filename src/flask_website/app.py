@@ -1,5 +1,5 @@
 import json
-from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash
+from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -229,11 +229,14 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 @app.route('/add_certificate', methods=['GET', 'POST'])
 def add_certificate():
     form = CertificateForm()
-    message = ""  # Empty message by default
+    message = ""
+    show_second_signatory = 'second_signatory' in request.args
 
     # Retrieve active event types from the database
     active_event_types = EventType.query.filter_by(is_active=True).all()
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
+
+
 
     if form.validate_on_submit():
         file = form.file.data
@@ -252,6 +255,24 @@ def add_certificate():
                 filename = secure_filename(file.filename)
                 file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                 file.save(file_path)
+
+                signature_image_1 = form.signature_image_1.data
+                signature_image_2 = form.signature_image_2.data
+
+                # Path where signature images will be saved
+                signatures_folder = 'signatures'  # This should be the path to the signatures folder
+
+                if signature_image_1 and allowed_image_file(signature_image_1.filename):
+                    # Construct filename and save the first signature image
+                    filename_1 = secure_filename(signature_image_1.filename)
+                    image_path_1 = os.path.join(signatures_folder, filename_1)
+                    signature_image_1.save(image_path_1)
+
+                if signature_image_2 and allowed_image_file(signature_image_2.filename):
+                    # Construct filename and save the second signature image
+                    filename_2 = secure_filename(signature_image_2.filename)
+                    image_path_2 = os.path.join(signatures_folder, filename_2)
+                    signature_image_2.save(image_path_2)
 
                 # Create a new CertificateEvent instance with the file path
                 new_certificate_event = CertificateEvent(
@@ -273,14 +294,22 @@ def add_certificate():
         else:
             message = 'Please upload a CSV file.'
 
-    # Render the page with the form
-    return render_template('add_certificate.html', form=form, message=message)
+    return render_template(
+        'add_certificate.html',
+        form=form,
+        message=message,
+        show_second_signatory=show_second_signatory
+    )
 
 # Ensure you have your CertificateEvent model, EventType model, and CertificateForm form class defined as needed.
 
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in {'csv'}
+def allowed_image_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
+
 
 @app.route('/settings')
 @login_required
