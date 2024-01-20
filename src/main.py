@@ -28,7 +28,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Command line utility for CGAV.")
     parser.add_argument("-e", "--event", type=str, default="events/sample-event.yaml",
                         help="The file for event information settings.")
-    parser.add_argument("-o", "--output", type=str, default="output",
+    # parser.add_argument("-o", "--output", type=str, default="output",
+    #                     help="The output directory where all certificates will be saved.")
+    parser.add_argument("-o", "--output", type=str, default="flask_website/static/output",
                         help="The output directory where all certificates will be saved.")
 
     # get arguments
