@@ -5,141 +5,256 @@
     /* select:not([size]) {
     print-color-adjust: exact;
 } */
-@media (min-width: 768px){
-.md\:w-48 {
-    width: auto;
-}
+    @media (min-width: 768px) {
+        .md\:w-48 {
+            width: auto;
+        }
 
-.md\:max-w-xl {
-    max-width: fit-content;
-}
-.md\:h-auto {
-    height: 220px;; 
-}}
-@media (min-width: 1024px){
-.md\:w-48 {
-    width: auto;
-}
-.md\:max-w-xl {
-    max-width: fit-content;
-}
-.md\:h-auto {
-    height: 400px;; 
-}}
+        .md\:max-w-xl {
+            max-width: fit-content;
+        }
 
-</style> 
+        .md\:h-auto {
+            height: 220px;
+            ;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .md\:w-48 {
+            width: auto;
+        }
+
+        .md\:max-w-xl {
+            max-width: fit-content;
+        }
+
+        .md\:h-auto {
+            height: 400px;
+            ;
+        }
+    }
+</style>
+
 <body>
-    <div class="text-center p-5" style="display: flow;" >
+    <div class="text-center p-5">
         <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;">Certificate Appearance</h1>
     </div>
-    <div style="background-color:transparent;" class="flex m-2 flex-col bg-white  rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100  dark:bg-gray-800 dark:hover:bg-gray-700">
-        <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg" src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}"
-        alt="Template">
-        <div class="flex flex-col items-center p-4 leading-normal">
-            <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;">{{temp.template_name}}</h5>
-            <label  onchange="check()" class="mt-4 relative inline-flex items-center mb- cursor-pointer">
-                <input id="bilingualCheckbox" type="checkbox" value="bilingual" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                <span class="ms-3 text-xl font-semibold text-blue-900 ">bilingual</span>
-              </label> 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <button id="dropdownToggleButton" data-dropdown-toggle="dropdownToggle" class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800" type="button">Certificate items<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
-            </button>
-            <!-- Dropdown menu -->
-            <div id="dropdownToggle" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
-                <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownToggleButton">
-            {% for item in data %}
-            <li>
-            <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-              <label class="relative inline-flex items-center w-full cursor-pointer">
-                <input oninput="checkItems(this.value, this.checked)" type="checkbox" id="itemCheckbox{{loop.index}}" value="{{item}}" class="sr-only peer">
-                <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600"></div>
-                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{item}}</span>
-              </label>
+    <div style="background-color:transparent;"
+        class="flex m-2 flex-col bg-white rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+        id="contain">
+        <div class="Image-container">
+            <!-- Image -->
+            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}" alt="Template">
+
+            <!-- PDF Viewer with the same styling as the image -->
+            <div id="pdfViewer" style="display: none;">
+                <iframe id="pdfFrame"
+                    class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                    allowfullscreen webkitallowfullscreen></iframe>
             </div>
-          </li>
-          {% endfor %}
-        </ul>
+        </div>
+
+        <div class="flex flex-col items-center p-4 leading-normal">
+            <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;">
+                {{temp.template_name}}</h5>
+            <label onchange="check()" class="mt-4 relative inline-flex items-center mb- cursor-pointer">
+                <input id="bilingualCheckbox" type="checkbox" value="bilingual" class="sr-only peer">
+                <div
+                    class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                </div>
+                <span class="ms-3 text-xl font-semibold text-blue-900 ">bilingual</span>
+            </label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                <button id="dropdownToggleButton" data-dropdown-toggle="dropdownToggle"
+                    class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
+                    type="button">Certificate items<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+                <!-- Dropdown menu -->
+                <div id="dropdownToggle"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
+                    <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdownToggleButton">
+                        {% for item in data %}
+                        <li>
+                            <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <label class="relative inline-flex items-center w-full cursor-pointer">
+                                    <input oninput="checkItems(this.value, this.checked)" type="checkbox"
+                                        id="itemCheckbox{{loop.index}}" value="{{item}}" class="sr-only peer">
+                                    <div
+                                        class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600">
+                                    </div>
+                                    <span
+                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{item}}</span>
+                                </label>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button id="ardropdownToggleButton" style="display: none;" data-dropdown-toggle="ardropdownToggle"
+                    class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
+                    type="button">عناصر الشهادة<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+                <!-- Dropdown menu -->
+                <div id="ardropdownToggle"
+                    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
+                    <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="ardropdownToggleButton">
+                        {% for aritem in arData %}
+                        <li>
+                            <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                <label class="relative inline-flex items-center w-full cursor-pointer">
+                                    <input type="checkbox" oninput="arCheckItems(this.value, this.checked)"
+                                        id="aritemCheckbox{{loop.index}}" value="{{aritem}}" class="sr-only peer">
+                                    <div
+                                        class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600">
+                                    </div>
+                                    <span
+                                        class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{aritem}}</span>
+                                </label>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <form style="display:none;" id="customizationform" class="max-w-md mx-auto my-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <div>
+                        <label for="x_postion"
+                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">x_postion</label>
+                        <input type="number" id="x_postion"
+                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="y_postion"
+                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">y_postion</label>
+                        <input type="number" id="y_postion"
+                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="height"
+                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Height</label>
+                        <input type="number" id="height"
+                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="width"
+                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Width</label>
+                        <input type="number" id="width"
+                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                </div>
+                <button type="submit"
+                    class="my-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
+                <button type="button"
+                    class="my-2 text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previwe</button>
+            </form>
+            <button type="button" onclick="previewCertificate()"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Preview
+                Certificate</button>
+        </div>
+
     </div>
-    <button id="ardropdownToggleButton" style="display: none;" data-dropdown-toggle="ardropdownToggle" class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800" type="button">عناصر الشهادة<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
-    </button>
-    <!-- Dropdown menu -->
-    <div id="ardropdownToggle" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
-        <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="ardropdownToggleButton">
-    {% for aritem in arData %}
-    <li>
-    <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-      <label class="relative inline-flex items-center w-full cursor-pointer">
-        <input type="checkbox" oninput="arCheckItems(this.value, this.checked)" id="aritemCheckbox{{loop.index}}" value="{{aritem}}" class="sr-only peer">
-        <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600"></div>
-        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{aritem}}</span>
-      </label>
-    </div>
-  </li>
-  {% endfor %}
-</ul>
-</div>
-</div>
-<form  style="display:none;" id="customizationform" class="max-w-md mx-auto my-3">
-<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-    <div>
-        <label for="x_postion" class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">x_postion</label>
-        <input type="number" id="x_postion" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-    </div>
-    <div>
-        <label for="y_postion" class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">y_postion</label>
-        <input type="number" id="y_postion" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-    </div>
-    <div>
-        <label for="height" class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Height</label>
-        <input type="number" id="height" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-    </div>
-    <div>
-        <label for="width" class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Width</label>
-        <input type="number" id="width" class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-    </div>
-</div>
-    <button type="submit" class="my-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
-    <button type="button" class="my-2 text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previwe</button>
-  </form>
-</div>
-</div>
 </body>
 
 
-    <script>
-var checkbox = document.getElementById('bilingualCheckbox');
-var bilingual = document.getElementById("ardropdownToggleButton");
-var item = document.querySelectorAll("#itemCheckbox");
-var aritem = document.getElementById("aritemCheckbox");
-var customItem = document.getElementById("customizationform");
-var x_postion = document.getElementById("x_postion");
-// Check if the checkbox is in the checked state
-function check(){
-    if (checkbox.checked) {
-    bilingual.style.display = "flex";
-} else {
-    bilingual.style.display = "none";
-}}
+<script>
+    var checkbox = document.getElementById('bilingualCheckbox');
+    var bilingual = document.getElementById("ardropdownToggleButton");
+    var item = document.querySelectorAll("#itemCheckbox");
+    var aritem = document.getElementById("aritemCheckbox");
+    var customItem = document.getElementById("customizationform");
+    var x_postion = document.getElementById("x_postion");
+    // Check if the checkbox is in the checked state
+    function check() {
+        if (checkbox.checked) {
+            bilingual.style.display = "flex";
+        } else {
+            bilingual.style.display = "none";
+        }
+    }
 
 
-function checkItems(value, isChecked) {
-    if (isChecked) {
-        customItem.style.display = "block";
-        x_postion.placeholder = value;
-    } else {
-        customItem.style.display = "none";
-    }}
-function arCheckItems(value, isChecked){
-    if (isChecked) {
-        customItem.style.display = "block";
-        x_postion.placeholder = value;
-    } else {
-        customItem.style.display = "none";
-    }}
+    function checkItems(value, isChecked) {
+        if (isChecked) {
+            customItem.style.display = "block";
+            x_postion.placeholder = value;
+        } else {
+            customItem.style.display = "none";
+        }
+    }
+    function arCheckItems(value, isChecked) {
+        if (isChecked) {
+            customItem.style.display = "block";
+            x_postion.placeholder = value;
+        } else {
+            customItem.style.display = "none";
+        }
+    }
+    function previewCertificate() {
+        var imageElement = document.querySelector('.Image-container img');
+        var pdfViewer = document.getElementById('pdfViewer');
+        var pdfFrame = document.getElementById('pdfFrame');
+        var pdfContainer = document.getElementById('contain')
 
-    </script>
+        // Hide the image and show the PDF viewer
+        imageElement.style.display = 'none';
+
+        // Show the PDF viewer
+        pdfViewer.style.display = 'block';
+        pdfViewer.style.width = '80%';    // Ensure the iframe fills the container
+        pdfViewer.style.height = '100%';  // Adjust the height as necessary
+        pdfViewer.style.marginRight = '15rem'
+        pdfViewer.style.marginBottom = '15rem'
+        // Function to execute '/run_main_script' and then immediately execute '/fetch_latest_pdf'
+        function executeRunMainScriptAndFetchPDF() {
+            fetch('/run_main_script')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("main.py executed successfully.");
+                        fetchLatestPDF();
+                    } else {
+                        console.error("Error executing main.py:", data.error);
+                    }
+                });
+        }
+
+        // Function to execute '/fetch_latest_pdf'
+        function fetchLatestPDF() {
+            fetch('/fetch_latest_pdf')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.pdfUrl) {
+                        // Set the iframe dimensions to fill its container, adjust as necessary
+                        pdfFrame.style.width = '120%';
+                        pdfFrame.style.height = '80%';
+                        pdfContainer.style.marginBottom = '10rem';
+                        pdfFrame.src = data.pdfUrl + "#toolbar=0";
+                    } else {
+                        alert('PDF not found');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while fetching the PDF.');
+                });
+        }
+
+        // Start by executing '/run_main_script' and then immediately execute '/fetch_latest_pdf'
+        executeRunMainScriptAndFetchPDF();
+    }
+</script>
 
 {% endblock %}

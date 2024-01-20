@@ -15,7 +15,7 @@ import csv
 from io import StringIO
 from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
-
+import subprocess
 
 from werkzeug.utils import secure_filename
 
@@ -442,7 +442,8 @@ def delete_confirmation(certificate_event_id):
                 # Delete the certificate
                 db.session.delete(certificate)
                 db.session.commit()
-
+                 # Send email notification
+                send_delete_confirmation_email(certificate)
                 # Provide a success response
                 return jsonify({'success': True}), 200
             else:
@@ -455,6 +456,25 @@ def delete_confirmation(certificate_event_id):
 
     return render_template('delete_confirmation.html', certificate=certificate)
 
+# Function to send email notification
+def send_delete_confirmation_email(certificate):
+    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
+
+    if isinstance(recipient_email, str):
+        recipient_email = [recipient_email]  # Convert the string to a list with a single element
+
+    # Extract information from the certificate object
+    certificate_title = certificate.certificate_title
+    presenter_name = certificate.presenter_name
+    # Add more fields as needed
+
+    # Construct the email message
+    subject = f'Certificate Deleted: {certificate_title}'
+    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+
+    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
+    msg.body = body
+    mail.send(msg)
 
 
 @app.route("/create_new_template", methods=['GET',"POST"])
@@ -511,6 +531,41 @@ def template(tempname):
 def selectTemp():
     templates=db_classes.template.query.all()
     return render_template("select_template.html",templates=templates)
+
+@app.route('/fetch_latest_pdf', methods=['GET'])
+def fetch_latest_pdf():
+    # The path to the output directory, considering the Docker container's file system
+    search_directory = os.path.abspath("/root/src/flask_website/static/output")
+
+    try:
+        all_folders = [os.path.join(search_directory, d) for d in os.listdir(search_directory) if os.path.isdir(os.path.join(search_directory, d))]
+        latest_folder = max(all_folders, key=os.path.getmtime)
+
+        for file in os.listdir(latest_folder):
+            if file.endswith(".pdf"):
+                full_file_path = os.path.join(latest_folder, file)
+                # Generate the relative path from the static folder
+                relative_path = os.path.relpath(full_file_path, "/root/src/flask_website/static")
+                pdf_url = url_for('static', filename=relative_path.replace(os.sep, '/'))
+
+                return jsonify({'pdfUrl': pdf_url})
+
+        return jsonify({'error': 'No PDF found'}), 404
+
+    except Exception as e:
+        app.logger.error(f"Error in fetch_latest_pdf: {str(e)}")
+        return jsonify({'error': 'An internal error occurred'}), 500
+
+
+@app.route('/run_main_script', methods=['GET'])
+def run_main_script():
+    try:
+        # Adjust the path according to your folder structure
+        script_path = os.path.join(os.getcwd(), 'main.py')
+        result = subprocess.run(['python', script_path], check=True, capture_output=True, text=True)
+        return jsonify({'success': True, 'output': result.stdout})
+    except subprocess.CalledProcessError as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required
