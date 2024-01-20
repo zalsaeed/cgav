@@ -90,7 +90,7 @@ CREATE TABLE users
             CREATE TABLE addCertificate
             (
                 certificate_event_id VARCHAR(255) NOT NULL,
-                certificate_title VARCHAR(255),
+                certificate_title VARCHAR(255),--
                 event_type_id INT(255) NULL,
                 -- Allow NULL values for event_type_id
                 recipient_id VARCHAR(255),
@@ -101,11 +101,18 @@ CREATE TABLE users
                 event_end_date DATETIME,
                 description VARCHAR(320),
                 secret_key VARCHAR(255),
+
                 presenter_name VARCHAR(255),
                 secret_phrase VARCHAR(255),
                 event_date DATETIME,
                 certificate_description TEXT,
                 file_path VARCHAR(255),
+                first_Signatory_Name VARCHAR(255),
+                first_Signatory_Position VARCHAR(255),
+                first_Signatory_Path VARCHAR(255),
+                second_Signatory_Name VARCHAR(255),
+                second_Signatory_Position VARCHAR(255),
+                second_Signatory_Path VARCHAR(255),
                 PRIMARY KEY (certificate_event_id),
                 FOREIGN KEY (template_id) REFERENCES template(template_id),
                 FOREIGN KEY (event_type_id) REFERENCES Event_type(event_type_id),

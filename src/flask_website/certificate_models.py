@@ -25,6 +25,12 @@ class CertificateEvent(db.Model):
     event_date = db.Column(db.DateTime)  # New field
     certificate_description = db.Column(db.Text)  # New field
     file_path = db.Column(db.String(255))  # New field, to store file path if needed
+    First_Signatory_Name = db.Column(db.String(255))
+    First_Signatory_Position = db.Column(db.String(255))
+    First_Signatory_Path = db.Column(db.String(255))
+    Second_Signatory_Name = db.Column(db.String(255))
+    Second_Signatory_Position = db.Column(db.String(255))
+    Second_Signatory_Path = db.Column(db.String(255))
     # ... any additional fields ...
 
 class CertificateCustomizations(db.Model):
