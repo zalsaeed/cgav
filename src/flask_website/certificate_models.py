@@ -76,8 +76,11 @@ class CertificateForm(FlaskForm):
     # Fields for the second signatory
     signatory_name_2 = StringField('Second Signatory Name')
     signatory_position_2 = StringField('Second Signatory Position')
+    # signature_image_2 = FileField('Second Signature Image', validators=[
+    #     FileRequired(message='Second signature image is required.'),
+    #     FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
+    # ])
     signature_image_2 = FileField('Second Signature Image', validators=[
-        FileRequired(message='Second signature image is required.'),
         FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
     ])
 

@@ -62,62 +62,69 @@
       </div>
     </div>
 
-<!-- Signature Section -->
-<div class="form-section">
-  <h2 class="mt-4 mb-2">Signature Information</h2>
+    <!-- Signature Section -->
+    <div class="form-section">
+      <h2 class="mt-4 mb-2">Signature Information</h2>
 
-  <!-- First Signatory Fields -->
-  <div class="mb-3">
-    {{ form.signatory_name_1.label(class="form-label") }}
-    {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
-    {% for error in form.signatory_name_1.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="mb-3">
-    {{ form.signatory_position_1.label(class="form-label") }}
-    {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
-    {% for error in form.signatory_position_1.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="mb-3">
-    {{ form.signature_image_1.label(class="form-label") }}
-    {{ form.signature_image_1(class="form-control") }}
-    {% for error in form.signature_image_1.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
+      <!-- First Signatory Fields -->
+      <div class="mb-3">
+        {{ form.signatory_name_1.label(class="form-label") }}
+        {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
+        {% for error in form.signatory_name_1.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.signatory_position_1.label(class="form-label") }}
+        {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
+        {% for error in form.signatory_position_1.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.signature_image_1.label(class="form-label") }}
+        {{ form.signature_image_1(class="form-control") }}
+        {% for error in form.signature_image_1.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
-  <div class="mb-3">
-    <a href="{{ url_for('add_certificate', second_signatory='true') }}" class="btn btn-primary">Add Second Signatory</a>
-  </div>
-
-  <!-- Second Signatory Fields (conditionally shown) -->
-  {% if show_second_signatory %}
-  <div class="mb-3">
-    {{ form.signatory_name_2.label(class="form-label") }}
-    {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
-    {% for error in form.signatory_name_2.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="mb-3">
-    {{ form.signatory_position_2.label(class="form-label") }}
-    {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
-    {% for error in form.signatory_position_2.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="mb-3">
-    {{ form.signature_image_2.label(class="form-label") }}
-    {{ form.signature_image_2(class="form-control") }}
-    {% for error in form.signature_image_2.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  {% endif %}
-</div>
+      <!-- <div class="mb-3">
+        <a href="{{ url_for('add_certificate', second_signatory='true') }}" class="btn btn-primary">Add Second
+          Signatory</a>
+      </div> -->
+      <div class="mb-3">
+        <!-- Button to show/hide the second signatory section -->
+        <button type="button" class="btn btn-primary" onclick="
+          toggleSecondSignatory()">Add Second Signatory</button>
+      </div>
+      <!-- Second Signatory Fields (conditionally shown) -->
+      {% if show_second_signatory %}
+      <div id="secondSignatorySection" class="form-section" style="display: none;">
+        <div class="mb-3">
+          {{ form.signatory_name_2.label(class="form-label") }}
+          {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
+          {% for error in form.signatory_name_2.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.signatory_position_2.label(class="form-label") }}
+          {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
+          {% for error in form.signatory_position_2.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.signature_image_2.label(class="form-label") }}
+          {{ form.signature_image_2(class="form-control") }}
+          {% for error in form.signature_image_2.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
 
 
 
@@ -143,14 +150,24 @@
     </div>
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
-      <button type="button" class="button cancel" onclick="window.location.href='{{ url_for('certificates') }}'">Cancel</button>
+      <button type="button" class="button cancel"
+        onclick="window.location.href='{{ url_for('certificates') }}'">Cancel</button>
       <input type="submit" value="Submit" class="button">
     </div>
 
+
   </form>
 </div>
+<script>
+  function toggleSecondSignatory() {
+    var section = document.getElementById('secondSignatorySection');
+    if (section.style.display === 'none') {
+      section.style.display = 'block';
+    } else {
+      section.style.display = 'none';
+    }
+  }
+</script>
 {% endblock %}
 {% block scripts %}
 {% endblock %}
-
-

@@ -268,13 +268,29 @@ def add_certificate():
                     image_path_1 = os.path.join(signatures_folder, filename_1)
                     signature_image_1.save(image_path_1)
 
+                
                 if signature_image_2 and allowed_image_file(signature_image_2.filename):
                     # Construct filename and save the second signature image
                     filename_2 = secure_filename(signature_image_2.filename)
                     image_path_2 = os.path.join(signatures_folder, filename_2)
                     signature_image_2.save(image_path_2)
-
+                else:
+                    # Set second signatory details to None or empty string
+                    signatory_name_2 = None
+                    signatory_position_2 = None
+                    image_path_2 = None
                 # Create a new CertificateEvent instance with the file path
+                # new_certificate_event = CertificateEvent(
+                #     certificate_event_id=str(uuid.uuid4()),
+                #     certificate_title=form.certificate_title.data,
+                #     event_type_id=form.event_type.data,
+                #     presenter_name=form.presenter_name.data,
+                #     secret_phrase=form.secret_phrase.data,
+                #     event_date=form.date.data,
+                #     certificate_description=form.certificate_description.data,
+                #     file_path=file_path  # Save the path to the file
+                # )
+                # Create a new CertificateEvent instance
                 new_certificate_event = CertificateEvent(
                     certificate_event_id=str(uuid.uuid4()),
                     certificate_title=form.certificate_title.data,
@@ -283,12 +299,23 @@ def add_certificate():
                     secret_phrase=form.secret_phrase.data,
                     event_date=form.date.data,
                     certificate_description=form.certificate_description.data,
-                    file_path=file_path  # Save the path to the file
+                    file_path=file_path,  # Assuming file_path is set earlier in your code
+                    First_Signatory_Name=form.signatory_name_1.data,
+                    First_Signatory_Position=form.signatory_position_1.data,
+                    First_Signatory_Path=image_path_1,
+                    Second_Signatory_Name=form.signatory_name_2.data,
+                    Second_Signatory_Position=form.signatory_position_2.data,
+                    Second_Signatory_Path=image_path_2
                 )
 
                 # Add the new event to the session and commit it to the database
-                db.session.add(new_certificate_event)
-                db.session.commit()
+                try:
+                    db.session.add(new_certificate_event)
+                    db.session.commit()
+                except Exception as e:
+                    print("Failed to commit to database:", e)
+                    # Optionally, roll back the session in case of failure
+                    db.session.rollback()
 
                 return redirect(url_for('certificates'))  # Redirect to the dashboard after successful upload
         else:

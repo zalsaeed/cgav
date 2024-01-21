@@ -7,8 +7,8 @@
     <title>{% block title %}My Website{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
-    <link rel="stylesheet" type="text/css" href="/static/style_settings.css">
+    <link rel="stylesheet" type="text/css" href="static/styles_certificate.css">
+    <link rel="stylesheet" type="text/css" href="static/style_settings.css">
 
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
@@ -43,12 +43,13 @@
                 id="user-dropdown">
                 <div class="px-4 py-3">
                     <span class="block text-sm text-gray-900 dark:text-white">
-                        {{current_user.Fname}} {{current_user.Lname}}<!-- to get the current logged in user first and last name -->
+                        {{current_user.Fname}}
+                        {{current_user.Lname}}<!-- to get the current logged in user first and last name -->
                     </span>
                     <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{current_user.email}}</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
-                    
+
                     <li>
                         <a href="{{ url_for('settings') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
