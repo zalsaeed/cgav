@@ -7,27 +7,30 @@
         <!-- Sidebar content -->
         <h2>{{ first_name }} {{ last_name }}</h2>
         {% if current_user.user_role ==1 %}
-        <div id="admin">Admin page</div>
+            <div id="admin">Admin page</div>
         {% endif %}
         <div id="publicProfileTab">Public profile</div>
         <div id="accountTab">Manage Event Types</div>
-        <!-- <div>Settings4</div>
-        <div>Settings5</div>
-        <div>Settings6</div>
-        <div>Settings7</div> -->
     </div>
     <div class="content">
         <div class="public-profile-container">
             <h2>Public Profile</h2>
             <div class="profile-field">
                 <label for="displayName">Name:</label>
-                <span id="displayName"></span>
+                <span id="displayName">{{ first_name }} {{ last_name }}</span>
+                <!-- Button for changing the name -->
+                <a href="{{ url_for('change_name') }}" class="btn btn-primary">Change Name</a>
             </div>
             <div class="profile-field">
                 <label for="displayEmail">Email:</label>
-                <span id="displayEmail"></span>
+                <span id="displayEmail">{{ current_user.email }}</span>
+                <!-- Button for changing the email -->
+                <a href="{{ url_for('change_email') }}" class="btn btn-primary">Change Email</a>
             </div>
-            <!-- Additional profile content can be added here -->
+            <!-- Button for changing the password -->
+            <div class="profile-field">
+                <a href="{{ url_for('change_password') }}" class="btn btn-primary">Change Password</a>
+            </div>
         </div>
     </div>
 </div>
@@ -50,6 +53,7 @@ function showError(message) {
     $(".content").html(`<div class="error">${message}</div>`);
 }
 
+// Function to load the public profile information
 function loadPublicProfile() {
     showLoading(); // Show loading indicator before the request
     $.ajax({
@@ -63,56 +67,52 @@ function loadPublicProfile() {
                     <div class="profile-field">
                         <label>Name:</label>
                         <span>${response.Fname} ${response.Lname}</span>
+                        <a href="/settings/change_name" class="btn btn-primary">Change Name</a>
                     </div>
                     <div class="profile-field">
                         <label>Email:</label>
                         <span>${response.email}</span>
+                        <a href="/settings/change_email" class="btn btn-primary">Change Email</a>
+                    </div>
+                    <div class="profile-field">
+                        <a href="/settings/change_password" class="btn btn-primary">Change Password</a>
                     </div>
                 </div>
             `;
             $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
         },
         error: function(error) {
-            showError('An error occurred while loading the profile.'); // Show user-friendly error message
+            // Show user-friendly error message
+            showError('An error occurred while loading the profile.');
             console.log(error); // Log the error for debugging
         }
-    }).always(function() {
-        hideLoading(); // Hide loading indicator when the request is complete
-    });
-}
-
-function saveProfileData() {
-    // Here you would implement the AJAX request to save the updated profile data
+    }).always(hideLoading); // Hide loading indicator when the request is complete
 }
 
 $(document).ready(function() {
-    loadPublicProfile(); // Load the public profile section by default
+    // Load the public profile section by default
+    loadPublicProfile();
 
-    $("#publicProfileTab").click(function() {
-        loadPublicProfile();
-    });
+    // Event handlers for navigation tabs
+    $("#publicProfileTab").click(loadPublicProfile);
+    $("#admin").click(function() { $(".content").load("/admin"); });
+    $("#accountTab").click(function() { $(".content").load("/manage_event_types"); });
 
-    $("#admin").click(function() {
-        $(".content").load("/admin");
-    });
-
-    $("#accountTab").click(function() {
-        $(".content").load("/manage_event_types");
-    });
-
+    // Event handlers for edit and save buttons
     $(document).on('click', '#editModeBtn', function() {
         $('.view-mode').hide();
         $('.edit-mode').fadeIn(500); // Fade in the edit mode
     });
 
     $(document).on('click', '#saveBtn', function() {
+        // Placeholder function to implement saving profile data
         saveProfileData();
-        $('.edit-mode').fadeOut(500, function() { // Fade out the edit mode and then show the view mode
+        $('.edit-mode').fadeOut(500, function() { // Fade out the edit mode and show the view mode
             $('.view-mode').fadeIn(500);
         });
     });
-
 });
 </script>
+
 
 {% endblock %}

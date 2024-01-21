@@ -4,10 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, FileField, SubmitField
-from wtforms.validators import InputRequired,DataRequired , Length, ValidationError
+from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
 import os
+from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations
 import uuid
@@ -347,15 +348,96 @@ def settings():
 
 
 
+
+
+
+@app.route('/settings/change_name', methods=['GET', 'POST'])
+@login_required
+def change_name():
+    form = ChangeNameForm()
+    if form.validate_on_submit():
+        current_user.Fname = form.name.data.split()[0]  # assuming the first name is the first word
+        current_user.Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
+        db.session.commit()
+        flash('Your name has been updated.', 'success')
+        return redirect(url_for('settings'))
+    return render_template('change_name.html', form=form)
+
+class ChangeNameForm(FlaskForm):
+    name = StringField('Full Name', validators=[DataRequired()])
+    submit = SubmitField('Change Name')
+
+
+
+
+
+class ChangeNameForm(FlaskForm):
+    name = StringField('Full Name', validators=[DataRequired()])
+    submit = SubmitField('Change Name')
+
+
+
+
+@app.route('/settings/change_email', methods=['GET', 'POST'])
+@login_required
+def change_email():
+    form = ChangeEmailForm()
+    if form.validate_on_submit():
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your email has been updated.', 'success')
+        return redirect(url_for('settings'))
+    return render_template('change_email.html', form=form)
+
+class ChangeEmailForm(FlaskForm):
+        email = StringField('New Email', validators=[DataRequired(), Email()])
+        submit = SubmitField('Change Email')
+
+    # Route and form for changing password
+@app.route('/settings/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    form = ChangePasswordForm()
+    message = None  # Initialize the message variable
+
+    if form.validate_on_submit():
+        if bcrypt.check_password_hash(current_user.password, form.old_password.data):
+            if form.new_password.data == form.confirm_new_password.data:
+                # Set new password with bcrypt and decode it to string
+                hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+                current_user.password = hashed_password
+                db.session.commit()
+                message = 'Your password has been updated successfully.'
+            else:
+                message = 'New password and confirmation do not match.'
+        else:
+            message = 'Incorrect old password.'
+
+    # Pass the message to the template. If the message is None, nothing will be displayed.
+    return render_template('change_password.html', form=form, message=message)
+
+
+
+
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(),
+        EqualTo('confirm_new_password', message='Passwords must match.')])
+    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired()])
+    submit = SubmitField('Change Password')
+
+
 @app.route('/get_user_info')
 @login_required
 def get_user_info():
-    user = current_user
-    return jsonify({
-        'Fname': user.Fname,
-        'Lname': user.Lname,
-        'email': user.email
-    })
+    user_info = {
+        'Fname': current_user.Fname,
+        'Lname': current_user.Lname,
+        'email': current_user.email
+    }
+    return jsonify(user_info)
+
 class Certificate(db.Model):
     __tablename__ = 'Certificate'
     hash = db.Column(db.String(25), primary_key=True)

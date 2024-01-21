@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Change Name{% endblock %}
+{% block body %}
+
+<div class="container mt-5">
+    <h1>Change Name</h1>
+    <form action="{{ url_for('change_name') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+            {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Change Name</button>
+    </form>
+</div>
+
+{% endblock %}
