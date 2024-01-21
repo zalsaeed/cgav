@@ -5,65 +5,66 @@
 {% block title %}Event{% endblock %}
 
 {% block body %}
-  <div class="container mt-5">
-    <h1 class="mb-4 text-center">Your Events</h1>
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Your Events</h1>
 
-    <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Event</h2>
-    <div class="row">
-      <!-- Display the latest 3 certificates -->
-      {% for certificate in latest_certificates %}
-        <div class="col-md-4 mb-4 latest-certificate" id="certificate-{{ certificate.certificate_event_id }}">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ certificate.certificate_title }}</h5>
-              <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
-              <p class="card-text">Event date: {{ certificate.event_date.strftime('%m/%d/%Y') }}</p>
-              <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button">More Info</a>
-            </div>
-          </div>
+  <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Event</h2>
+  <div class="row">
+    <!-- Display the latest 3 certificates -->
+    {% for certificate in latest_certificates %}
+    <div class="col-md-4 mb-4 latest-certificate" id="certificate-{{ certificate.certificate_event_id }}">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+          <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
+          <p class="card-text">Event date: {{ certificate.event_date.strftime('%m/%d/%Y') }}</p>
+          <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
+          <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button">More Info</a>
         </div>
-      {% endfor %}
+      </div>
     </div>
-
-    <div id="all-certificates" class="row">
-      <!-- AJAX will populate this section -->
-    </div>
-
-    <div class="text-center mt-3">
-      <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
-      <a href="/add_certificate"><button  class="m-2 custom-button">Add Events</button></a>
-    </div>
+    {% endfor %}
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const allCertificatesContainer = document.getElementById('all-certificates');
-      const loadMoreCertificatesBtn = document.getElementById('load-more-certificates');
-      const certificatesHeader = document.getElementById('certificates-header');
-  
-      // Set to store loaded certificate IDs
-      const loadedCertificateIds = new Set();
-  
-      function loadMoreCertificates() {
-        // Get the number of certificates already loaded
-        const alreadyLoadedCount = document.querySelectorAll('.latest-certificate').length;
-  
-        // Make an AJAX request to load more certificates, excluding already loaded IDs
-        fetch(`/load_more_certificates?loaded_count=${alreadyLoadedCount}&exclude_ids=${Array.from(loadedCertificateIds).join(',')}`)
-          .then(response => response.json())
-          .then(certificates => {
-            // Ensure certificates is an array before using forEach
-            if (Array.isArray(certificates)) {
-              // Update the UI with the received certificates
-              certificates.forEach(certificate => {
-                const certificateId = certificate.certificate_event_id;
-  
-                // Check if the certificate ID is not in the loaded set and not on the page
-                if (!loadedCertificateIds.has(certificateId) && !document.getElementById(`certificate-${certificateId}`)) {
-                  const certificateCard = document.createElement('div');
-                  certificateCard.classList.add('col-md-4', 'mb-4', 'latest-certificate');
-                  certificateCard.id = `certificate-${certificateId}`;
-                  certificateCard.innerHTML = `
+  <div id="all-certificates" class="row">
+    <!-- AJAX will populate this section -->
+  </div>
+
+  <div class="text-center mt-3">
+    <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
+    <a href="/add_certificate"><button class="m-2 custom-button">Add Events</button></a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const allCertificatesContainer = document.getElementById('all-certificates');
+    const loadMoreCertificatesBtn = document.getElementById('load-more-certificates');
+    const certificatesHeader = document.getElementById('certificates-header');
+
+    // Set to store loaded certificate IDs
+    const loadedCertificateIds = new Set();
+
+    function loadMoreCertificates() {
+      // Get the number of certificates already loaded
+      const alreadyLoadedCount = document.querySelectorAll('.latest-certificate').length;
+
+      // Make an AJAX request to load more certificates, excluding already loaded IDs
+      fetch(`/load_more_certificates?loaded_count=${alreadyLoadedCount}&exclude_ids=${Array.from(loadedCertificateIds).join(',')}`)
+        .then(response => response.json())
+        .then(certificates => {
+          // Ensure certificates is an array before using forEach
+          if (Array.isArray(certificates)) {
+            // Update the UI with the received certificates
+            certificates.forEach(certificate => {
+              const certificateId = certificate.certificate_event_id;
+
+              // Check if the certificate ID is not in the loaded set and not on the page
+              if (!loadedCertificateIds.has(certificateId) && !document.getElementById(`certificate-${certificateId}`)) {
+                const certificateCard = document.createElement('div');
+                certificateCard.classList.add('col-md-4', 'mb-4', 'latest-certificate');
+                certificateCard.id = `certificate-${certificateId}`;
+                certificateCard.innerHTML = `
                     <div class="card">
                       <div class="card-body">
                         <h5 class="card-title">${certificate.certificate_title}</h5>
@@ -73,32 +74,32 @@
                       </div>
                     </div>
                   `;
-                  allCertificatesContainer.appendChild(certificateCard);
-  
-                  // Add the loaded certificate ID to the set
-                  loadedCertificateIds.add(certificateId);
-                }
-              });
-  
-              // If no more certificates to load, update the button and notify the user
-              if (certificates.length === 0) {
-                certificatesHeader.textContent = 'All Event';
-                loadMoreCertificatesBtn.textContent = 'No More Events';
-                loadMoreCertificatesBtn.disabled = true;
+                allCertificatesContainer.appendChild(certificateCard);
+
+                // Add the loaded certificate ID to the set
+                loadedCertificateIds.add(certificateId);
               }
-            } else {
-              console.error('Invalid response format:', certificates);
+            });
+
+            // If no more certificates to load, update the button and notify the user
+            if (certificates.length === 0) {
+              certificatesHeader.textContent = 'All Event';
+              loadMoreCertificatesBtn.textContent = 'No More Events';
+              loadMoreCertificatesBtn.disabled = true;
             }
-          })
-          .catch(error => console.error('Error loading certificates:', error));
-      }
-  
-      // Initial click event for the "Load More" button
-      if (loadMoreCertificatesBtn) {
-        loadMoreCertificatesBtn.addEventListener('click', loadMoreCertificates);
-      } else {
-        console.error('Button element not found.');
-      }
-    });
-  </script>
+          } else {
+            console.error('Invalid response format:', certificates);
+          }
+        })
+        .catch(error => console.error('Error loading certificates:', error));
+    }
+
+    // Initial click event for the "Load More" button
+    if (loadMoreCertificatesBtn) {
+      loadMoreCertificatesBtn.addEventListener('click', loadMoreCertificates);
+    } else {
+      console.error('Button element not found.');
+    }
+  });
+</script>
 {% endblock %}
