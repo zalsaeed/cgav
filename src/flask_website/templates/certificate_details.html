@@ -16,7 +16,12 @@
         <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
         <p class="card-text">File Path: {{ certificate.file_path }}</p>
         <p class="card-text">Description: {{ certificate.certificate_description }}</p>
-        
+        <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
+        <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
+        {% if certificate.Second_Signatory_Name %}
+          <p class="card-text">Signatory 2: {{ certificate.Second_Signatory_Name }}</p>
+          <p class="card-text"> Position 2: {{ certificate.Second_Signatory_Position }}</p>
+        {% endif %}
 
         <!-- Buttons -->
         <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
