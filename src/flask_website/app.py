@@ -132,12 +132,22 @@ def admin():
 def update_user(id):
     form = db_classes.UpdateForm()
     user_to_edit = db_classes.users.query.get(id)
-    if request.method == 'POST':
+    existing_email = db_classes.users.query.filter_by(email=form.email.data).first()
+    if form.validate_on_submit():
+        if form.email.data == user_to_edit.email:
+            email_to_save = user_to_edit.email
+        elif existing_email:
+            flash('email already exist')
+            return redirect(url_for('update_user',id=user_to_edit.id))
+        else:
+            email_to_save = form.email.data
+
+
         if form.password.data == user_to_edit.password:
             password_to_save = form.password.data
         else:
             password_to_save = bcrypt.generate_password_hash(form.password.data)
-        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = form.email.data, Fname = form.Fname.data, password = password_to_save)
+        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = email_to_save, Fname = form.Fname.data, password = password_to_save)
         db.session.execute(user_to_edit)
         db.session.commit()
         flash('success')
@@ -354,7 +364,7 @@ def settings():
 @app.route('/settings/change_name', methods=['GET', 'POST'])
 @login_required
 def change_name():
-    form = ChangeNameForm()
+    form = db_classes.ChangeNameForm()
     if form.validate_on_submit():
         current_user.Fname = form.name.data.split()[0]  # assuming the first name is the first word
         current_user.Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
@@ -363,25 +373,12 @@ def change_name():
         return redirect(url_for('settings'))
     return render_template('change_name.html', form=form)
 
-class ChangeNameForm(FlaskForm):
-    name = StringField('Full Name', validators=[DataRequired()])
-    submit = SubmitField('Change Name')
-
-
-
-
-
-class ChangeNameForm(FlaskForm):
-    name = StringField('Full Name', validators=[DataRequired()])
-    submit = SubmitField('Change Name')
-
-
-
+ 
 
 @app.route('/settings/change_email', methods=['GET', 'POST'])
 @login_required
 def change_email():
-    form = ChangeEmailForm()
+    form = db_classes.ChangeEmailForm()
     if form.validate_on_submit():
         current_user.email = form.email.data
         db.session.commit()
@@ -389,15 +386,13 @@ def change_email():
         return redirect(url_for('settings'))
     return render_template('change_email.html', form=form)
 
-class ChangeEmailForm(FlaskForm):
-        email = StringField('New Email', validators=[DataRequired(), Email()])
-        submit = SubmitField('Change Email')
+
 
     # Route and form for changing password
 @app.route('/settings/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
-    form = ChangePasswordForm()
+    form = db_classes.ChangePasswordForm()
     message = None  # Initialize the message variable
 
     if form.validate_on_submit():
@@ -415,17 +410,6 @@ def change_password():
 
     # Pass the message to the template. If the message is None, nothing will be displayed.
     return render_template('change_password.html', form=form, message=message)
-
-
-
-
-class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField('Old Password', validators=[DataRequired()])
-    new_password = PasswordField('New Password', validators=[
-        DataRequired(),
-        EqualTo('confirm_new_password', message='Passwords must match.')])
-    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired()])
-    submit = SubmitField('Change Password')
 
 
 @app.route('/get_user_info')
