@@ -702,6 +702,41 @@ def run_main_script():
     except subprocess.CalledProcessError as e:
         return jsonify({'success': False, 'error': str(e)})
 
+
+@app.route('/generate_certificate/<certificate_event_id>', methods=['POST'])
+@login_required
+def generate_certificate(certificate_event_id):
+    try:
+        certificate = CertificateEvent.query.get(certificate_event_id)
+        if not certificate:
+            return jsonify({'success': False, 'error': 'Certificate not found'}), 404
+
+        event_data = {
+            'certificate_event_id': str(certificate.certificate_event_id),
+            'certificate_title': certificate.certificate_title,
+            'event_type_id': certificate.event_type_id,
+            'presenter_name': certificate.presenter_name,
+            'secret_phrase': certificate.secret_phrase,
+            'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+            'certificate_description': certificate.certificate_description,
+            'file_path': certificate.file_path,
+            'First_Signatory_Name': certificate.First_Signatory_Name,
+            'First_Signatory_Position': certificate.First_Signatory_Position,
+            'First_Signatory_Path': certificate.First_Signatory_Path,
+            'Second_Signatory_Name': certificate.Second_Signatory_Name,
+            'Second_Signatory_Position': certificate.Second_Signatory_Position,
+            'Second_Signatory_Path': certificate.Second_Signatory_Path
+        }
+        
+        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': result.stderr})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required
 def send_email():

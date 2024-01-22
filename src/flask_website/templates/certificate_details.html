@@ -5,144 +5,213 @@
 {% block title %}Event Details{% endblock %}
 
 {% block body %}
-  <div class="container mt-5">
-    <h1 class="mb-4 text-center">Event Details</h1>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">{{ certificate.certificate_title }}</h5>
-        <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
-        <p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>
-        <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
-        <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
-        <p class="card-text">File Path: {{ certificate.file_path }}</p>
-        <p class="card-text">Description: {{ certificate.certificate_description }}</p>
-        <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
-        <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
-        <p class="card-text">Path 1: {{ certificate.First_Signatory_Path }}</p>
-        {% if certificate.Second_Signatory_Name %}
-          <p class="card-text">Signatory 2: {{ certificate.Second_Signatory_Name }}</p>
-          <p class="card-text"> Position 2: {{ certificate.Second_Signatory_Position }}</p>
-          <p class="card-text">Path 2: {{ certificate.Second_Signatory_Path }}</p>
-        {% endif %}
+<div class="container mt-5">
+  <h1 class="mb-4 text-center">Event Details</h1>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+      <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
+      <p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>
+      <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
+      <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
+      <p class="card-text">File Path: {{ certificate.file_path }}</p>
+      <p class="card-text">Description: {{ certificate.certificate_description }}</p>
+      <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
+      <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
+      <p class="card-text">Path 1: {{ certificate.First_Signatory_Path }}</p>
+      {% if certificate.Second_Signatory_Name %}
+      <p class="card-text">Signatory 2: {{ certificate.Second_Signatory_Name }}</p>
+      <p class="card-text"> Position 2: {{ certificate.Second_Signatory_Position }}</p>
+      <p class="card-text">Path 2: {{ certificate.Second_Signatory_Path }}</p>
+      {% endif %}
 
-        <!-- Buttons -->
-        <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
-        <button id="generate-btn" class="custom-button" onclick="handleGenerate()">Generate</button>
-        <button id="download-btn" class="custom-button" onclick="handleDownload()">Download</button>
-        <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
-      </div>
+
+      <!-- Buttons -->
+      <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
+      <button id="generate-btn" class="custom-button"
+        onclick="handleGenerate('{{ certificate.certificate_event_id }}')">Generate</button>
+
+      <button id="download-btn" class="custom-button" onclick="handleDownload()">Download</button>
+      <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
     </div>
   </div>
+</div>
 
-  <!-- Delete Confirmation Popup -->
-  <div id="delete-confirmation-popup" class="popup">
-    <div class="popup-content">
-      <p>Are you sure you want to delete the certificate titled "{{ certificate.certificate_title }}"?</p>
-      <form onsubmit="return handleDeleteConfirmation()">
-        <label for="event_name">Enter the event name for confirmation:</label>
-        <input type="text" id="event_name" name="event_name" required>
-        <button type="submit" class="custom-button">Confirm Delete</button>
-      </form>
-      <button onclick="closePopup()" class="custom-button">Cancel</button>
-    </div>
+<!-- Delete Confirmation Popup -->
+<div id="delete-confirmation-popup" class="popup">
+  <div class="popup-content">
+    <p>Are you sure you want to delete the certificate titled "{{ certificate.certificate_title }}"?</p>
+    <form onsubmit="return handleDeleteConfirmation()">
+      <label for="event_name">Enter the event name for confirmation:</label>
+      <input type="text" id="event_name" name="event_name" required>
+      <button type="submit" class="custom-button">Confirm Delete</button>
+    </form>
+    <button onclick="closePopup()" class="custom-button">Cancel</button>
   </div>
+</div>
 
-  <!-- Loading Popup -->
-  <div id="loading-popup" class="popup">
-    <div class="popup-content">
-      <p>Loading...</p>
-    </div>
+<!-- Loading Popup -->
+<div id="loading-popup" class="popup">
+  <div class="popup-content">
+    <p>Loading...</p>
   </div>
+</div>
 
-  <!-- Success Popup -->
-  <div id="success-popup" class="popup">
-    <div class="popup-content">
-      <p>Certificate deleted successfully</p>
-      <button onclick="redirectToCertificates()" class="custom-button">OK</button>
-    </div>
+<!-- Success Popup -->
+<div id="success-popup" class="popup">
+  <div class="popup-content">
+    <p>Certificate deleted successfully</p>
+    <button onclick="redirectToCertificates()" class="custom-button">OK</button>
   </div>
+</div>
 
-  <!-- Error Popup -->
-  <div id="error-popup" class="popup">
-    <div class="popup-content">
-      <p>Error: Please try again later</p>
-      <button onclick="closePopup()" class="custom-button">OK</button>
-    </div>
+<!-- Error Popup -->
+<div id="error-popup" class="popup">
+  <div class="popup-content">
+    <p>Error: Please try again later</p>
+    <button onclick="closePopup()" class="custom-button">OK</button>
   </div>
+</div>
 
+<style>
+  /* Button Style */
+  .custom-button {
+    display: inline-block;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #427AA1;
+    /* Match the color used in your project */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: auto;
+    /* Let the width adjust based on content */
+    font-size: 16px;
+    /* Adjust the font size as needed */
+    transition: background-color 0.3s, color 0.3s;
+  }
 
-  <script>
-    // Delete section
-    function handleDelete() {
-      document.getElementById('delete-confirmation-popup').style.display = 'block';
-    }
+  .custom-button:hover,
+  .custom-button:active {
+    /* Apply styles for active state (clicked) */
+    background-color: #2c4e71;
+    /* Darken the color */
+    color: #fff;
+  }
 
-    function handleDeleteConfirmation() {
-      const eventName = document.getElementById('event_name').value;
-        
-      // Check if the event name is empty
-      if (!eventName) {
-        alert('Please enter the event name for confirmation.');
-        return false; // Prevent form submission
-      }
-    
-      document.getElementById('delete-confirmation-popup').style.display = 'none';
-      document.getElementById('loading-popup').style.display = 'block';
-    
-      // Make an AJAX request to delete the certificate
-      fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ event_name: eventName }),
-      })
-        .then(response => {
-          // Check if the response status is 500 (INTERNAL SERVER ERROR)
-          if (response.status === 500) {
-            // Assume success, hide loading popup, and show success popup
-            document.getElementById('loading-popup').style.display = 'none';
-            document.getElementById('success-popup').style.display = 'block';
-          } else {
-            // Otherwise, proceed with parsing the JSON response
-            return response.json();
-          }
-        })
-        .then(result => {
-          // If result is defined, it means the response status was not 500
-          if (result) {
-            document.getElementById('loading-popup').style.display = 'none';
-          
-            if (result.success) {
-              document.getElementById('success-popup').style.display = 'block';
-            } else {
-              document.getElementById('error-popup').style.display = 'block';
-            }
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          document.getElementById('loading-popup').style.display = 'none';
+  /* Popup Styles */
+  .popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    /* Adjust as needed */
+  }
+
+  .popup-content {
+    text-align: center;
+  }
+
+  /* Card Styles */
+  .card-title {
+    font-size: 1.5rem;
+    color: #007bff;
+    /* Adjust the color to match your theme */
+    margin-bottom: 10px;
+  }
+
+  .card-text {
+    font-size: 1rem;
+    color: #333;
+    /* Adjust the color to match your theme */
+    margin-bottom: 5px;
+  }
+</style>
+
+<script>
+  // Delete section
+  function handleDelete() {
+    document.getElementById('delete-confirmation-popup').style.display = 'block';
+  }
+
+  function handleDeleteConfirmation() {
+    document.getElementById('delete-confirmation-popup').style.display = 'none';
+    document.getElementById('loading-popup').style.display = 'block';
+
+    const eventName = document.getElementById('event_name').value;
+
+    // Make an AJAX request to delete the certificate
+    fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ event_name: eventName }),
+    })
+      .then(response => response.json())
+      .then(result => {
+        document.getElementById('loading-popup').style.display = 'none';
+
+        if (result.success) {
+          document.getElementById('success-popup').style.display = 'block';
+        } else {
           document.getElementById('error-popup').style.display = 'block';
-        });
-      
-      return false;
-    }
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('loading-popup').style.display = 'none';
+        document.getElementById('error-popup').style.display = 'block';
+      });
 
-    function redirectToCertificates() {
-      window.location.href = '/certificates';
-    }
+    return false;
+  }
 
-    function closePopup() {
-      document.getElementById('delete-confirmation-popup').style.display = 'none';
-      document.getElementById('loading-popup').style.display = 'none';
-      document.getElementById('success-popup').style.display = 'none';
-      document.getElementById('error-popup').style.display = 'none';
-    }
-    function handleSend(){
-      // Implement send functionality
-      window.location.href = '/send_email';
-    }
+  function redirectToCertificates() {
+    window.location.href = '/certificates';
+  }
+
+  function closePopup() {
+    document.getElementById('delete-confirmation-popup').style.display = 'none';
+    document.getElementById('loading-popup').style.display = 'none';
+    document.getElementById('success-popup').style.display = 'none';
+    document.getElementById('error-popup').style.display = 'none';
+  }
+  function handleSend() {
+    // Implement send functionality
+    window.location.href = '/send_email';
+  }
+
+  ///////////////////
+  function handleGenerate(certificateEventId) {
+    fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          console.log("Certificate generation initiated.");
+        } else {
+          console.error("Error initiating certificate generation:", data.error);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+
+
+  ////////////////
   // Other buttons (Generate, downloud, send)
-  </script>
+</script>
 {% endblock %}
