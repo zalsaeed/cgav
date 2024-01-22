@@ -18,9 +18,11 @@
         <p class="card-text">Description: {{ certificate.certificate_description }}</p>
         <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
         <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
+        <p class="card-text">Path 1: {{ certificate.First_Signatory_Path }}</p>
         {% if certificate.Second_Signatory_Name %}
           <p class="card-text">Signatory 2: {{ certificate.Second_Signatory_Name }}</p>
           <p class="card-text"> Position 2: {{ certificate.Second_Signatory_Position }}</p>
+          <p class="card-text">Path 2: {{ certificate.Second_Signatory_Path }}</p>
         {% endif %}
 
         <!-- Buttons -->
