@@ -19,17 +19,22 @@
                 <label for="displayName">Name:</label>
                 <span id="displayName">{{ first_name }} {{ last_name }}</span>
                 <!-- Button for changing the name -->
-                <a href="{{ url_for('change_name') }}" class="btn btn-primary">Change Name</a>
+                <a href="{{ url_for('change_name') }}" class="form-control mr-3 text-sm bg-blue-500
+                hover:bg-blue-700 text-white py-1 px-2 rounded">Change Name</a>
             </div>
             <div class="profile-field">
                 <label for="displayEmail">Email:</label>
                 <span id="displayEmail">{{ current_user.email }}</span>
                 <!-- Button for changing the email -->
-                <a href="{{ url_for('change_email') }}" class="btn btn-primary">Change Email</a>
+                <a href="{{ url_for('change_email') }}" class="form-control mr-3 text-sm bg-blue-500
+                hover:bg-blue-700 text-white py-1 px-2 rounded
+                focus:outline-none focus:shadow-outline">Change Email</a>
             </div>
             <!-- Button for changing the password -->
             <div class="profile-field">
-                <a href="{{ url_for('change_password') }}" class="btn btn-primary">Change Password</a>
+                <a href="{{ url_for('change_password') }}" class="form-control mr-3 text-sm bg-blue-500
+                hover:bg-blue-700 text-white py-1 px-2 rounded
+                focus:outline-none focus:shadow-outline">Change Password</a>
             </div>
         </div>
     </div>
@@ -67,15 +72,21 @@ function loadPublicProfile() {
                     <div class="profile-field">
                         <label>Name:</label>
                         <span>${response.Fname} ${response.Lname}</span>
-                        <a href="/settings/change_name" class="btn btn-primary">Change Name</a>
+                        <a href="/settings/change_name" class="form-control mr-3 text-sm bg-blue-500
+                  hover:bg-blue-700 text-white py-1 px-2 rounded
+                  focus:outline-none focus:shadow-outline">Change Name</a>
                     </div>
                     <div class="profile-field">
                         <label>Email:</label>
                         <span>${response.email}</span>
-                        <a href="/settings/change_email" class="btn btn-primary">Change Email</a>
+                        <a href="/settings/change_email" class="form-control mr-3 text-sm bg-blue-500
+                  hover:bg-blue-700 text-white py-1 px-2 rounded
+                  focus:outline-none focus:shadow-outline">Change Email</a>
                     </div>
                     <div class="profile-field">
-                        <a href="/settings/change_password" class="btn btn-primary">Change Password</a>
+                        <a href="/settings/change_password" class="form-control mr-3 text-sm bg-red-500
+                  hover:bg-red-700 text-white py-1 px-2 rounded
+                  focus:outline-none focus:shadow-outline">Change Password</a>
                     </div>
                 </div>
             `;
