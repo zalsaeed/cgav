@@ -47,7 +47,7 @@ class RegisterForm(FlaskForm):
             email=email.data).first()
         if existing_email:
             raise ValidationError(
-                'That user_name already exists. Please choose a different one.')
+                'That email already exists. Please choose a different one.')
     def validate_id(self, id):
         existing_user_id = users.query.filter_by(id=id.data).first()
         if existing_user_id:
@@ -79,6 +79,7 @@ class UpdateForm(FlaskForm):
                            ], render_kw={"placeholder": "user_role"})
 
     submit = SubmitField('save')
+
 
 # Certificates classes
 class template(db.Model):
@@ -151,3 +152,27 @@ class NewTemplates(FlaskForm):
     template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
     template_image= FileField('*Upload Background', validators=[DataRequired()])
     submit= SubmitField('Add')
+
+class ChangeEmailForm(FlaskForm):
+        email = StringField('New Email', validators=[DataRequired(), Email()])
+        submit = SubmitField('Change Email')
+
+        def validate_email(self, email):
+            existing_email = users.query.filter_by(
+            email=email.data).first()
+            if existing_email:
+                raise ValidationError(
+                    'That email already exists. Please choose a different one.')
+            
+class ChangePasswordForm(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[
+        DataRequired(),
+        EqualTo('confirm_new_password', message='Passwords must match.')])
+    confirm_new_password = PasswordField('Confirm New Password', validators=[DataRequired()])
+    submit = SubmitField('Change Password')
+
+class ChangeNameForm(FlaskForm):
+    name = StringField('Full Name', validators=[DataRequired()])
+    submit = SubmitField('Change Name')
+   
