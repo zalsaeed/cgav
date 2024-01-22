@@ -8,6 +8,7 @@ from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from sqlalchemy.orm import relationship
 
+
 # Assuming the db object will be imported from elsewhere, like your main app.py
 # This import line is assuming the db instance is initialized in a file named 'extensions.py'
 from extensions import db
@@ -57,6 +58,9 @@ class CertificateForm(FlaskForm):
     certificate_title = StringField('Event Title', validators=[DataRequired()])
     presenter_name = StringField('Presenter Name', validators=[DataRequired()])
     secret_phrase = StringField('Secret Phrase', validators=[DataRequired()])
+    template_choice = SelectField('Certificate Template', choices=[])
+    greeting_female = StringField('Greeting for Females', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for her success"})
+    greeting_male = StringField('Greeting for Males', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for his success"})
     # event_type = SelectField('Event Type', choices=[
     #     ('type1', 'Event Type 1'),
     #     ('type2', 'Event Type 2'),

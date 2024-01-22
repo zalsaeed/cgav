@@ -53,6 +53,8 @@ CREATE TABLE users
                 gender VARCHAR(5),
                 email VARCHAR(255),
                 phone_number VARCHAR(20),
+                greeting_female TEXT, -- Add this line for the female greeting
+                greeting_male TEXT,   -- And this line for the male greeting
                 PRIMARY KEY (recipient_id)
             );
 
