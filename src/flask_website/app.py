@@ -10,6 +10,7 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
+from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations
 import uuid
 import csv
@@ -237,17 +238,20 @@ app.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__fil
 # Ensure the upload_folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+
 @app.route('/add_certificate', methods=['GET', 'POST'])
 def add_certificate():
     form = CertificateForm()
     message = ""
     show_second_signatory = 'second_signatory' in request.args
 
-    # Retrieve active event types from the database
+    # Retrieve active event types and templates from the database
     active_event_types = EventType.query.filter_by(is_active=True).all()
-    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
+    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in
+                               active_event_types]
 
-
+    templates = Template.query.all()
+    form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if form.validate_on_submit():
         file = form.file.data
@@ -257,7 +261,8 @@ def add_certificate():
             csv_reader = csv.DictReader(file_stream)  # Use DictReader to read the CSV into a dictionary
 
             # Check if CSV has all required headers
-            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash', 'date_issued'}
+            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash',
+                                'date_issued'}
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'
             else:
@@ -279,7 +284,6 @@ def add_certificate():
                     image_path_1 = os.path.join(signatures_folder, filename_1)
                     signature_image_1.save(image_path_1)
 
-                
                 if signature_image_2 and allowed_image_file(signature_image_2.filename):
                     # Construct filename and save the second signature image
                     filename_2 = secure_filename(signature_image_2.filename)
@@ -338,6 +342,7 @@ def add_certificate():
         message=message,
         show_second_signatory=show_second_signatory
     )
+
 
 # Ensure you have your CertificateEvent model, EventType model, and CertificateForm form class defined as needed.
 
@@ -570,20 +575,26 @@ def send_delete_confirmation_email(certificate):
     mail.send(msg)
 
 
-@app.route("/create_new_template", methods=['GET',"POST"])
+@app.route("/create_new_template", methods=['GET', "POST"])
 def newtemp():
-    form=db_classes.NewTemplates()
+    form = db_classes.NewTemplates()
     if form.validate_on_submit():
         file = form.template_image.data
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
-        new_template = db_classes.template(template_name=form.template_name.data,template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
+                               secure_filename(file.filename)))
+
+
+        new_template = db_classes.Template(template_name=form.template_name.data,
+                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'],
+                                                                       secure_filename(file.filename)))
         db.session.add(new_template)
         db.session.commit()
 
         flash('You Add New Templates Successfully.')
-        return redirect('Select_template')
+        return redirect(url_for('selectTemp'))  # It's better to use url_for() here
 
-    return render_template('create_new_template.html',form=form)
+    return render_template('create_new_template.html', form=form)
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -591,9 +602,9 @@ def uploaded_file(filename):
 
 @app.route('/Select_template/<tempname>')
 def template(tempname):
-    temp = db_classes.template.query.filter_by(template_name=tempname).first()
+    temp = db_classes.Template.query.filter_by(template_name=tempname).first()
     tempid= temp.template_id if temp else None
-    temp = db_classes.template.query.get_or_404(tempid)
+    temp = db_classes.Template.query.get_or_404(tempid)
     json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
     ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
     custom_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/customization.json')
@@ -622,8 +633,9 @@ def template(tempname):
 
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
-    templates=db_classes.template.query.all()
-    return render_template("select_template.html",templates=templates)
+    templates = db_classes.Template.query.all()  # Use uppercase 'T' here
+    return render_template("select_template.html", templates=templates)
+
 
 @app.route('/fetch_latest_pdf', methods=['GET'])
 def fetch_latest_pdf():

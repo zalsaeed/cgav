@@ -53,6 +53,20 @@
         {% endfor %}
       </div>
 
+<!-- Greeting for Females -->
+<div class="mb-3">
+    <label for="greetingFemale">Greeting for Females</label>
+    <input type="text" id="greetingFemale" name="greeting_female" class="form-control" placeholder="Best wishes for her success and prosperity" />
+</div>
+
+<!-- Greeting for Males -->
+<div class="mb-3">
+    <label for="greetingMale">Greeting for Males</label>
+    <input type="text" id="greetingMale" name="greeting_male" class="form-control" placeholder="Best wishes for his success and prosperity" />
+</div>
+
+
+
       <div class="mb-3">
         {{ form.certificate_description.label(class="form-label") }}
         {{ form.certificate_description(class="form-control", placeholder="Enter event description") }}
@@ -60,6 +74,16 @@
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
       </div>
+    </div>
+
+        <!-- Template Selection -->
+    <div class="mb-3">
+      {{ form.template_choice.label(class="form-label") }}
+      {{ form.template_choice(class="form-control") }}
+      <button type="button" class="btn btn-info" onclick="location.href='{{ url_for('selectTemp') }}'">Show the Templates</button>
+      {% for error in form.template_choice.errors %}
+      <span style="color: red;">{{ error }}</span>
+      {% endfor %}
     </div>
 
     <!-- Signature Section -->

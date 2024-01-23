@@ -82,7 +82,7 @@ class UpdateForm(FlaskForm):
 
 
 # Certificates classes
-class template(db.Model):
+class Template(db.Model):
     template_id = db.Column(db.Integer, primary_key=True, unique=True )
     template_name = db.Column(db.String(30), nullable=False)
     template_image = db.Column(db.String(300), nullable=False)
@@ -90,7 +90,7 @@ class template(db.Model):
 
 class Event_type(db.Model):
     event_type_id = db.Column(db.Integer, primary_key=True)
-    event_type_id = db.Column(db.Integer, primary_key=True)
+    #duplicate event_type_id = db.Column(db.Integer, primary_key=True)
     is_active = db.Column(db.Boolean, default=True)
 
 class recipient(db.Model):
@@ -152,6 +152,8 @@ class NewTemplates(FlaskForm):
     template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
     template_image= FileField('*Upload Background', validators=[DataRequired()])
     submit= SubmitField('Add')
+
+
 
 class ChangeEmailForm(FlaskForm):
         email = StringField('New Email', validators=[DataRequired(), Email()])
