@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FileField, SubmitField
+from wtforms import StringField, PasswordField, FileField, SubmitField,IntegerField,FloatField
 from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
@@ -83,7 +83,9 @@ class UpdateForm(FlaskForm):
 
 # Certificates classes
 class Template(db.Model):
+    __tablename__ = 'template'
     template_id = db.Column(db.Integer, primary_key=True, unique=True )
+    id = db.Column(db.Integer)
     template_name = db.Column(db.String(30), nullable=False)
     template_image = db.Column(db.String(300), nullable=False)
 
@@ -177,4 +179,11 @@ class ChangePasswordForm(FlaskForm):
 class ChangeNameForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     submit = SubmitField('Change Name')
-   
+
+class customizationForm(FlaskForm):
+    item = StringField()
+    x = IntegerField('*x_postion',validators=[DataRequired()])
+    y = IntegerField('*y_postion',validators=[DataRequired()])
+    h = IntegerField('*Height',validators=[DataRequired()])
+    w = IntegerField('*Width',validators=[DataRequired()])
+    submit = SubmitField('Save')

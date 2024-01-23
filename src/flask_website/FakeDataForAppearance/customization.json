@@ -1,40 +1,56 @@
 {
-    "certificate_title": {
-        "x": 30,
-        "y": 40
-    },
-    "certificate_intro": {
-        "x": 50,
-        "y": 60
-    },
-    "recipient_title": {
-        "x": 70,
-        "y": 80
-    },
-    "recipient_name": {
-        "x": 90,
-        "y": 100
-    },
-    "certificate_body": {
-        "x": 110,
-        "y": 120
-    },
-    "final_greeting": {
-        "x": 130,
-        "y": 140
-    },
-    "contact_info":{
-        "x": 150,
-        "y": 190
-    },
-    "signs":{
-        "sign1":{
-         "x":150,
-         "y":160
-        },
-        "sign2":{
-            "x":150,
-            "y":180
-        }
-    }
+  "Certificate_Title": {
+    "x": 1,
+    "y": 1,
+    "w": 1,
+    "h": 1
+  },
+  "Intro": {
+    "x": 2,
+    "y": 2,
+    "w": 2,
+    "h": 2
+  },
+  "recipient_title": {
+    "x": 70,
+    "y": 80,
+    "w": 0,
+    "h": 0
+  },
+  "recipient_name": {
+    "x": 90,
+    "y": 100,
+    "w": 0,
+    "h": 0
+  },
+  "body": {
+    "x": 110,
+    "y": 120,
+    "w": 0,
+    "h": 0
+  },
+  "final_greeting": {
+    "x": 130,
+    "y": 140,
+    "w": 0,
+    "h": 0
+  },
+  "contact_info": {
+    "x": 150,
+    "y": 190,
+    "w": 0,
+    "h": 0
+  },
+  "signature_1": {
+    "x": 150,
+    "y": 160,
+    "w": 0,
+    "h": 0
+  },
+  "signature_2": {
+    "x": 150,
+    "y": 180,
+    "w": 0,
+    "h": 0
+  }
 }

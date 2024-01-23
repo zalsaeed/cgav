@@ -21,16 +21,14 @@ CREATE TABLE users
     (id)
 );
 
-    CREATE TABLE template
-    (
-        template_id INT(255) NOT NULL
-        AUTO_INCREMENT,
-    template_name VARCHAR
-        (255),
-    template_image VARCHAR
-        (320),
-    PRIMARY KEY
-        (template_id)
+CREATE TABLE template
+(
+    template_id INT(255) NOT NULL AUTO_INCREMENT,
+    id INT(255),
+    template_name VARCHAR (255),
+    template_image VARCHAR (320),
+    PRIMARY KEY (template_id),
+    FOREIGN KEY (id) REFERENCES users(id)
 );
 
         CREATE TABLE Event_type

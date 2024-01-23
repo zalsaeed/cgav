@@ -585,8 +585,8 @@ def newtemp():
 
 
         new_template = db_classes.Template(template_name=form.template_name.data,
-                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'],
-                                                                       secure_filename(file.filename)))
+                                           id = current_user.id,
+                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
         db.session.add(new_template)
         db.session.commit()
 
@@ -600,11 +600,12 @@ def newtemp():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/Select_template/<tempname>')
+@app.route('/Select_template/<tempname>',methods=['GET',"POST"])
 def template(tempname):
     temp = db_classes.Template.query.filter_by(template_name=tempname).first()
     tempid= temp.template_id if temp else None
     temp = db_classes.Template.query.get_or_404(tempid)
+    form=db_classes.customizationForm()
     json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
     ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
     custom_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/customization.json')
@@ -616,25 +617,51 @@ def template(tempname):
     with open(ar_json_file, 'r') as file:
         arData = json.load(file)
     
-    # with open(custom_file,'r') as file:
-    #   customization_data = json.load(file)
-    
-    # # Create a new CertificateCustomizations instance and save it to the database
-    # new_customization = CertificateCustomizations(
-    #       customization_id=str(uuid.uuid4()),
-    #       items_positions = customization_data )
-    # # Add and commit the new record to the database
-    # db.session.add(new_customization)
-    # db.session.commit()
+    with open(custom_file,'r') as file:
+      customization_data = json.load(file)
 
-    # Extract the value of "Field1" from each object in the JSON array
-    first_names = data.get('first_name')
-    return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData)
+    
+    # if request.method == 'POST':
+    if form.validate_on_submit():
+        form_item = form.item.data  # Assuming form.item is a Flask-WTF field
+        form_x = form.x.data
+        form_y = form.y.data
+        form_w = form.w.data
+        form_h = form.h.data
+        if form_item in customization_data:
+            customization_data[form_item]['x'] = form_x
+            customization_data[form_item]['y'] = form_y
+            customization_data[form_item]['w'] = form_w
+            customization_data[form_item]['h'] = form_h
+        with open(custom_file, 'w') as file:
+            json.dump(customization_data, file, indent=2)
+        
+        existing_customization = CertificateCustomizations.query.filter_by(
+            id=current_user.id,
+            template_id=temp.template_id).first()
+        if existing_customization:
+            # existing_customization.items_positions = customization_data
+            # Reactivate the existing event type using update statement
+            custom = update(CertificateCustomizations).where(CertificateCustomizations.template_id == temp.template_id and CertificateCustomizations.id == current_user.id).values(items_positions = customization_data)
+            db.session.execute(custom)
+            db.session.commit()
+        else:
+            new_customization = CertificateCustomizations(customization_id=str(uuid.uuid4()),
+                                                          id = current_user.id,
+                                                          template_id = temp.template_id,
+                                                          items_positions = customization_data )
+            # Add and commit the new record to the database
+            db.session.add(new_customization)
+            db.session.commit()
+
+    return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
+
 
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
-    templates = db_classes.Template.query.all()  # Use uppercase 'T' here
-    return render_template("select_template.html", templates=templates)
+     # Assuming the user ID is stored in the id field of the User model
+    user_templates = db_classes.Template.query.filter_by(id=current_user.id).all()
+    return render_template("select_template.html", templates=user_templates)
 
 
 @app.route('/fetch_latest_pdf', methods=['GET'])

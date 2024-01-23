@@ -128,41 +128,44 @@
                     </ul>
                 </div>
             </div>
-            <form style="display:none;" id="customizationform" class="max-w-md mx-auto my-3">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <div>
-                        <label for="x_postion"
-                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">x_postion</label>
-                        <input type="number" id="x_postion"
-                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="y_postion"
-                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">y_postion</label>
-                        <input type="number" id="y_postion"
-                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="height"
-                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Height</label>
-                        <input type="number" id="height"
-                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label for="width"
-                            class="block mb-2 text-sm font-medium text-gray-900 text-sky-900">Width</label>
-                        <input type="number" id="width"
-                            class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    </div>
+            <form  style="display:none;" id="customizationform" class="max-w-md mx-auto my-3"  method="POST" enctype="multipart/form-data">
+                {{form.hidden_tag()}}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div>
+                    {{ form.x.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.x(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="x_postion")}}
+                    {% for error in form.x.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
                 </div>
-                <button type="submit"
-                    class="my-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Save</button>
-                <button type="button"
-                    class="my-2 text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previwe</button>
-            </form>
-            <button type="button" onclick="previewCertificate()"
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Preview
-                Certificate</button>
+                <div>
+                    {{ form.y.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.y(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="y_postion")}}
+                    {% for error in form.y.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.h.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.h(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="height")}}
+                    {% for error in form.h.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.w.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.w(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="width")}}
+                    {% for error in form.w.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div>
+                    {{ form.item(type="hidden",id="keyitem")}}
+                </div>
+            </div>
+                {{form.submit( class="my-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800")}}
+                <button type="button" onclick="previewCertificate()" class="my-2 text-white bg-blue-700 hover:bg-blue-800  focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Previwe</button>
+              </form>
         </div>
 
     </div>
@@ -176,6 +179,7 @@
     var aritem = document.getElementById("aritemCheckbox");
     var customItem = document.getElementById("customizationform");
     var x_postion = document.getElementById("x_postion");
+    var keyitem = document.getElementById("keyitem");
     // Check if the checkbox is in the checked state
     function check() {
         if (checkbox.checked) {
@@ -189,15 +193,16 @@
     function checkItems(value, isChecked) {
         if (isChecked) {
             customItem.style.display = "block";
-            x_postion.placeholder = value;
+            keyitem.value = value;
         } else {
             customItem.style.display = "none";
         }
     }
-    function arCheckItems(value, isChecked) {
+
+    function arCheckItems(value, isChecked){
         if (isChecked) {
             customItem.style.display = "block";
-            x_postion.placeholder = value;
+            keyitem.value = value;
         } else {
             customItem.style.display = "none";
         }
