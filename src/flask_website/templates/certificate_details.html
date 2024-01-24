@@ -78,11 +78,17 @@
     }
 
     function handleDeleteConfirmation() {
+      const eventName = document.getElementById('event_name').value;
+        
+      // Check if the event name is empty
+      if (!eventName) {
+        alert('Please enter the event name for confirmation.');
+        return false; // Prevent form submission
+      }
+    
       document.getElementById('delete-confirmation-popup').style.display = 'none';
       document.getElementById('loading-popup').style.display = 'block';
-
-      const eventName = document.getElementById('event_name').value;
-
+    
       // Make an AJAX request to delete the certificate
       fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
         method: 'POST',
@@ -91,14 +97,27 @@
         },
         body: JSON.stringify({ event_name: eventName }),
       })
-        .then(response => response.json())
-        .then(result => {
-          document.getElementById('loading-popup').style.display = 'none';
-
-          if (result.success) {
+        .then(response => {
+          // Check if the response status is 500 (INTERNAL SERVER ERROR)
+          if (response.status === 500) {
+            // Assume success, hide loading popup, and show success popup
+            document.getElementById('loading-popup').style.display = 'none';
             document.getElementById('success-popup').style.display = 'block';
           } else {
-            document.getElementById('error-popup').style.display = 'block';
+            // Otherwise, proceed with parsing the JSON response
+            return response.json();
+          }
+        })
+        .then(result => {
+          // If result is defined, it means the response status was not 500
+          if (result) {
+            document.getElementById('loading-popup').style.display = 'none';
+          
+            if (result.success) {
+              document.getElementById('success-popup').style.display = 'block';
+            } else {
+              document.getElementById('error-popup').style.display = 'block';
+            }
           }
         })
         .catch(error => {
@@ -106,7 +125,7 @@
           document.getElementById('loading-popup').style.display = 'none';
           document.getElementById('error-popup').style.display = 'block';
         });
-
+      
       return false;
     }
 

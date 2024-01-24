@@ -94,12 +94,13 @@ class CertificateForm(FlaskForm):
         FileAllowed(['csv'], 'CSV files only!')])
     submit = SubmitField('Submit')
 
-class Signature(db.Model):
-    __tablename__ = 'signatures'
-    id = db.Column(db.Integer, primary_key=True)
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
-    signatory_name = db.Column(db.String(255))
-    signatory_position = db.Column(db.String(255))
-    signature_image_path = db.Column(db.String(255))  # Path to the stored signature image file
-
-    certificate_event = relationship('CertificateEvent', backref='signatures')
+# class Signature(db.Model):
+    # __tablename__ = 'signatures'
+    # id = db.Column(db.Integer, primary_key=True)
+    # certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+    # signatory_name = db.Column(db.String(255))
+    # signatory_position = db.Column(db.String(255))
+    # signature_image_path = db.Column(db.String(255))  # Path to the stored signature image file
+# 
+    # certificate_event = relationship('CertificateEvent', backref='signatures')
+# 

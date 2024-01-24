@@ -90,10 +90,10 @@ class Template(db.Model):
     template_image = db.Column(db.String(300), nullable=False)
 
 
-class Event_type(db.Model):
-    event_type_id = db.Column(db.Integer, primary_key=True)
-    #duplicate event_type_id = db.Column(db.Integer, primary_key=True)
-    is_active = db.Column(db.Boolean, default=True)
+# class Event_type(db.Model):
+#     event_type_id = db.Column(db.Integer, primary_key=True)
+#     #duplicate event_type_id = db.Column(db.Integer, primary_key=True)
+#     is_active = db.Column(db.Boolean, default=True)
 
 class recipient(db.Model):
     recipient_id = db.Column(db.String(255), primary_key=True)

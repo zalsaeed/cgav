@@ -519,7 +519,7 @@ def certificate_details(certificate_event_id):
 
 # Add routes for other actions ( generate, download, send) as needed
 
-# Route for the delete confirmation page(from database)
+# Route for the delete confirmation page (from database)
 @app.route('/delete_confirmation/<certificate_event_id>', methods=['GET', 'POST'])
 @login_required
 def delete_confirmation(certificate_event_id):
@@ -540,10 +540,13 @@ def delete_confirmation(certificate_event_id):
                 # Delete the certificate
                 db.session.delete(certificate)
                 db.session.commit()
-                 # Send email notification
+
+                # Send email notification
                 send_delete_confirmation_email(certificate)
+
                 # Provide a success response
-                return jsonify({'success': True}), 200
+                return jsonify({'success': True}), 200  # Return 200 OK status
+
             else:
                 # Provide an error response (incorrect event name)
                 return jsonify({'success': False, 'error': 'Incorrect event name'}), 400
