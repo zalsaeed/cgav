@@ -19,12 +19,14 @@ class CertificateEvent(db.Model):
     customization_id = db.Column(db.String(255))
     certificate_title = db.Column(db.String(255))
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
+    template_path = db.Column(db.String(255))
     # Define the relationship to EventType
     event_type = relationship('EventType', backref='certificates')
     presenter_name = db.Column(db.String(255))  # New field
     secret_phrase = db.Column(db.String(255))  # New field
     event_date = db.Column(db.DateTime)  # New field
-    certificate_description = db.Column(db.Text)  # New field
+    certificate_description_female = db.Column(db.Text)
+    certificate_description_male = db.Column(db.Text)
     file_path = db.Column(db.String(255))  # New field, to store file path if needed
     First_Signatory_Name = db.Column(db.String(255))
     First_Signatory_Position = db.Column(db.String(255))
@@ -32,7 +34,11 @@ class CertificateEvent(db.Model):
     Second_Signatory_Name = db.Column(db.String(255))
     Second_Signatory_Position = db.Column(db.String(255))
     Second_Signatory_Path = db.Column(db.String(255))
-    # ... any additional fields ...
+    greeting_female = db.Column(db.String(255))  # New field for female greeting
+    greeting_male = db.Column(db.String(255))    
+    intro = db.Column(db.String(255))
+    male_recipient_title = db.Column(db.String(255))
+    female_recipient_title = db.Column(db.String(255))
 
 class CertificateCustomizations(db.Model):
     __tablename__ = 'CertificateCustomizations'
@@ -61,15 +67,13 @@ class CertificateForm(FlaskForm):
     template_choice = SelectField('Certificate Template', choices=[])
     greeting_female = StringField('Greeting for Females', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for her success"})
     greeting_male = StringField('Greeting for Males', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for his success"})
-    # event_type = SelectField('Event Type', choices=[
-    #     ('type1', 'Event Type 1'),
-    #     ('type2', 'Event Type 2'),
-    #     ('type3', 'Event Type 3')
-    # ], validators=[DataRequired()])
-    # Modify the choices attribute to dynamically load event types from the database
     event_type = SelectField('Event Type', validators=[DataRequired()])
     date = DateField('Date', validators=[DataRequired()])
-    certificate_description = TextAreaField('Event Description', validators=[DataRequired()])
+    certificate_description_female = TextAreaField('Event Description for Female', validators=[DataRequired()])
+    certificate_description_male = TextAreaField('Event Description for Male', validators=[DataRequired()])
+    intro = StringField('Intro', validators=[DataRequired()], render_kw={"placeholder": "تشهد كلية الحاسب"})
+    male_recipient_title = StringField('Male Recipient Title', validators=[DataRequired()], render_kw={"placeholder": "المتدرب:"})
+    female_recipient_title = StringField('Female Recipient Title', validators=[DataRequired()], render_kw={"placeholder": "المتدربة:"})
     signatory_name_1 = StringField('First Signatory Name', validators=[DataRequired()])
     signatory_position_1 = StringField('First Signatory Position', validators=[DataRequired()])
     signature_image_1 = FileField('First Signature Image', validators=[

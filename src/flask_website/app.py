@@ -1,5 +1,6 @@
 import json
 from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash, session
+import yaml
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -249,20 +250,29 @@ def add_certificate():
     active_event_types = EventType.query.filter_by(is_active=True).all()
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in
                                active_event_types]
+    # Retrieve the selected template
+    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
 
+    templates = Template.query.all()
+    form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
+    
     templates = Template.query.all()
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if form.validate_on_submit():
+
+        selected_template_id = form.template_choice.data
+        selected_template = Template.query.filter_by(template_id=selected_template_id).first()
+        template_path = selected_template.template_image
+
         file = form.file.data
         if file and allowed_file(file.filename):
             # Read the file into a StringIO object for parsing as CSV
             file_stream = StringIO(file.read().decode('utf-8-sig'), newline=None)
             csv_reader = csv.DictReader(file_stream)  # Use DictReader to read the CSV into a dictionary
 
-            # Check if CSV has all required headers
-            required_headers = {'name', 'email', 'event_name', 'event_date', 'event_type', 'certificate_hash',
-                                'date_issued'}
+             # Updated required headers
+            required_headers = {'first_name', 'middle_name', 'last_name', 'email', 'phone', 'gender'}
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'
             else:
@@ -294,34 +304,31 @@ def add_certificate():
                     signatory_name_2 = None
                     signatory_position_2 = None
                     image_path_2 = None
-                # Create a new CertificateEvent instance with the file path
-                # new_certificate_event = CertificateEvent(
-                #     certificate_event_id=str(uuid.uuid4()),
-                #     certificate_title=form.certificate_title.data,
-                #     event_type_id=form.event_type.data,
-                #     presenter_name=form.presenter_name.data,
-                #     secret_phrase=form.secret_phrase.data,
-                #     event_date=form.date.data,
-                #     certificate_description=form.certificate_description.data,
-                #     file_path=file_path  # Save the path to the file
-                # )
-                # Create a new CertificateEvent instance
+               
                 new_certificate_event = CertificateEvent(
                     certificate_event_id=str(uuid.uuid4()),
                     certificate_title=form.certificate_title.data,
                     event_type_id=form.event_type.data,
+                    template_path=template_path,
                     presenter_name=form.presenter_name.data,
                     secret_phrase=form.secret_phrase.data,
                     event_date=form.date.data,
-                    certificate_description=form.certificate_description.data,
-                    file_path=file_path,  # Assuming file_path is set earlier in your code
+                    certificate_description_female=form.certificate_description_female.data,
+                    certificate_description_male=form.certificate_description_male.data,
+                    file_path=file_path,  
                     First_Signatory_Name=form.signatory_name_1.data,
                     First_Signatory_Position=form.signatory_position_1.data,
                     First_Signatory_Path=image_path_1,
                     Second_Signatory_Name=form.signatory_name_2.data,
                     Second_Signatory_Position=form.signatory_position_2.data,
-                    Second_Signatory_Path=image_path_2
+                    Second_Signatory_Path=image_path_2,
+                    greeting_female=form.greeting_female.data,
+                    greeting_male=form.greeting_male.data,  
+                    intro=form.intro.data,
+                    male_recipient_title=form.male_recipient_title.data,
+                    female_recipient_title=form.female_recipient_title.data,
                 )
+
 
                 # Add the new event to the session and commit it to the database
                 try:
@@ -495,7 +502,7 @@ def load_more_certificates():
                 'presenter_name': certificate.presenter_name,
                 'certificate_event_id': certificate.certificate_event_id,
                 'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-                'certificate_description': certificate.certificate_description,
+                'certificate_description_female': certificate.certificate_description_female,
                 'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
             }
             for certificate in additional_certificates
@@ -666,7 +673,31 @@ def selectTemp():
     user_templates = db_classes.Template.query.filter_by(id=current_user.id).all()
     return render_template("select_template.html", templates=user_templates)
 
+########
+@app.route('/preview_certificate', methods=['POST'])
+def preview_certificate():
+    try:
+        # Get the selected template and other details from the request
+        data = request.get_json()
+        selected_template = data.get('selected_template')
 
+        # Load default event data
+        with open('events/sample-event.yaml', 'r') as file:
+            event_data = yaml.safe_load(file)
+
+        # Update the template path with the selected template
+        event_data['certificate_background'] = selected_template
+
+        # Run main.py with updated event data
+        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
+        if result.returncode == 0:
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': result.stderr})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+######
 @app.route('/fetch_latest_pdf', methods=['GET'])
 def fetch_latest_pdf():
     # The path to the output directory, considering the Docker container's file system
@@ -692,12 +723,20 @@ def fetch_latest_pdf():
         return jsonify({'error': 'An internal error occurred'}), 500
 
 
-@app.route('/run_main_script', methods=['GET'])
+@app.route('/run_main_script', methods=['POST'])
 def run_main_script():
     try:
-        # Adjust the path according to your folder structure
+        # Retrieve event data from the request body, if provided
+        event_data = request.json.get('event_data', None)
+
         script_path = os.path.join(os.getcwd(), 'main.py')
-        result = subprocess.run(['python', script_path], check=True, capture_output=True, text=True)
+        command = ['python', script_path]
+
+        # If event data is provided, pass it as an argument to main.py
+        if event_data:
+            command += ['--event_data', json.dumps(event_data)]
+
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
         return jsonify({'success': True, 'output': result.stdout})
     except subprocess.CalledProcessError as e:
         return jsonify({'success': False, 'error': str(e)})
@@ -715,17 +754,25 @@ def generate_certificate(certificate_event_id):
             'certificate_event_id': str(certificate.certificate_event_id),
             'certificate_title': certificate.certificate_title,
             'event_type_id': certificate.event_type_id,
+            'template_path': certificate.template_path,
             'presenter_name': certificate.presenter_name,
             'secret_phrase': certificate.secret_phrase,
             'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-            'certificate_description': certificate.certificate_description,
+            'certificate_description_female': certificate.certificate_description_female,
+            'certificate_description_male': certificate.certificate_description_male,
             'file_path': certificate.file_path,
             'First_Signatory_Name': certificate.First_Signatory_Name,
             'First_Signatory_Position': certificate.First_Signatory_Position,
             'First_Signatory_Path': certificate.First_Signatory_Path,
             'Second_Signatory_Name': certificate.Second_Signatory_Name,
             'Second_Signatory_Position': certificate.Second_Signatory_Position,
-            'Second_Signatory_Path': certificate.Second_Signatory_Path
+            'Second_Signatory_Path': certificate.Second_Signatory_Path,
+            'greeting_female': certificate.greeting_female,
+            'greeting_male': certificate.greeting_male,
+            'intro': certificate.intro,
+            'male_recipient_title': certificate.male_recipient_title,
+            'female_recipient_title': certificate.female_recipient_title,
+            # ... add other fields as needed ...
         }
         
         result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
@@ -735,7 +782,6 @@ def generate_certificate(certificate_event_id):
             return jsonify({'success': False, 'error': result.stderr})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
-
 
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required

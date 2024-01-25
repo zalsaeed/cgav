@@ -179,8 +179,10 @@ class Certificate:
 
         self.signature_filed(10, 190, 10, 50, self.dean_name, self.dean_position,
                              self.path_to_dean_signature)
-        self.signature_filed(123.5, 190, 10, 50, self.csu_director_name, self.csu_position,
-                             self.path_to_csu_head_signature)
+        # Second signature - process only if the path is provided
+        if self.path_to_csu_head_signature is not None:
+            self.signature_filed(123.5, 190, 10, 50, self.csu_director_name, self.csu_position,
+                                self.path_to_csu_head_signature)
 
         self.greeting(self.greeting_txt, 165)
 

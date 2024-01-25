@@ -51,8 +51,10 @@ CREATE TABLE template
                 gender VARCHAR(5),
                 email VARCHAR(255),
                 phone_number VARCHAR(20),
-                greeting_female TEXT, -- Add this line for the female greeting
-                greeting_male TEXT,   -- And this line for the male greeting
+                greeting_female TEXT,
+                -- Add this line for the female greeting
+                greeting_male TEXT,
+                -- And this line for the male greeting
                 PRIMARY KEY (recipient_id)
             );
 
@@ -93,19 +95,22 @@ CREATE TABLE template
                 certificate_title VARCHAR(255),--
                 event_type_id INT(255) NULL,
                 -- Allow NULL values for event_type_id
+                template_path VARCHAR(255),
+                intro VARCHAR(255),
+                female_recipient_title VARCHAR(255),
+                male_recipient_title VARCHAR(255),
                 recipient_id VARCHAR(255),
                 customization_id VARCHAR(255) NULL,
                 template_id INT(255),
                 instructor_id VARCHAR(255),
                 event_start_date DATETIME,
                 event_end_date DATETIME,
-                description VARCHAR(320),
                 secret_key VARCHAR(255),
-
                 presenter_name VARCHAR(255),
                 secret_phrase VARCHAR(255),
                 event_date DATETIME,
-                certificate_description TEXT,
+                certificate_description_female TEXT,
+                certificate_description_male TEXT,
                 file_path VARCHAR(255),
                 first_Signatory_Name VARCHAR(255),
                 first_Signatory_Position VARCHAR(255),
@@ -113,6 +118,10 @@ CREATE TABLE template
                 second_Signatory_Name VARCHAR(255),
                 second_Signatory_Position VARCHAR(255),
                 second_Signatory_Path VARCHAR(255),
+                greeting_female TEXT,
+                -- Add this line for the female greeting
+                greeting_male TEXT,
+                -- And this line for the male greeting
                 PRIMARY KEY (certificate_event_id),
                 FOREIGN KEY (template_id) REFERENCES template(template_id),
                 FOREIGN KEY (event_type_id) REFERENCES Event_type(event_type_id),

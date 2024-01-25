@@ -208,58 +208,33 @@
         }
     }
     function previewCertificate() {
-        var imageElement = document.querySelector('.Image-container img');
-        var pdfViewer = document.getElementById('pdfViewer');
-        var pdfFrame = document.getElementById('pdfFrame');
-        var pdfContainer = document.getElementById('contain')
+        var selectedTemplatePath = document.getElementById('selectedTemplatePath').value;  // Ensure this ID matches your HTML element
 
-        // Hide the image and show the PDF viewer
-        imageElement.style.display = 'none';
-
-        // Show the PDF viewer
-        pdfViewer.style.display = 'block';
-        pdfViewer.style.width = '80%';    // Ensure the iframe fills the container
-        pdfViewer.style.height = '100%';  // Adjust the height as necessary
-        pdfViewer.style.marginRight = '15rem'
-        pdfViewer.style.marginBottom = '15rem'
-        // Function to execute '/run_main_script' and then immediately execute '/fetch_latest_pdf'
-        function executeRunMainScriptAndFetchPDF() {
-            fetch('/run_main_script')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log("main.py executed successfully.");
-                        fetchLatestPDF();
-                    } else {
-                        console.error("Error executing main.py:", data.error);
-                    }
-                });
-        }
-
-        // Function to execute '/fetch_latest_pdf'
-        function fetchLatestPDF() {
-            fetch('/fetch_latest_pdf')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.pdfUrl) {
-                        // Set the iframe dimensions to fill its container, adjust as necessary
-                        pdfFrame.style.width = '120%';
-                        pdfFrame.style.height = '80%';
-                        pdfContainer.style.marginBottom = '10rem';
-                        pdfFrame.src = data.pdfUrl + "#toolbar=0";
-                    } else {
-                        alert('PDF not found');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while fetching the PDF.');
-                });
-        }
-
-        // Start by executing '/run_main_script' and then immediately execute '/fetch_latest_pdf'
-        executeRunMainScriptAndFetchPDF();
+        fetch('/preview_certificate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ template_path: selectedTemplatePath })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Handle successful response
+                } else {
+                    console.error('Preview generation error:', data.error);
+                    alert('Error generating preview: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('An error occurred while generating the preview.');
+            });
     }
+
 </script>
 
 {% endblock %}
