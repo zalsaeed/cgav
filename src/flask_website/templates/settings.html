@@ -14,6 +14,17 @@
     </div>
     <div class="content">
         <div class="public-profile-container">
+            {% for mesg in get_flashed_messages() %}
+            <!-- Alert Success  -->
+            <div
+              class="flex justify-between text-white-200 shadow-inner rounded p-3 bg-yellow-600"
+            >
+              <p class="self-center">{{ mesg }}</p>
+              <strong class="text-xl align-center cursor-pointer alert-del"
+                >&times;</strong
+              >
+            </div>
+            {% endfor %}
             <h2>Public Profile</h2>
             <div class="profile-field">
                 <label for="displayName">Name:</label>
@@ -68,6 +79,17 @@ function loadPublicProfile() {
             // Assuming response is a JSON object containing user data
             const profileContent = `
                 <div class="public-profile-container">
+                    {% for mesg in get_flashed_messages() %}
+                    <!-- Alert Success  -->
+                    <div
+                      class="flex justify-between text-white-200 shadow-inner rounded p-3 bg-yellow-600"
+                    >
+                      <p class="self-center">{{ mesg }}</p>
+                      <strong class="text-xl align-center cursor-pointer alert-del"
+                        >&times;</strong
+                      >
+                    </div>
+                    {% endfor %}
                     <h2>Public Profile</h2>
                     <div class="profile-field">
                         <label>Name:</label>
@@ -91,13 +113,21 @@ function loadPublicProfile() {
                 </div>
             `;
             $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
+            var alert_del = document.querySelectorAll(".alert-del");
+            alert_del.forEach((x) =>
+              x.addEventListener("click", function () {
+                x.parentElement.classList.add("hidden");
+              })
+            );
         },
         error: function(error) {
             // Show user-friendly error message
             showError('An error occurred while loading the profile.');
             console.log(error); // Log the error for debugging
         }
+        
     }).always(hideLoading); // Hide loading indicator when the request is complete
+    
 }
 
 $(document).ready(function() {
@@ -123,6 +153,14 @@ $(document).ready(function() {
         });
     });
 });
+// Script For Close alert
+
+var alert_del = document.querySelectorAll(".alert-del");
+    alert_del.forEach((x) =>
+      x.addEventListener("click", function () {
+        x.parentElement.classList.add("hidden");
+      })
+    );
 </script>
 
 
