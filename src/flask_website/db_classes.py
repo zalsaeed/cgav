@@ -82,12 +82,12 @@ class UpdateForm(FlaskForm):
 
 
 # Certificates classes
-class Template(db.Model):
-    __tablename__ = 'template'
-    template_id = db.Column(db.Integer, primary_key=True, unique=True )
-    id = db.Column(db.Integer)
-    template_name = db.Column(db.String(30), nullable=False)
-    template_image = db.Column(db.String(300), nullable=False)
+# class Template(db.Model):
+#     __tablename__ = 'template'
+#     template_id = db.Column(db.Integer, primary_key=True, unique=True )
+#     id = db.Column(db.Integer)
+#     template_name = db.Column(db.String(30), nullable=False)
+#     template_image = db.Column(db.String(300), nullable=False)
 
 
 # class Event_type(db.Model):

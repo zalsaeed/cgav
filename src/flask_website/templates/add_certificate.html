@@ -98,7 +98,7 @@
 
       <div class="mb-3">
         {{ form.certificate_description_female.label(class="form-label") }}
-        {{ form.certificate_description_female(class="form-control", placeholder="Enter event description") }}
+        {{ form.certificate_description_female(class="form-control",style="width: -webkit-fill-available;", placeholder="Enter event description") }}
         {% for error in form.certificate_description_female.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
@@ -106,7 +106,7 @@
 
       <div class="mb-3">
         {{ form.certificate_description_male.label(class="form-label") }}
-        {{ form.certificate_description_male(class="form-control", placeholder="Enter event description") }}
+        {{ form.certificate_description_male(class="form-control", style="width: -webkit-fill-available;",placeholder="Enter event description") }}
         {% for error in form.certificate_description_male.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}

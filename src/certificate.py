@@ -95,32 +95,31 @@ class Certificate:
 
         """
 
-    def certificate_info(self, x: float, y: float, h: float, w: float):
-        # intro: str, recipient_name: str, recipient_title:str, certificate_details: str
-        intro_width = self.pdf.get_string_width(self.certificate_intro)
-        intro_x = (self.pdf.w - intro_width) / 2
-        self.pdf.set_xy(intro_x, y)
-        self.pdf.cell(intro_width, h, get_display(reshape(self.certificate_intro)), border=0, align="C", fill=False)
-        
-        recipient_title_width = self.pdf.get_string_width(self.recipient_title)
+    def certificate_info(self, intro_x: float, intro_y: float, intro_w: float, intro_h: float,
+                     name_x: float, name_y: float, name_w: float, name_h: float,
+                     title_x: float, title_y: float, title_w: float, title_h: float,
+                     body_x: float, body_y: float, body_w: float, body_h: float):
+        # intro
+        self.pdf.set_xy(intro_x, intro_y)
+        self.pdf.cell(intro_w, intro_h, get_display(reshape(self.certificate_intro)), border=0, align="C", fill=False)
+        # recipient_name
         recipient_name_width = self.pdf.get_string_width(self.recipient_name)
-        left_margin = (self.pdf.w - (recipient_name_width + recipient_title_width)) / 2
-        
-        self.pdf.set_xy(left_margin, y+h)
+        left_margin_name = (name_w - recipient_name_width) / 2
+        self.pdf.set_xy(name_x + left_margin_name, name_y)
         self.pdf.set_font(DEFAULT_FONT[0], size=DEFAULT_FONT[1], style="B")
-        self.pdf.cell(recipient_name_width, h, get_display(reshape(self.recipient_name)), border=0, align="C",
-                      fill=False)
-        
-        self.pdf.set_xy(left_margin+recipient_name_width, y+h)
+        self.pdf.cell(recipient_name_width, name_h, get_display(reshape(self.recipient_name)), border=0, align="C", fill=False)
+        # recipient_title
+        recipient_title_width = self.pdf.get_string_width(self.recipient_title)
+        left_margin_title = (title_w - recipient_title_width) / 2
+        self.pdf.set_xy(title_x + left_margin_title, title_y)
         self.pdf.set_font(DEFAULT_FONT[0], size=DEFAULT_FONT[1], style="")
-        self.pdf.cell(recipient_title_width, h, get_display(reshape(self.recipient_title)), border=0, align="C",
-                      fill=False)
+        self.pdf.cell(recipient_title_width, title_h, get_display(reshape(self.recipient_title)), border=0, align="C", fill=False)
+        # certificate_body
 
-        body_lines = util.break_string_into_chunks(self.certificate_body, len(self.certificate_intro))
+        body_lines = util.break_string_into_chunks(self.certificate_body, 58)
         for idx, line in enumerate(body_lines):
-
-            self.pdf.set_xy(intro_x, y+(h*(idx+2)))
-            self.pdf.cell(intro_width, h, get_display(reshape(line)), border=0, align="C", fill=False)
+            self.pdf.set_xy(body_x, body_y + (body_h * idx))
+            self.pdf.cell(body_w, body_h, get_display(reshape(line)), border=0, align="C", fill=False)
 
     def signature_filed(self, x: float, y: float, h: float, w: float, name: str, position: str, signature: str):
         # the dean signature line
@@ -167,34 +166,68 @@ class Certificate:
 
         self.pdf.set_text_color(0, 0, 0)  # set it back to black
         self.pdf.set_font(DEFAULT_FONT[0], size=DEFAULT_FONT[1])
-
-    def generate_certificate(self, output_dir: str):
-
-        x = 140
-        y = 100
-        w = 17
-        h = 13
-
-        self.certificate_info(x, y, h, w)
-
-        self.signature_filed(10, 190, 10, 50, self.dean_name, self.dean_position,
+    
+    def generate_certificate(self, output_dir: str,get_certificate_customizations):
+        customization = get_certificate_customizations
+        if customization:
+            # Extract values for Certificate_Title
+            certificate_intro_values = customization.get("Intro", {})
+            intro_x=certificate_intro_values.get("x",0)
+            intro_y=certificate_intro_values.get("y",0)
+            intro_w=certificate_intro_values.get("w",0)
+            intro_h=certificate_intro_values.get("h",0)
+            recipient_title_values = customization.get("recipient_title", {})
+            title_x=recipient_title_values.get("x",0)
+            title_y=recipient_title_values.get("y",0)
+            title_w=recipient_title_values.get("w",0)
+            title_h=recipient_title_values.get("h",0)
+            recipient_name_values = customization.get("recipient_name", {})
+            name_x=recipient_name_values.get("x",0)
+            name_y=recipient_name_values.get("y",0) 
+            name_w=recipient_name_values.get("w",0)
+            name_h=recipient_name_values.get("h",0)
+            body_values = customization.get("body", {})
+            body_x=body_values.get("x",0)
+            body_y=body_values.get("y",0)
+            body_w=body_values.get("w",0)
+            body_h=body_values.get("h",0)
+            final_greeting_values = customization.get("final_greeting", {})
+            greeting_y=final_greeting_values.get("y",0)
+            contact_info_values = customization.get("contact_info", {})
+            contact_info_x=contact_info_values.get("x",0)
+            contact_info_y=contact_info_values.get("y",0)
+            signature_1_values =customization.get("signature_1", {})
+            signature_1_x = signature_1_values.get("x",0)
+            signature_1_y = signature_1_values.get("y",0)
+            signature_1_w = signature_1_values.get("w",0)
+            signature_1_h = signature_1_values.get("h",0)
+            signature_2_values =customization.get("signature_2", {})
+            signature_2_x = signature_2_values.get("x",0)
+            signature_2_y = signature_2_values.get("y",0)
+            signature_2_w = signature_2_values.get("w",0)
+            signature_2_h = signature_2_values.get("h",0)
+            self.certificate_info(intro_x, intro_y, intro_w, intro_h,name_x, name_y, name_w, name_h,
+                              title_x, title_y, title_w, title_h,
+                              body_x, body_y, body_w, body_h)
+            
+            self.signature_filed(signature_1_x, signature_1_y, signature_1_h, signature_1_w, self.dean_name, self.dean_position,
                              self.path_to_dean_signature)
-        # Second signature - process only if the path is provided
-        if self.path_to_csu_head_signature is not None:
-            self.signature_filed(123.5, 190, 10, 50, self.csu_director_name, self.csu_position,
+            # Second signature - process only if the path is provided
+            if self.path_to_csu_head_signature is not None:
+                self.signature_filed(signature_2_x, signature_2_y,signature_2_h, signature_2_w, self.csu_director_name, self.csu_position,
                                 self.path_to_csu_head_signature)
-
-        self.greeting(self.greeting_txt, 165)
-
-        contact_info_dict = {
-            1: ["img/globe.png", "coc.qu.edu.sa", "https://coc.qu.edu.sa"],
-            2: ["img/x-logo.png", "@coc_qu_sa", "https://twitter.com/coc_qu_sa"],
-            3: ["img/checkmark.png", self.certificate_hash, ""]
-        }
-
-        self.contact_info(contact_info_dict, 250, 180)
-
-        self.log.debug(f"Hash: '{self.certificate_hash}'")
-        util.make_sure_path_exists(output_dir)
-        self.pdf.output(f"{output_dir}/{self.recipient_email}-{self.certificate_hash}.pdf")
-        self.pdf.close()
+            
+            self.greeting(self.greeting_txt, greeting_y)
+            contact_info_dict = {
+                1: ["img/globe.png", "coc.qu.edu.sa", "https://coc.qu.edu.sa"],
+                2: ["img/x-logo.png", "@coc_qu_sa", "https://twitter.com/coc_qu_sa"],
+                3: ["img/checkmark.png", self.certificate_hash, ""]
+                }
+            self.contact_info(contact_info_dict, contact_info_x, contact_info_y)
+            
+            self.log.debug(f"Hash: '{self.certificate_hash}'")
+            util.make_sure_path_exists(output_dir)
+            self.pdf.output(f"{output_dir}/{self.recipient_email}-{self.certificate_hash}.pdf")
+            self.pdf.close()
+        else:
+             print("erorr")

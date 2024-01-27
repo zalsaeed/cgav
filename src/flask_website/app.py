@@ -11,8 +11,8 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
-from db_classes import Template
-from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations
+# from db_classes import Template
+from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
 import csv
 from io import StringIO
@@ -309,6 +309,7 @@ def add_certificate():
                     certificate_event_id=str(uuid.uuid4()),
                     certificate_title=form.certificate_title.data,
                     event_type_id=form.event_type.data,
+                    template_id =form.template_choice.data,
                     template_path=template_path,
                     presenter_name=form.presenter_name.data,
                     secret_phrase=form.secret_phrase.data,
@@ -594,7 +595,7 @@ def newtemp():
                                secure_filename(file.filename)))
 
 
-        new_template = db_classes.Template(template_name=form.template_name.data,
+        new_template = Template(template_name=form.template_name.data,
                                            id = current_user.id,
                                            template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
         db.session.add(new_template)
@@ -610,11 +611,11 @@ def newtemp():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-@app.route('/Select_template/<tempname>',methods=['GET',"POST"])
-def template(tempname):
-    temp = db_classes.Template.query.filter_by(template_name=tempname).first()
-    tempid= temp.template_id if temp else None
-    temp = db_classes.Template.query.get_or_404(tempid)
+@app.route('/Select_template/<temp_id>',methods=['GET',"POST"])
+def template(temp_id):
+    # temp = db_classes.Template.query.filter_by(template_name=tempname).first()
+    # tempid= temp.template_id if temp else None
+    temp = Template.query.get_or_404(temp_id)
     form=db_classes.customizationForm()
     json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
     ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
@@ -670,7 +671,7 @@ def template(tempname):
 @app.route("/Select_template", methods=['GET',"POST"])
 def selectTemp():
      # Assuming the user ID is stored in the id field of the User model
-    user_templates = db_classes.Template.query.filter_by(id=current_user.id).all()
+    user_templates = Template.query.filter_by(id=current_user.id).all()
     return render_template("select_template.html", templates=user_templates)
 
 ########
@@ -747,6 +748,7 @@ def run_main_script():
 def generate_certificate(certificate_event_id):
     try:
         certificate = CertificateEvent.query.get(certificate_event_id)
+        customization = CertificateCustomizations.query.filter_by(template_id=certificate.template_id).first()
         if not certificate:
             return jsonify({'success': False, 'error': 'Certificate not found'}), 404
 
@@ -774,15 +776,28 @@ def generate_certificate(certificate_event_id):
             'female_recipient_title': certificate.female_recipient_title,
             # ... add other fields as needed ...
         }
-        
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
+
+        if customization:
+            items_positions={
+                "Certificate_Title":customization.items_positions["Certificate_Title"],
+                "Intro": customization.items_positions["Intro"],
+                "recipient_title":customization.items_positions["recipient_title"],
+                "recipient_name":customization.items_positions["recipient_name"],
+                "body":customization.items_positions["body"] ,
+                "final_greeting":customization.items_positions["final_greeting"] ,
+                "contact_info":customization.items_positions["contact_info"],
+                "signature_1": customization.items_positions["signature_1"],
+                "signature_2": customization.items_positions["signature_2"]}
+        else:
+            items_positions={}
+        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'success': True})
         else:
             return jsonify({'success': False, 'error': result.stderr})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
-
+    
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required
 def send_email():

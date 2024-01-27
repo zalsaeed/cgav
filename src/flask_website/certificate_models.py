@@ -20,8 +20,10 @@ class CertificateEvent(db.Model):
     certificate_title = db.Column(db.String(255))
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
     template_path = db.Column(db.String(255))
+    template_id = db.Column(db.Integer, db.ForeignKey('template.template_id'))
     # Define the relationship to EventType
     event_type = relationship('EventType', backref='certificates')
+    template = db.relationship('Template', backref='certificates')
     presenter_name = db.Column(db.String(255))  # New field
     secret_phrase = db.Column(db.String(255))  # New field
     event_date = db.Column(db.DateTime)  # New field
@@ -39,6 +41,14 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
+
+# Certificates classes
+class Template(db.Model):
+    __tablename__ = 'template'
+    template_id = db.Column(db.Integer, primary_key=True, unique=True )
+    id = db.Column(db.Integer)
+    template_name = db.Column(db.String(30), nullable=False)
+    template_image = db.Column(db.String(300), nullable=False)
 
 class CertificateCustomizations(db.Model):
     __tablename__ = 'CertificateCustomizations'
