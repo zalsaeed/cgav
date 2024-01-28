@@ -246,16 +246,10 @@ def add_certificate():
     message = ""
     show_second_signatory = 'second_signatory' in request.args
 
-    # Retrieve active event types and templates from the database
+    # Initialize form choices
     active_event_types = EventType.query.filter_by(is_active=True).all()
-    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in
-                               active_event_types]
-    # Retrieve the selected template
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
 
-    templates = Template.query.all()
-    form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
-    
     templates = Template.query.all()
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
@@ -304,7 +298,7 @@ def add_certificate():
                     signatory_name_2 = None
                     signatory_position_2 = None
                     image_path_2 = None
-               
+
                 new_certificate_event = CertificateEvent(
                     certificate_event_id=str(uuid.uuid4()),
                     certificate_title=form.certificate_title.data,
@@ -316,20 +310,31 @@ def add_certificate():
                     event_date=form.date.data,
                     certificate_description_female=form.certificate_description_female.data,
                     certificate_description_male=form.certificate_description_male.data,
-                    file_path=file_path,  
-                    First_Signatory_Name=form.signatory_name_1.data,
-                    First_Signatory_Position=form.signatory_position_1.data,
-                    First_Signatory_Path=image_path_1,
-                    Second_Signatory_Name=form.signatory_name_2.data,
-                    Second_Signatory_Position=form.signatory_position_2.data,
-                    Second_Signatory_Path=image_path_2,
-                    greeting_female=form.greeting_female.data,
-                    greeting_male=form.greeting_male.data,  
-                    intro=form.intro.data,
-                    male_recipient_title=form.male_recipient_title.data,
-                    female_recipient_title=form.female_recipient_title.data,
-                )
+                    file_path=file_path,
 
+                    First_Signatory_Path=image_path_1,
+
+                    Second_Signatory_Path=image_path_2,
+
+                    male_recipient_title_en=form.male_recipient_title_en.data,
+                    male_recipient_title_ar=form.male_recipient_title_ar.data,
+                    female_recipient_title_en=form.female_recipient_title_en.data,
+                    female_recipient_title_ar=form.female_recipient_title_ar.data,
+                    intro_en=form.intro_en.data,
+                    intro_ar=form.intro_ar.data,
+                    greeting_female_en=form.greeting_female_en.data,
+                    greeting_female_ar=form.greeting_female_ar.data,
+                    greeting_male_en=form.greeting_male_en.data,
+                    greeting_male_ar=form.greeting_male_ar.data,
+                    signatory_name_1_en=form.signatory_name_1_en.data,
+                    signatory_name_1_ar=form.signatory_name_1_ar.data,
+                    signatory_position_1_en=form.signatory_position_1_en.data,
+                    signatory_position_1_ar=form.signatory_position_1_ar.data,
+                    signatory_name_2_en=form.signatory_name_2_en.data,
+                    signatory_name_2_ar=form.signatory_name_2_ar.data,
+                    signatory_position_2_en=form.signatory_position_2_en.data,
+                    signatory_position_2_ar=form.signatory_position_2_ar.data
+                )
 
                 # Add the new event to the session and commit it to the database
                 try:
