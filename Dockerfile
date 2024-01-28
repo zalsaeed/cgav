@@ -1,8 +1,7 @@
 FROM python:3.9
 
 RUN apt-get update -y
-RUN apt-get install -y vim curl nodejs  ripgrep
-# RUN apt-get install -y vim curl nodejs npm ripgrep
+RUN apt-get install -y vim curl nodejs npm ripgrep
 
 # a beautiful bash!
 COPY resources/.bash_profile /root/.bash_profile
@@ -20,7 +19,7 @@ COPY resources/hotkeys /root/.vim/hotkeys
 # RUN chomd 444 ~/.vim/hotkeys  # do we really neeed to?
 
 # install yarn, as needed for some vim plugins
-# RUN npm install --global yarn
+RUN npm install --global yarn
 
 # Install all listed plugins:
 # RUN vim -c 'PlugInstall' -c 'qa!' ~/.vimrc
