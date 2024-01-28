@@ -209,11 +209,11 @@ class Certificate:
             self.certificate_info(intro_x, intro_y, intro_w, intro_h,name_x, name_y, name_w, name_h,
                               title_x, title_y, title_w, title_h,
                               body_x, body_y, body_w, body_h)
-            
-            self.signature_filed(signature_1_x, signature_1_y, signature_1_h, signature_1_w, self.dean_name, self.dean_position,
+            if (signature_1_x >0 and signature_1_y >0 and signature_1_w >0):
+                self.signature_filed(signature_1_x, signature_1_y, signature_1_h, signature_1_w, self.dean_name, self.dean_position,
                              self.path_to_dean_signature)
             # Second signature - process only if the path is provided
-            if self.path_to_csu_head_signature is not None:
+            if (self.path_to_csu_head_signature is not None)and (signature_2_x >0 and signature_2_y>0 and signature_2_w >0):
                 self.signature_filed(signature_2_x, signature_2_y,signature_2_h, signature_2_w, self.csu_director_name, self.csu_position,
                                 self.path_to_csu_head_signature)
             

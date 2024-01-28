@@ -182,8 +182,8 @@ class ChangeNameForm(FlaskForm):
 
 class customizationForm(FlaskForm):
     item = StringField()
-    x = IntegerField('*x_postion',validators=[DataRequired()])
-    y = IntegerField('*y_postion',validators=[DataRequired()])
-    h = IntegerField('*Height',validators=[DataRequired()])
-    w = IntegerField('*Width',validators=[DataRequired()])
+    x = IntegerField('*x_postion')
+    y = IntegerField('*y_postion')
+    h = IntegerField('*Height')
+    w = IntegerField('*Width')
     submit = SubmitField('Save')

@@ -5,7 +5,7 @@ certificate_background: "certificate-templates/sample_background.png"
 
 intro: "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن"
 
-csv_file: 'data/sample-data.csv'
+csv_file: 'data/sample-datarow.csv'
 
 male_recipient_title: "المتدرب:"
 female_recipient_title: "المتدربة:"

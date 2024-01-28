@@ -637,13 +637,13 @@ def template(temp_id):
         form_item = form.item.data  # Assuming form.item is a Flask-WTF field
         form_x = form.x.data
         form_y = form.y.data
-        form_w = form.w.data
         form_h = form.h.data
+        form_w = form.w.data
         if form_item in customization_data:
             customization_data[form_item]['x'] = form_x
             customization_data[form_item]['y'] = form_y
-            customization_data[form_item]['w'] = form_w
             customization_data[form_item]['h'] = form_h
+            customization_data[form_item]['w'] = form_w
         with open(custom_file, 'w') as file:
             json.dump(customization_data, file, indent=2)
         
@@ -724,21 +724,32 @@ def fetch_latest_pdf():
         return jsonify({'error': 'An internal error occurred'}), 500
 
 
-@app.route('/run_main_script', methods=['POST'])
-def run_main_script():
+@app.route('/run_main_script/<temp_id>', methods=['POST'])
+def run_main_script(temp_id):
     try:
-        # Retrieve event data from the request body, if provided
-        event_data = request.json.get('event_data', None)
-
-        script_path = os.path.join(os.getcwd(), 'main.py')
-        command = ['python', script_path]
-
-        # If event data is provided, pass it as an argument to main.py
-        if event_data:
-            command += ['--event_data', json.dumps(event_data)]
-
-        result = subprocess.run(command, check=True, capture_output=True, text=True)
+        customization = CertificateCustomizations.query.filter_by(template_id=temp_id).first()
+        template= Template.query.filter_by(template_id=temp_id).first()
+        event_data = {
+            'template_path': template.template_image,
+        }
+        if customization:
+            items_positions={
+                "Certificate_Title":customization.items_positions["Certificate_Title"],
+                "Intro": customization.items_positions["Intro"],
+                "recipient_title":customization.items_positions["recipient_title"],
+                "recipient_name":customization.items_positions["recipient_name"],
+                "body":customization.items_positions["body"] ,
+                "final_greeting":customization.items_positions["final_greeting"] ,
+                "contact_info":customization.items_positions["contact_info"],
+                "signature_1": customization.items_positions["signature_1"],
+                "signature_2": customization.items_positions["signature_2"]}
+        else:
+            items_positions={}
+        # Adjust the path according to your folder structure
+        # script_path = os.path.join(os.getcwd(), 'main.py')
+        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         return jsonify({'success': True, 'output': result.stdout})
+    
     except subprocess.CalledProcessError as e:
         return jsonify({'success': False, 'error': str(e)})
 
