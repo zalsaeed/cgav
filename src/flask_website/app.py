@@ -606,7 +606,7 @@ def newtemp():
         db.session.add(new_template)
         db.session.commit()
 
-        flash('You Add New Templates Successfully.')
+        flash('A new template has been added successfully.')
         return redirect(url_for('selectTemp'))  # It's better to use url_for() here
 
     return render_template('create_new_template.html', form=form)
