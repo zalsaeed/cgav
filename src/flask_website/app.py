@@ -825,6 +825,7 @@ def generate_certificate(certificate_event_id):
 
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
+        
         result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'success': True})

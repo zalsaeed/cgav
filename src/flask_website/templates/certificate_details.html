@@ -5,6 +5,8 @@
 {% block title %}Event Details{% endblock %}
 
 {% block body %}
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="container mt-5">
   <h1 class="mb-4 text-center">Event Details</h1>
   <div class="card">
@@ -201,37 +203,56 @@
       })
       .then(data => {
         if (data.success) {
-          console.log("Certificate generation initiated.");
+          Swal.fire({
+            title: 'Success!',
+            text: 'Certificate Generate Seccessfully .',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          });
         } else {
-          console.error("Error initiating certificate generation:", data.error);
+          Swal.fire({
+            title: 'Error!',
+            text: `Error initiating certificate generation: ${data.error}`,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
         }
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: `Error: ${error}`,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      });
   }
+
 
   // Downloud section 
   function handleDownload() {
-  // Make an AJAX request to the new Flask route
-  fetch(`/download_latest_event_certificates`, {
-    method: 'GET',
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.blob();
+    // Make an AJAX request to the new Flask route
+    fetch(`/download_latest_event_certificates`, {
+      method: 'GET',
     })
-    .then(data => {
-      // Create a blob URL for the zip file and trigger the download
-      const blobUrl = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = 'latest_event_certificates.zip';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    })
-    .catch(error => console.error('Error:', error));
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.blob();
+      })
+      .then(data => {
+        // Create a blob URL for the zip file and trigger the download
+        const blobUrl = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = 'latest_event_certificates.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      })
+      .catch(error => console.error('Error:', error));
   }
 
   ////////////////
