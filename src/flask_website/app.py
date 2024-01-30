@@ -178,6 +178,7 @@ def delete_user(id):
 
 # New route for Manage Event Types
 @app.route('/manage_event_types', methods=['GET', 'POST'])
+@login_required
 def manage_event_types():
     if request.method == 'POST':
         new_type = request.form.get('newTypeName')
@@ -243,6 +244,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
 @app.route('/add_certificate', methods=['GET', 'POST'])
+@login_required
 def add_certificate():
     form = CertificateForm()
     message = ""
@@ -588,6 +590,7 @@ def send_delete_confirmation_email(certificate):
 
 
 @app.route("/create_new_template", methods=['GET', "POST"])
+@login_required
 def newtemp():
     form = db_classes.NewTemplates()
     if form.validate_on_submit():
@@ -613,6 +616,7 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/Select_template/<temp_id>',methods=['GET',"POST"])
+@login_required
 def template(temp_id):
     # temp = db_classes.Template.query.filter_by(template_name=tempname).first()
     # tempid= temp.template_id if temp else None
@@ -665,14 +669,19 @@ def template(temp_id):
             # Add and commit the new record to the database
             db.session.add(new_customization)
             db.session.commit()
+        flash(f'You Add Customizations Successfully.')
 
     return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
 
 
 @app.route("/Select_template", methods=['GET',"POST"])
+@login_required
 def selectTemp():
      # Assuming the user ID is stored in the id field of the User model
-    user_templates = Template.query.filter_by(id=current_user.id).all()
+    if current_user.user_role == 1 :
+        user_templates = Template.query.all()
+    else:
+        user_templates = Template.query.filter_by(id=current_user.id).all()
     return render_template("select_template.html", templates=user_templates)
 
 ########
