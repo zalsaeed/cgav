@@ -209,7 +209,30 @@
       .catch(error => console.error('Error:', error));
   }
 
-
+  // Downloud section 
+  function handleDownload() {
+  // Make an AJAX request to the new Flask route
+  fetch(`/download_latest_event_certificates`, {
+    method: 'GET',
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.blob();
+    })
+    .then(data => {
+      // Create a blob URL for the zip file and trigger the download
+      const blobUrl = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = 'latest_event_certificates.zip';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    })
+    .catch(error => console.error('Error:', error));
+  }
 
   ////////////////
   // Other buttons (Generate, downloud, send)

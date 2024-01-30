@@ -19,6 +19,7 @@ from io import StringIO
 from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
 import subprocess
+import shutil
 
 from werkzeug.utils import secure_filename
 
@@ -856,6 +857,20 @@ def send_email():
             flash("Default emails sent successfully!", "success")
 
     return render_template('send_email.html')
+
+
+@app.route('/download_latest_event_certificates', methods=['GET'])
+def download_latest_event_certificates():
+    # The path to the latest event folder
+    latest_event_folder = os.path.abspath("/root/src/flask_website/static/output")
+
+    # Create a zip file containing all PDFs in the folder
+    zip_file_path = os.path.join(os.getcwd(), 'latest_event_certificates.zip')
+    shutil.make_archive(zip_file_path[:-4], 'zip', latest_event_folder)
+
+    # Send the zip file for download
+    return send_from_directory(os.getcwd(), 'latest_event_certificates.zip', as_attachment=True)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
