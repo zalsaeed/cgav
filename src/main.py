@@ -122,6 +122,7 @@ def generate_certificate(event_data, output_dir, item_postions):
             "certificate_hash": certificate.certificate_hash,
             "date_issued": datetime.datetime.now().date()
         })
+        
      # Generate report CSV
     report_filename = util.make_file_name_compatible(f"{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)

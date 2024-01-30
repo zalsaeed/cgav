@@ -5,8 +5,11 @@
 {% block body %}
 <div class="container mt-5">
   <h1 class="mb-4 text-center">Add Event</h1>
-  <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST" enctype="multipart/form-data">
+  <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST"
+    enctype="multipart/form-data">
+
     {{ form.hidden_tag() }}
+
 
     <div class="form-section">
       <div class="mb-3">
@@ -17,153 +20,106 @@
         {% endfor %}
       </div>
 
-      <!-- Intro Fields -->
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.intro_en.label(class="form-label") }}
-          {{ form.intro_en(class="form-control", placeholder="Enter introduction (English)") }}
-          {% for error in form.intro_en.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="col-md-6">
-          {{ form.intro_ar.label(class="form-label") }}
-          {{ form.intro_ar(class="form-control", placeholder="أدخل المقدمة (عربي)") }}
-          {% for error in form.intro_ar.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-      </div>
-    </div>
-
-    <div class="mb-3">
-      {{ form.presenter_name.label(class="form-label") }}
-      {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
-      {% for error in form.presenter_name.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.secret_phrase.label(class="form-label") }}
-      {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
-      {% for error in form.secret_phrase.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.event_type.label(class="form-label") }}
-      {{ form.event_type(class="form-control") }}
-      {% for error in form.event_type.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
-    </div>
-
-    <div class="mb-3">
-      {{ form.date.label(class="form-label") }}
-      {{ form.date(class="form-control") }}
-      {% for error in form.date.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
-    </div>
-
-    <!-- Greeting Female Fields -->
-    <div class="row mb-3">
-      <div class="col-md-6">
-        {{ form.greeting_female_en.label(class="form-label") }}
-        {{ form.greeting_female_en(class="form-control", placeholder="Best wishes for her success (English)") }}
-        {% for error in form.greeting_female_en.errors %}
+      <!-- Intro Field -->
+      <div class="mb-3">
+        {{ form.intro.label(class="form-label") }}
+        {{ form.intro(class="form-control") }}
+        {% for error in form.intro.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
       </div>
-      <div class="col-md-6">
-        {{ form.greeting_female_ar.label(class="form-label") }}
-        {{ form.greeting_female_ar(class="form-control", placeholder="أطيب التمنيات لنجاحها (عربي)") }}
-        {% for error in form.greeting_female_ar.errors %}
+
+      <div class="mb-3">
+        {{ form.presenter_name.label(class="form-label") }}
+        {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
+        {% for error in form.presenter_name.errors %}
         <span style="color: red;">{{ error }}</span>
         {% endfor %}
       </div>
-    </div>
+
+      <div class="mb-3">
+        {{ form.secret_phrase.label(class="form-label") }}
+        {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
+        {% for error in form.secret_phrase.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.event_type.label(class="form-label") }}
+        {{ form.event_type(class="form-control") }}
+        {% for error in form.event_type.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
 
-    <!-- Greeting Male Fields -->
-<div class="row mb-3">
-  <div class="col-md-6">
-    {{ form.greeting_male_en.label(class="form-label") }}
-    {{ form.greeting_male_en(class="form-control", placeholder="Best wishes for his success (English)") }}
-    {% for error in form.greeting_male_en.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="col-md-6">
-    {{ form.greeting_male_ar.label(class="form-label") }}
-    {{ form.greeting_male_ar(class="form-control", placeholder="أطيب التمنيات لنجاحه (عربي)") }}
-    {% for error in form.greeting_male_ar.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-</div>
+      <div class="mb-3">
+        {{ form.date.label(class="form-label") }}
+        {{ form.date(class="form-control") }}
+        {% for error in form.date.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <!-- Greeting for Females -->
+      <div class="mb-3">
+        <label for="greetingFemale">Greeting for Females</label>
+        <input type="text" id="greetingFemale" name="greeting_female" class="form-control"
+          placeholder="Best wishes for her success and prosperity" />
+      </div>
+
+      <!-- Greeting for Males -->
+      <div class="mb-3">
+        <label for="greetingMale">Greeting for Males</label>
+        <input type="text" id="greetingMale" name="greeting_male" class="form-control"
+          placeholder="Best wishes for his success and prosperity" />
+      </div>
+
+      <!-- Female Recipient Title Field -->
+      <div class="mb-3">
+        {{ form.female_recipient_title.label(class="form-label") }}
+        {{ form.female_recipient_title(class="form-control") }}
+        {% for error in form.female_recipient_title.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
 
- <!-- Recipient Male Fields -->
-<div class="row mb-3">
-  <div class="col-md-6">
-    {{ form.male_recipient_title_en.label(class="form-label") }}
-    {{ form.male_recipient_title_en(class="form-control", placeholder="Mr. / The trainee (English)") }}
-    {% for error in form.male_recipient_title_en.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="col-md-6">
-    {{ form.male_recipient_title_ar.label(class="form-label") }}
-    {{ form.male_recipient_title_ar(class="form-control", placeholder="المتدرب (عربي)") }}
-    {% for error in form.male_recipient_title_ar.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-</div>
-
-<!-- Recipient Female Fields -->
-<div class="row mb-3">
-  <div class="col-md-6">
-    {{ form.female_recipient_title_en.label(class="form-label") }}
-    {{ form.female_recipient_title_en(class="form-control", placeholder="Ms. / The trainee (English)") }}
-    {% for error in form.female_recipient_title_en.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-  <div class="col-md-6">
-    {{ form.female_recipient_title_ar.label(class="form-label") }}
-    {{ form.female_recipient_title_ar(class="form-control", placeholder="المتدربة (عربي)") }}
-    {% for error in form.female_recipient_title_ar.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-  </div>
-</div>
+      <!-- Male Recipient Title Field -->
+      <div class="mb-3">
+        {{ form.male_recipient_title.label(class="form-label") }}
+        {{ form.male_recipient_title(class="form-control") }}
+        {% for error in form.male_recipient_title.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
 
 
-    <div class="mb-3">
-      {{ form.certificate_description_female.label(class="form-label") }}
-      {{ form.certificate_description_female(class="form-control", placeholder="Enter event description") }}
-      {% for error in form.certificate_description_female.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
-    </div>
 
-    <div class="mb-3">
-      {{ form.certificate_description_male.label(class="form-label") }}
-      {{ form.certificate_description_male(class="form-control", placeholder="Enter event description") }}
-      {% for error in form.certificate_description_male.errors %}
-      <span style="color: red;">{{ error }}</span>
-      {% endfor %}
+      <div class="mb-3">
+        {{ form.certificate_description_female.label(class="form-label") }}
+        {{ form.certificate_description_female(class="form-control", placeholder="Enter event description") }}
+        {% for error in form.certificate_description_female.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.certificate_description_male.label(class="form-label") }}
+        {{ form.certificate_description_male(class="form-control", placeholder="Enter event description") }}
+        {% for error in form.certificate_description_male.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+      </div>
     </div>
 
     <!-- Template Selection -->
     <div class="mb-3">
       {{ form.template_choice.label(class="form-label") }}
       {{ form.template_choice(class="form-control") }}
-      <button type="button" class="btn btn-info" onclick="location.href='{{ url_for('selectTemp') }}'">Show the Templates</button>
+      <button type="button" class="btn btn-info" onclick="location.href='{{ url_for('selectTemp') }}'">Show the
+        Templates</button>
       {% for error in form.template_choice.errors %}
       <span style="color: red;">{{ error }}</span>
       {% endfor %}
@@ -173,43 +129,21 @@
     <div class="form-section">
       <h2 class="mt-4 mb-2">Signature Information</h2>
 
-      <!-- First Signatory Name Fields -->
-      <div class="row mb-3">
-        <div class="col">
-          {{ form.signatory_name_1_en.label(class="form-label") }}
-          {{ form.signatory_name_1_en(class="form-control", placeholder="Enter first signatory name (English)") }}
-          {% for error in form.signatory_name_1_en.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="col">
-          {{ form.signatory_name_1_ar.label(class="form-label") }}
-          {{ form.signatory_name_1_ar(class="form-control", placeholder="أدخل اسم الموقع الأول (عربي)") }}
-          {% for error in form.signatory_name_1_ar.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+      <!-- First Signatory Fields -->
+      <div class="mb-3">
+        {{ form.signatory_name_1.label(class="form-label") }}
+        {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
+        {% for error in form.signatory_name_1.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
       </div>
-
-      <!-- First Signatory Position Fields -->
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.signatory_position_1_en.label(class="form-label") }}
-          {{ form.signatory_position_1_en(class="form-control", placeholder="Enter first signatory position (English)") }}
-          {% for error in form.signatory_position_1_en.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="col-md-6">
-          {{ form.signatory_position_1_ar.label(class="form-label") }}
-          {{ form.signatory_position_1_ar(class="form-control", placeholder="أدخل منصب الموقع الأول (عربي)") }}
-          {% for error in form.signatory_position_1_ar.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+      <div class="mb-3">
+        {{ form.signatory_position_1.label(class="form-label") }}
+        {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
+        {% for error in form.signatory_position_1.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
       </div>
-
-      <!-- First Signature Image Field -->
       <div class="mb-3">
         {{ form.signature_image_1.label(class="form-label") }}
         {{ form.signature_image_1(class="form-control") }}
@@ -218,83 +152,75 @@
         {% endfor %}
       </div>
 
-      <!-- Button to show/hide the second signatory section -->
+      <!-- <div class="mb-3">
+        <a href="{{ url_for('add_certificate', second_signatory='true') }}" class="btn btn-primary">Add Second
+          Signatory</a>
+      </div> -->
       <div class="mb-3">
-        <button type="button" class="btn btn-primary" onclick="toggleSecondSignatory()">Add Second Signatory</button>
+        <!-- Button to show/hide the second signatory section -->
+        <button type="button" class="btn btn-primary" onclick="
+          toggleSecondSignatory()">Add Second Signatory</button>
       </div>
-
       <!-- Second Signatory Fields (conditionally shown) -->
+
       <div id="secondSignatorySection" class="form-section" style="display: none;">
-        <!-- Second Signatory Name Fields -->
-        <div class="row mb-3">
-          <div class="col">
-            {{ form.signatory_name_2_en.label(class="form-label") }}
-            {{ form.signatory_name_2_en(class="form-control", placeholder="Enter second signatory name (English)") }}
-            {% for error in form.signatory_name_2_en.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-          </div>
-          <div class="col">
-            {{ form.signatory_name_2_ar.label(class="form-label") }}
-            {{ form.signatory_name_2_ar(class="form-control", placeholder="أدخل اسم الموقع الثاني (عربي)") }}
-            {% for error in form.signatory_name_2_ar.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-          </div>
-        </div>
-
-        <!-- Second Signatory Position Fields -->
-        <div class="row mb-3">
-          <div class="col">
-            {{ form.signatory_position_2_en.label(class="form-label") }}
-            {{ form.signatory_position_2_en(class="form-control", placeholder="Enter second signatory position (English)") }}
-            {% for error in form.signatory_position_2_en.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-          </div>
-          <div class="col">
-            {{ form.signatory_position_2_ar.label(class="form-label") }}
-            {{ form.signatory_position_2_ar(class="form-control", placeholder="أدخل منصب الموقع الثاني (عربي)") }}
-            {% for error in form.signatory_position_2_ar.errors %}
-            <span style="color: red;">{{ error }}</span>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Attendance Information Section -->
-      <div class="row">
-        <div class="col-12">
-          <h2 class="mt-4 mb-2">Attendance Information:</h2>
-          {{ form.file.label(class="form-label") }}
-          {{ form.file(class="form-control") }}
-          {% for error in form.file.errors %}
+        <div class="mb-3">
+          {{ form.signatory_name_2.label(class="form-label") }}
+          {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
+          {% for error in form.signatory_name_2.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
-          {% if message %}
-          <div class="error-message">
-            {{ message }}
-          </div>
-          {% endif %}
-          <p>* The file must be in CSV format</p>
+        </div>
+        <div class="mb-3">
+          {{ form.signatory_position_2.label(class="form-label") }}
+          {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
+          {% for error in form.signatory_position_2.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="mb-3">
+          {{ form.signature_image_2.label(class="form-label") }}
+          {{ form.signature_image_2(class="form-control") }}
+          {% for error in form.signature_image_2.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
         </div>
       </div>
 
-    <!-- Cancel Button -->
-<div class="mb-3">
-  <button type="button" class="button cancel" onclick="window.location.href='{{ url_for('certificates') }}'">Cancel</button>
-</div>
+    </div>
 
-<!-- Submit Button -->
-<div class="mb-3">
-  <input type="submit" value="Submit" class="button">
-</div>
+
+
+
+    <div class="file-upload-section">
+      <h2 class="mt-4 mb-2">Attendance Information:</h2>
+      <div class="mb-3">
+        {{ form.file.label(class="form-label") }}
+        {{ form.file(class="form-control") }}
+        {% for error in form.file.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+
+        {% if message %}
+        <div class="error-message">
+          {{ message }}
+        </div>
+        {% endif %}
+
 
       </div>
+      <p>* The file must be in CSV format</p>
     </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
+      <button type="button" class="button cancel"
+        onclick="window.location.href='{{ url_for('certificates') }}'">Cancel</button>
+      <input type="submit" value="Submit" class="button">
+    </div>
+
+
   </form>
 </div>
-
 <script>
   function toggleSecondSignatory() {
     var section = document.getElementById('secondSignatorySection');
