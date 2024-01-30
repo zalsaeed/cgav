@@ -811,6 +811,18 @@ def generate_certificate(certificate_event_id):
                 "signature_2": customization.items_positions["signature_2"]}
         else:
             items_positions={}
+        
+        try:
+            certificate_exists = CertificateEvent.query.get(certificate_event_id) is not None
+            if not certificate_exists:
+                return jsonify({'success': False, 'error': 'Certificate not found'}), 404
+
+            stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_key="ggGBs2hu9j")
+            db.session.execute(stmt)
+            db.session.commit()
+
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
         result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         if result.returncode == 0:
             return jsonify({'success': True})
@@ -858,6 +870,7 @@ def send_email():
             else:
                 # No certificate file found for the user
                 print(f"Certificate not found for {email}")
+            
 
         # Check if custom values were used
         if subject and custom_content:

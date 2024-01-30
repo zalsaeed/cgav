@@ -40,6 +40,9 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
+    secret_key = db.Column(db.String(255)) 
+    recipient_id = db.Column(db.String(255))
+    
 
 class Template(db.Model):
     __tablename__ = 'template'
@@ -117,9 +120,14 @@ class CertificateForm(FlaskForm):
     # certificate_event = relationship('CertificateEvent', backref='signatures')
 # 
 
-class Certificate(db.Model):
-    __tablename__ = 'Certificate'
-    hash = db.Column(db.String(25), primary_key=True)
-    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('CertificateEvent.certificate_event_id'))
-    # Ensure the rest of your model definition matches your database schema
+# class Certificate(db.Model):
+#     __tablename__ = 'Certificate'
+#     hash = db.Column(db.String(25), primary_key=True)
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     certificate_event_id = db.Column(db.String(255), db.ForeignKey('CertificateEvent.certificate_event_id'))
+   
+# class Certificate(db.Model):
+#     __tablename__ = 'Certificate'
+#     # hash = db.Column(db.String(25), primary_key=True)
+#     # recipient_id = db.Column(db.String(255))
+#     # certificate_event_id = db.Column(db.String(255))
