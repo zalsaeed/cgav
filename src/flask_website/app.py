@@ -449,25 +449,27 @@ class VerifyCertificateForm(FlaskForm):
     submit = SubmitField('Verify')
 
 
-@app.route('/api/verify_certificate', methods=['POST'])
-def verify_certificate_api():
-    data = request.get_json()
-
-    certificate_hash = data.get('certificate_hash')
-    if not certificate_hash:
-        return jsonify({'error': 'Missing certificate hash'}), 400
-
-    certificate = Certificate.query.filter_by(hash=certificate_hash).first()
+@app.route('/api/verify_certificate/<secret_key>', methods=['GET'])
+def verify_certificate_api(secret_key):
+    certificate = CertificateEvent.query.filter_by(secret_key=secret_key).first()
     if certificate:
+        # Use a fake recipient name as a placeholder
+        fake_recipient_name = "سمية بنت ناصر الناصر"
+
         return jsonify({
-            'message': 'Certificate is valid.',
+            'valid': True,
             'certificate_details': {
-                'recipient_id': certificate.recipient_id,
-                'certificate_event_id': certificate.certificate_event_id
+                'recipient_name': fake_recipient_name,  # Static placeholder value
+                'certificate_title': certificate.certificate_title,
+                'presenter_name': certificate.presenter_name,
+                'event_date': certificate.event_date.strftime("%Y-%m-%d") if certificate.event_date else None,
+                # Include any other fields you want to return
             }
         }), 200
     else:
-        return jsonify({'error': 'Certificate is invalid or not found.'}), 404
+        return jsonify({'valid': False, 'error': 'Certificate is invalid or not found.'}), 404
+
+
 
 
 
@@ -669,7 +671,7 @@ def template(temp_id):
             # Add and commit the new record to the database
             db.session.add(new_customization)
             db.session.commit()
-        flash(f'You Add Customizations Successfully.')
+    flash(f'Customizations Added Successfully.')
 
     return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
 
