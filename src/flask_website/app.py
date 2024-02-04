@@ -15,6 +15,7 @@ import db_classes
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
 import csv
+import db_connection
 from io import StringIO
 from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
@@ -32,41 +33,41 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # to access the data in .env file
-HOSTNAME = os.environ.get('HOSTNAME')
-DB_PORT = os.environ.get('DB_PORT')
-MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
-MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
-MYSQL_USER = os.environ.get('MYSQL_USER')
-MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-SCHEMA = os.environ.get("SCHEMA")
+# HOSTNAME = os.environ.get('HOSTNAME')
+# DB_PORT = os.environ.get('DB_PORT')
+# MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
+# MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
+# MYSQL_USER = os.environ.get('MYSQL_USER')
+# MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+# SCHEMA = os.environ.get("SCHEMA")
 
-app = db_classes.app
-db = db_classes.db
-bcrypt = db_classes.bcrypt
+app = db_connection.app
+db = db_connection.db
+bcrypt = db_connection.bcrypt
 # old uri 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 # new uri
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
+# app.config['SQLALCHEMY_DATABASE_URI'] =\
+#     f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 
 # TimeoutError Database need to change
-app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
-app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
+# app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
+# app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
 
-app.config['SECRET_KEY'] = 'thisisasecretkey'
-app.config['UPLOAD_FOLDER']='../certificate-templates'
+# app.config['SECRET_KEY'] = 'thisisasecretkey'
+# app.config['UPLOAD_FOLDER']='../certificate-templates'
 
 
-# Mail Server Configuration
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
-app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+# # Mail Server Configuration
+# app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+# app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+# app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+# app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
+# app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+# app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+# app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
-mail = Mail(app)
+# mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -588,7 +589,7 @@ def send_delete_confirmation_email(certificate):
 
     msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
     msg.body = body
-    mail.send(msg)
+    db_connection.mail.send(msg)
 
 
 @app.route("/create_new_template", methods=['GET', "POST"])
@@ -869,7 +870,7 @@ def send_email():
                     msg.attach(email + '_certificate.pdf', 'application/pdf', certificate.read())
 
                 # Send the email
-                mail.send(msg)
+                db_connection.mail.send(msg)
             else:
                 # No certificate file found for the user
                 print(f"Certificate not found for {email}")

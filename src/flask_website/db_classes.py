@@ -7,10 +7,11 @@ from wtforms.validators import InputRequired,DataRequired , Length, ValidationEr
 from flask_bcrypt import Bcrypt
 from werkzeug.utils import secure_filename
 import os
+import db_connection
 
-app = Flask(__name__)
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+app = db_connection.app
+db = db_connection.db
+bcrypt = db_connection.bcrypt
 # app = Flask(__name__)
 
 class users(db.Model, UserMixin):
