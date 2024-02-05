@@ -12,109 +12,131 @@
 
 
     <div class="form-section">
-      <div class="mb-3">
-        {{ form.certificate_title.label(class="form-label") }}
-        {{ form.certificate_title(class="form-control", placeholder="Enter event title") }}
-        {% for error in form.certificate_title.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
+      <div class="p-2 m-2 grid grid-cols-3 auto-rows-[50px] gap-1">
+        <div class="mb-4 mt-3 pt-4">
+          {{ form.certificate_title.label(class="form-label") }}
+          {{ form.certificate_title(class="form-control", placeholder="Enter event title") }}
+          {% for error in form.certificate_title.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+  
+        <!-- Intro Field -->
+        <div class="mb-4 mt-3 pt-4">
+          {{ form.intro.label(class="form-label") }}
+          {{ form.intro(class="form-control") }}
+          {% for error in form.intro.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-4 mt-3 pt-4">
+          {{ form.presenter_name.label(class="form-label") }}
+          {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
+          {% for error in form.presenter_name.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+
       </div>
+      <br>
+      
+      <div class="p-2 m-2 grid grid-cols-3 auto-rows-[50px] gap-1">
+        <div class="mb-3 mt-5 pt-4">
+          {{ form.secret_phrase.label(class="form-label") }}
+          {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
+          {% for error in form.secret_phrase.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
 
-      <!-- Intro Field -->
-      <div class="mb-3">
-        {{ form.intro.label(class="form-label") }}
-        {{ form.intro(class="form-control") }}
-        {% for error in form.intro.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
+        <div class="mb-3 mt-5 pt-4">
+          {{ form.event_type.label(class="form-label") }}
+          {{ form.event_type(class="form-control") }}
+          {% for error in form.event_type.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3 mt-5 pt-4">
+          {{ form.date.label(class="form-label") }}
+          {{ form.date(class="form-control") }}
+          {% for error in form.date.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+
       </div>
+      <br>
 
-      <div class="mb-3">
-        {{ form.presenter_name.label(class="form-label") }}
-        {{ form.presenter_name(class="form-control", placeholder="Enter presenter name") }}
-        {% for error in form.presenter_name.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
+
+
+      <div class="p-2 m-2 grid grid-cols-4 auto-rows-[50px] gap-1">
+        <!-- Greeting for Females -->
+        <div class="mb-3 mt-7 pt-4">
+          <label for="greetingFemale">Greeting for Females</label>
+          <input type="text" id="greetingFemale" name="greeting_female" class="form-control"
+            placeholder="Best wishes for her success and prosperity" />
+        </div>
+      
+        <!-- Greeting for Males -->
+        <div class="mb-3 mt-7 pt-4">
+          <label for="greetingMale">Greeting for Males</label>
+          <input type="text" id="greetingMale" name="greeting_male" class="form-control"
+            placeholder="Best wishes for his success and prosperity" />
+        </div>
+      
+        <!-- Female Recipient Title Field -->
+        <div class="mb-3 mt-7 pt-4">
+          {{ form.female_recipient_title.label(class="form-label") }}
+          {{ form.female_recipient_title(class="form-control") }}
+          {% for error in form.female_recipient_title.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      
+      
+        <!-- Male Recipient Title Field -->
+        <div class="mb-3 mt-7 pt-4">
+          {{ form.male_recipient_title.label(class="form-label") }}
+          {{ form.male_recipient_title(class="form-control") }}
+          {% for error in form.male_recipient_title.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+      
       </div>
+      <br>
 
-      <div class="mb-3">
-        {{ form.secret_phrase.label(class="form-label") }}
-        {{ form.secret_phrase(class="form-control", placeholder="Enter secret phrase") }}
-        {% for error in form.secret_phrase.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
+      
+
+      <div class="p-2 m-2 grid grid-cols-2 auto-rows-[50px] gap-1">
+
+        <div class="mb-3 mt-9 pt-4">
+          {{ form.certificate_description_female.label(class="form-label") }}
+          {{ form.certificate_description_female(class="form-control w-full", placeholder="Enter event description") }}
+          {% for error in form.certificate_description_female.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+  
+        <div class="mb-3 mt-9 pt-4">
+          {{ form.certificate_description_male.label(class="form-label") }}
+          {{ form.certificate_description_male(class="form-control w-full", placeholder="Enter event description") }}
+          {% for error in form.certificate_description_male.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        
       </div>
-
-      <div class="mb-3">
-        {{ form.event_type.label(class="form-label") }}
-        {{ form.event_type(class="form-control") }}
-        {% for error in form.event_type.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-
-
-      <div class="mb-3">
-        {{ form.date.label(class="form-label") }}
-        {{ form.date(class="form-control") }}
-        {% for error in form.date.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-
-      <!-- Greeting for Females -->
-      <div class="mb-3">
-        <label for="greetingFemale">Greeting for Females</label>
-        <input type="text" id="greetingFemale" name="greeting_female" class="form-control"
-          placeholder="Best wishes for her success and prosperity" />
-      </div>
-
-      <!-- Greeting for Males -->
-      <div class="mb-3">
-        <label for="greetingMale">Greeting for Males</label>
-        <input type="text" id="greetingMale" name="greeting_male" class="form-control"
-          placeholder="Best wishes for his success and prosperity" />
-      </div>
-
-      <!-- Female Recipient Title Field -->
-      <div class="mb-3">
-        {{ form.female_recipient_title.label(class="form-label") }}
-        {{ form.female_recipient_title(class="form-control") }}
-        {% for error in form.female_recipient_title.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-
-
-      <!-- Male Recipient Title Field -->
-      <div class="mb-3">
-        {{ form.male_recipient_title.label(class="form-label") }}
-        {{ form.male_recipient_title(class="form-control") }}
-        {% for error in form.male_recipient_title.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-
-
-
-      <div class="mb-3">
-        {{ form.certificate_description_female.label(class="form-label") }}
-        {{ form.certificate_description_female(class="form-control", placeholder="Enter event description") }}
-        {% for error in form.certificate_description_female.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-
-      <div class="mb-3">
-        {{ form.certificate_description_male.label(class="form-label") }}
-        {{ form.certificate_description_male(class="form-control", placeholder="Enter event description") }}
-        {% for error in form.certificate_description_male.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
+      
     </div>
+    <br>
+    <br>
+    <br>
 
     <!-- Template Selection -->
+
     <div class="mb-3">
       {{ form.template_choice.label(class="form-label") }}
       {{ form.template_choice(class="form-control") }}
@@ -128,29 +150,35 @@
     <!-- Signature Section -->
     <div class="form-section">
       <h2 class="mt-4 mb-2">Signature Information</h2>
+      <div class="p-2 m-2 grid grid-cols-5 auto-rows-[50px] gap-1">
+        <div class="mb-3 col-span-2">
+          {{ form.signatory_name_1.label(class="form-label") }}
+          {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
+          {% for error in form.signatory_name_1.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="mb-3 col-span-2">
+          {{ form.signatory_position_1.label(class="form-label") }}
+          {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
+          {% for error in form.signatory_position_1.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+        <div class="mb-3 col-span-1">
+          {{ form.signature_image_1.label(class="form-label") }}
+          {{ form.signature_image_1(class="form-control") }}
+          {% for error in form.signature_image_1.errors %}
+          <span style="color: red;">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+      </div>
+      <br>
+
 
       <!-- First Signatory Fields -->
-      <div class="mb-3">
-        {{ form.signatory_name_1.label(class="form-label") }}
-        {{ form.signatory_name_1(class="form-control", placeholder="Enter first signatory name") }}
-        {% for error in form.signatory_name_1.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-      <div class="mb-3">
-        {{ form.signatory_position_1.label(class="form-label") }}
-        {{ form.signatory_position_1(class="form-control", placeholder="Enter first signatory position") }}
-        {% for error in form.signatory_position_1.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
-      <div class="mb-3">
-        {{ form.signature_image_1.label(class="form-label") }}
-        {{ form.signature_image_1(class="form-control") }}
-        {% for error in form.signature_image_1.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-      </div>
+      
 
       <!-- <div class="mb-3">
         <a href="{{ url_for('add_certificate', second_signatory='true') }}" class="btn btn-primary">Add Second
@@ -162,29 +190,34 @@
           toggleSecondSignatory()">Add Second Signatory</button>
       </div>
       <!-- Second Signatory Fields (conditionally shown) -->
-
+      
+      
       <div id="secondSignatorySection" class="form-section" style="display: none;">
-        <div class="mb-3">
-          {{ form.signatory_name_2.label(class="form-label") }}
-          {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
-          {% for error in form.signatory_name_2.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
+        <div class="p-2 m-2 grid grid-cols-5 auto-rows-[50px] gap-1">
+
+          <div class="mb-3 col-span-2">
+            {{ form.signatory_name_2.label(class="form-label") }}
+            {{ form.signatory_name_2(class="form-control", placeholder="Enter second signatory name") }}
+            {% for error in form.signatory_name_2.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div class="mb-3 col-span-2">
+            {{ form.signatory_position_2.label(class="form-label") }}
+            {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
+            {% for error in form.signatory_position_2.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div class="mb-3 col-span-1">
+            {{ form.signature_image_2.label(class="form-label") }}
+            {{ form.signature_image_2(class="form-control") }}
+            {% for error in form.signature_image_2.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+          </div>
         </div>
-        <div class="mb-3">
-          {{ form.signatory_position_2.label(class="form-label") }}
-          {{ form.signatory_position_2(class="form-control", placeholder="Enter second signatory position") }}
-          {% for error in form.signatory_position_2.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
-        <div class="mb-3">
-          {{ form.signature_image_2.label(class="form-label") }}
-          {{ form.signature_image_2(class="form-control") }}
-          {% for error in form.signature_image_2.errors %}
-          <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-        </div>
+        
       </div>
 
     </div>
