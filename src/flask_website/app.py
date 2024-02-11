@@ -11,7 +11,8 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
-import setting_functions
+# place to import functions
+import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function, download_certificate_function
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -488,57 +489,19 @@ def verify_certificate_api(secret_key):
 @app.route('/certificates', methods=['GET'])
 @login_required
 def certificates():
-    # Fetch the latest 3 certificates and all certificates from the database
-    latest_certificates = CertificateEvent.query.limit(3).all()
-    all_certificates = CertificateEvent.query.all()
-
-    # Render the 'certificates.html' template with the certificate data
-    return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
+    return show_certificate_function.certificates()
 
 
 @app.route('/load_more_certificates', methods=['GET'])
 @login_required
 def load_more_certificates():
-    try:
-        # Get the number of certificates to load and the excluded IDs from the query parameters
-        loaded_count = int(request.args.get('loaded_count', 0))
-        exclude_ids = request.args.get('exclude_ids', '').split(',')
-
-        # Fetch additional certificates from the database, excluding the ones already loaded
-        additional_certificates = CertificateEvent.query \
-            .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
-            .offset(loaded_count) \
-            .limit(3) \
-            .all()
-
-        # Prepare a list of additional certificate details for JSON response
-        additional_certificates_list = [
-            {
-                'certificate_title': certificate.certificate_title,
-                'presenter_name': certificate.presenter_name,
-                'certificate_event_id': certificate.certificate_event_id,
-                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-                'certificate_description_female': certificate.certificate_description_female,
-                'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
-            }
-            for certificate in additional_certificates
-        ]
-
-        # Return the list of additional certificate details as a JSON response
-        return jsonify(additional_certificates_list)
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    return load_more_certificates_function.load_more_certificates()
 
 
 @app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
 @login_required
 def certificate_details(certificate_event_id):
-    # Fetch the details of a specific certificate by its event ID
-    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
-
-    # Render the 'certificate_details.html' template with the specific certificate details
-    return render_template('certificate_details.html', certificate=certificate)
+    return certificate_details_function.certificate_details(certificate_event_id)
 
 # Add routes for other actions ( generate, download, send) as needed
 
@@ -546,60 +509,11 @@ def certificate_details(certificate_event_id):
 @app.route('/delete_confirmation/<certificate_event_id>', methods=['GET', 'POST'])
 @login_required
 def delete_confirmation(certificate_event_id):
-    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
+    return delete_confirmation_function.delete_confirmation(certificate_event_id) 
 
-    # Check if the certificate is already attached to a session
-    existing_session = object_session(certificate)
-
-    if existing_session:
-        existing_session.expunge(certificate)
-
-    if request.method == 'POST':
-        try:
-            # Verify the event name for confirmation
-            event_name = request.json.get('event_name', '')
-
-            if event_name == certificate.certificate_title:
-                # Delete the certificate
-                db.session.delete(certificate)
-                db.session.commit()
-
-                # Send email notification
-                send_delete_confirmation_email(certificate)
-
-                # Provide a success response
-                return jsonify({'success': True}), 200  # Return 200 OK status
-
-            else:
-                # Provide an error response (incorrect event name)
-                return jsonify({'success': False, 'error': 'Incorrect event name'}), 400
-
-        except Exception as e:
-            # Provide an error response (server error)
-            return jsonify({'success': False, 'error': str(e)}), 500
-
-    return render_template('delete_confirmation.html', certificate=certificate)
-
-# Function to send email notification
-def send_delete_confirmation_email(certificate):
-    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
-
-    if isinstance(recipient_email, str):
-        recipient_email = [recipient_email]  # Convert the string to a list with a single element
-
-    # Extract information from the certificate object
-    certificate_title = certificate.certificate_title
-    presenter_name = certificate.presenter_name
-    # Add more fields as needed
-
-    # Construct the email message
-    subject = f'Certificate Deleted: {certificate_title}'
-    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
-
-    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
-    msg.body = body
-    db_connection.mail.send(msg)
-
+@app.route('/download_latest_event_certificates', methods=['GET'])
+def download_latest_event_certificates():
+    return download_certificate_function.download_certificates()
 
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required
@@ -892,19 +806,6 @@ def send_email():
             flash("Default emails sent successfully!", "success")
 
     return render_template('send_email.html')
-
-
-@app.route('/download_latest_event_certificates', methods=['GET'])
-def download_latest_event_certificates():
-    # The path to the latest event folder
-    latest_event_folder = os.path.abspath("/root/src/flask_website/static/output")
-
-    # Create a zip file containing all PDFs in the folder
-    zip_file_path = os.path.join(os.getcwd(), 'latest_event_certificates.zip')
-    shutil.make_archive(zip_file_path[:-4], 'zip', latest_event_folder)
-
-    # Send the zip file for download
-    return send_from_directory(os.getcwd(), 'latest_event_certificates.zip', as_attachment=True)
 
 
 if __name__ == "__main__":
