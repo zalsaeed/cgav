@@ -11,7 +11,8 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
-import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function
+# place to import functions
+import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -496,11 +497,7 @@ def load_more_certificates():
 @app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
 @login_required
 def certificate_details(certificate_event_id):
-    # Fetch the details of a specific certificate by its event ID
-    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
-
-    # Render the 'certificate_details.html' template with the specific certificate details
-    return render_template('certificate_details.html', certificate=certificate)
+    return certificate_details_function.certificate_details(certificate_event_id)
 
 # Add routes for other actions ( generate, download, send) as needed
 
