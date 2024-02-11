@@ -11,7 +11,7 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
-import setting_functions, show_certificate_function, delete_confirmation_function
+import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -490,36 +490,7 @@ def certificates():
 @app.route('/load_more_certificates', methods=['GET'])
 @login_required
 def load_more_certificates():
-    try:
-        # Get the number of certificates to load and the excluded IDs from the query parameters
-        loaded_count = int(request.args.get('loaded_count', 0))
-        exclude_ids = request.args.get('exclude_ids', '').split(',')
-
-        # Fetch additional certificates from the database, excluding the ones already loaded
-        additional_certificates = CertificateEvent.query \
-            .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
-            .offset(loaded_count) \
-            .limit(3) \
-            .all()
-
-        # Prepare a list of additional certificate details for JSON response
-        additional_certificates_list = [
-            {
-                'certificate_title': certificate.certificate_title,
-                'presenter_name': certificate.presenter_name,
-                'certificate_event_id': certificate.certificate_event_id,
-                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-                'certificate_description_female': certificate.certificate_description_female,
-                'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
-            }
-            for certificate in additional_certificates
-        ]
-
-        # Return the list of additional certificate details as a JSON response
-        return jsonify(additional_certificates_list)
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    return load_more_certificates_function.load_more_certificates()
 
 
 @app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
