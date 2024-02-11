@@ -11,7 +11,7 @@ from flask_mail import Mail, Message
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
-import setting_functions
+import setting_functions, show_certificate_function
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -484,12 +484,7 @@ def verify_certificate_api(secret_key):
 @app.route('/certificates', methods=['GET'])
 @login_required
 def certificates():
-    # Fetch the latest 3 certificates and all certificates from the database
-    latest_certificates = CertificateEvent.query.limit(3).all()
-    all_certificates = CertificateEvent.query.all()
-
-    # Render the 'certificates.html' template with the certificate data
-    return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
+    return show_certificate_function.certificates()
 
 
 @app.route('/load_more_certificates', methods=['GET'])
