@@ -12,7 +12,7 @@ import os
 from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
 # place to import functions
-import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function
+import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function, download_certificate_function
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -507,6 +507,9 @@ def certificate_details(certificate_event_id):
 def delete_confirmation(certificate_event_id):
     return delete_confirmation_function.delete_confirmation(certificate_event_id) 
 
+@app.route('/download_latest_event_certificates', methods=['GET'])
+def download_latest_event_certificates():
+    return download_certificate_function.download_certificates()
 
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required
@@ -799,19 +802,6 @@ def send_email():
             flash("Default emails sent successfully!", "success")
 
     return render_template('send_email.html')
-
-
-@app.route('/download_latest_event_certificates', methods=['GET'])
-def download_latest_event_certificates():
-    # The path to the latest event folder
-    latest_event_folder = os.path.abspath("/root/src/flask_website/static/output")
-
-    # Create a zip file containing all PDFs in the folder
-    zip_file_path = os.path.join(os.getcwd(), 'latest_event_certificates.zip')
-    shutil.make_archive(zip_file_path[:-4], 'zip', latest_event_folder)
-
-    # Send the zip file for download
-    return send_from_directory(os.getcwd(), 'latest_event_certificates.zip', as_attachment=True)
 
 
 if __name__ == "__main__":
