@@ -1,11 +1,18 @@
+# Standard Library Imports
 import os
 import json
-from flask import Flask, url_for, jsonify
-from sqlalchemy import update
-from flask_login import  LoginManager, current_user
-from db_classes import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import subprocess
+
+# Related Third Party Imports
+from flask import Flask, url_for, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import update
+from flask_login import LoginManager, current_user
+
+# Local App/Library Specific Imports
+from db_classes import CertificateEvent, EventType, CertificateForm,CertificateCustomizations, Template
 import db_connection
+
 
 
 

@@ -1,14 +1,20 @@
+# Standard Library Imports
+from werkzeug.utils import secure_filename
+
+# Related Third Party Imports
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FileField, SubmitField,IntegerField,StringField, TextAreaField, SubmitField, SelectField, DateField
-from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
+from wtforms import StringField, PasswordField, FileField,SubmitField, IntegerField, TextAreaField,SelectField, DateField
+from wtforms.validators import InputRequired, DataRequired, Length,ValidationError, EqualTo, Email
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from flask_bcrypt import Bcrypt
-from werkzeug.utils import secure_filename
 from sqlalchemy.orm import relationship
+
+# Local App/Library Specific Imports
 import db_connection
+
 
 app = db_connection.app
 db = db_connection.db

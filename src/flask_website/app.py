@@ -1,36 +1,36 @@
-import json
-from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash, session
-import yaml
+# Standard Library Imports
+import os
+from io import StringIO
+import uuid
+import csv
+
+# Related Third Party Imports
+from flask import Flask, render_template, url_for, redirect, request, jsonify, send_from_directory, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FileField, SubmitField
-from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
-import os
 from werkzeug.security import check_password_hash, generate_password_hash
-import db_classes
-# place to import functions
-import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function, download_certificate_function
-import template_functions,generate_functions
-# from db_classes import Template
-from db_classes import CertificateEvent, EventType, CertificateForm,Template
-import uuid
-import csv
-import db_connection
-from io import StringIO
 from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
-import subprocess
-import shutil
-
 from werkzeug.utils import secure_filename
-
-# Import for custom email handling
-# from flask import render_template_string
-# from jinja2 import Template
 from dotenv import load_dotenv
+
+# Local App/Library Specific Imports
+import db_classes
+import setting_functions
+import show_certificate_function
+import delete_confirmation_function
+import load_more_certificates_function
+import certificate_details_function
+import download_certificate_function
+import template_functions
+import generate_functions
+import db_connection
+from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
 load_dotenv()

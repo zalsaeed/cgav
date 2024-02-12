@@ -1,9 +1,14 @@
-from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash, session
+# Standard Library Imports
+from flask import Flask, render_template, url_for, redirect, flash, session
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
+
+# Local App/Library Specific Imports
 import db_connection
 import db_classes
+
 
 app = db_connection.app
 db = db_connection.db

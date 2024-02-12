@@ -1,14 +1,20 @@
+# Standard Library Imports
 import json
 import os
 import uuid
-from flask import Flask, render_template, url_for, redirect,flash
+
+# Related Third Party Imports
+from flask import Flask, render_template, url_for, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import  LoginManager, current_user
+from flask_login import LoginManager, current_user
 from werkzeug.utils import secure_filename
 from sqlalchemy import update
+
+# Local App/Library Specific Imports
 import db_connection
 import db_classes
-from db_classes import CertificateCustomizations,Template
+from db_classes import CertificateCustomizations, Template
+
 
 app = db_connection.app
 db = db_connection.db

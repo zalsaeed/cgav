@@ -1,9 +1,13 @@
+# Standard Library Imports
 import os
+
+# Related Third Party Imports
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
 from flask_mail import Mail
+
 # Load environment variables from the .env file
 load_dotenv()
 
