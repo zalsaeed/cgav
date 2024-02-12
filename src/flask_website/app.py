@@ -13,6 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import db_classes
 # place to import functions
 import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function, download_certificate_function
+import template_functions,generate_functions
 # from db_classes import Template
 from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import uuid
@@ -118,11 +119,6 @@ def login():
                 return redirect(url_for('certificates'))
     return render_template('login.html', form=form)
 
-
-# @app.route('/dashboard', methods=['GET', 'POST'])
-# @login_required
-# def dashboard():
-#     return render_template('index.html')
 
 #Admin route
 @app.route('/admin')
@@ -518,23 +514,8 @@ def download_latest_event_certificates():
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required
 def newtemp():
-    form = db_classes.NewTemplates()
-    if form.validate_on_submit():
-        file = form.template_image.data
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                               secure_filename(file.filename)))
+    return template_functions.newtemp()
 
-
-        new_template = Template(template_name=form.template_name.data,
-                                           id = current_user.id,
-                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-        db.session.add(new_template)
-        db.session.commit()
-
-        flash('A new template has been added successfully.')
-        return redirect(url_for('selectTemp'))  # It's better to use url_for() here
-
-    return render_template('create_new_template.html', form=form)
 
 
 @app.route('/uploads/<filename>')
@@ -544,220 +525,31 @@ def uploaded_file(filename):
 @app.route('/Select_template/<temp_id>',methods=['GET',"POST"])
 @login_required
 def template(temp_id):
-    # temp = db_classes.Template.query.filter_by(template_name=tempname).first()
-    # tempid= temp.template_id if temp else None
-    temp = Template.query.get_or_404(temp_id)
-    form=db_classes.customizationForm()
-    json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
-    ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
-    custom_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/customization.json')
+    return template_functions.template(temp_id)
 
-    # Read the JSON file
-    with open(json_file, 'r') as file:
-        data = json.load(file)
-    
-    with open(ar_json_file, 'r') as file:
-        arData = json.load(file)
-    
-    with open(custom_file,'r') as file:
-      customization_data = json.load(file)
-
-    
-    # if request.method == 'POST':
-    if form.validate_on_submit():
-        form_item = form.item.data  # Assuming form.item is a Flask-WTF field
-        form_x = form.x.data
-        form_y = form.y.data
-        form_h = form.h.data
-        form_w = form.w.data
-        if form_item in customization_data:
-            customization_data[form_item]['x'] = form_x
-            customization_data[form_item]['y'] = form_y
-            customization_data[form_item]['h'] = form_h
-            customization_data[form_item]['w'] = form_w
-        with open(custom_file, 'w') as file:
-            json.dump(customization_data, file, indent=2)
-        
-        existing_customization = CertificateCustomizations.query.filter_by(
-            id=current_user.id,
-            template_id=temp.template_id).first()
-        if existing_customization:
-            # existing_customization.items_positions = customization_data
-            # Reactivate the existing event type using update statement
-            custom = update(CertificateCustomizations).where(CertificateCustomizations.template_id == temp.template_id and CertificateCustomizations.id == current_user.id).values(items_positions = customization_data)
-            db.session.execute(custom)
-            db.session.commit()
-        else:
-            new_customization = CertificateCustomizations(customization_id=str(uuid.uuid4()),
-                                                          id = current_user.id,
-                                                          template_id = temp.template_id,
-                                                          items_positions = customization_data )
-            # Add and commit the new record to the database
-            db.session.add(new_customization)
-            db.session.commit()
-    flash(f'Customizations Added Successfully.')
-
-    return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
 
 
 @app.route("/Select_template", methods=['GET',"POST"])
 @login_required
 def selectTemp():
-     # Assuming the user ID is stored in the id field of the User model
-    if current_user.user_role == 1 :
-        user_templates = Template.query.all()
-    else:
-        user_templates = Template.query.filter_by(id=current_user.id).all()
-    return render_template("select_template.html", templates=user_templates)
+    return template_functions.selectTemp()
 
-########
-@app.route('/preview_certificate', methods=['POST'])
-def preview_certificate():
-    try:
-        # Get the selected template and other details from the request
-        data = request.get_json()
-        selected_template = data.get('selected_template')
-
-        # Load default event data
-        with open('events/sample-event.yaml', 'r') as file:
-            event_data = yaml.safe_load(file)
-
-        # Update the template path with the selected template
-        event_data['certificate_background'] = selected_template
-
-        # Run main.py with updated event data
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False, 'error': result.stderr})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-
-######
 @app.route('/fetch_latest_pdf', methods=['GET'])
 def fetch_latest_pdf():
-    # The path to the output directory, considering the Docker container's file system
-    search_directory = os.path.abspath("/root/src/flask_website/static/output")
+    return generate_functions.fetch_latest_pdf()
 
-    try:
-        all_folders = [os.path.join(search_directory, d) for d in os.listdir(search_directory) if os.path.isdir(os.path.join(search_directory, d))]
-        latest_folder = max(all_folders, key=os.path.getmtime)
-
-        for file in os.listdir(latest_folder):
-            if file.endswith(".pdf"):
-                full_file_path = os.path.join(latest_folder, file)
-                # Generate the relative path from the static folder
-                relative_path = os.path.relpath(full_file_path, "/root/src/flask_website/static")
-                pdf_url = url_for('static', filename=relative_path.replace(os.sep, '/'))
-
-                return jsonify({'pdfUrl': pdf_url})
-
-        return jsonify({'error': 'No PDF found'}), 404
-
-    except Exception as e:
-        app.logger.error(f"Error in fetch_latest_pdf: {str(e)}")
-        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/run_main_script/<temp_id>', methods=['POST'])
 def run_main_script(temp_id):
-    try:
-        customization = CertificateCustomizations.query.filter_by(template_id=temp_id).first()
-        template= Template.query.filter_by(template_id=temp_id).first()
-        event_data = {
-            'template_path': template.template_image,
-        }
-        if customization:
-            items_positions={
-                "Certificate_Title":customization.items_positions["Certificate_Title"],
-                "Intro": customization.items_positions["Intro"],
-                "recipient_title":customization.items_positions["recipient_title"],
-                "recipient_name":customization.items_positions["recipient_name"],
-                "body":customization.items_positions["body"] ,
-                "final_greeting":customization.items_positions["final_greeting"] ,
-                "contact_info":customization.items_positions["contact_info"],
-                "signature_1": customization.items_positions["signature_1"],
-                "signature_2": customization.items_positions["signature_2"]}
-        else:
-            items_positions={}
-        # Adjust the path according to your folder structure
-        # script_path = os.path.join(os.getcwd(), 'main.py')
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
-        return jsonify({'success': True, 'output': result.stdout})
-    
-    except subprocess.CalledProcessError as e:
-        return jsonify({'success': False, 'error': str(e)})
+    return generate_functions.run_main_script(temp_id)
 
 
 @app.route('/generate_certificate/<certificate_event_id>', methods=['POST'])
 @login_required
 def generate_certificate(certificate_event_id):
-    try:
-        certificate = CertificateEvent.query.get(certificate_event_id)
-        customization = CertificateCustomizations.query.filter_by(template_id=certificate.template_id).first()
-        if not certificate:
-            return jsonify({'success': False, 'error': 'Certificate not found'}), 404
+    return generate_functions.generate_certificate(certificate_event_id)
 
-        event_data = {
-            'certificate_event_id': str(certificate.certificate_event_id),
-            'certificate_title': certificate.certificate_title,
-            'event_type_id': certificate.event_type_id,
-            'template_path': certificate.template_path,
-            'presenter_name': certificate.presenter_name,
-            'secret_phrase': certificate.secret_phrase,
-            'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-            'certificate_description_female': certificate.certificate_description_female,
-            'certificate_description_male': certificate.certificate_description_male,
-            'file_path': certificate.file_path,
-            'First_Signatory_Name': certificate.First_Signatory_Name,
-            'First_Signatory_Position': certificate.First_Signatory_Position,
-            'First_Signatory_Path': certificate.First_Signatory_Path,
-            'Second_Signatory_Name': certificate.Second_Signatory_Name,
-            'Second_Signatory_Position': certificate.Second_Signatory_Position,
-            'Second_Signatory_Path': certificate.Second_Signatory_Path,
-            'greeting_female': certificate.greeting_female,
-            'greeting_male': certificate.greeting_male,
-            'intro': certificate.intro,
-            'male_recipient_title': certificate.male_recipient_title,
-            'female_recipient_title': certificate.female_recipient_title,
-            # ... add other fields as needed ...
-        }
-
-        if customization:
-            items_positions={
-                "Certificate_Title":customization.items_positions["Certificate_Title"],
-                "Intro": customization.items_positions["Intro"],
-                "recipient_title":customization.items_positions["recipient_title"],
-                "recipient_name":customization.items_positions["recipient_name"],
-                "body":customization.items_positions["body"] ,
-                "final_greeting":customization.items_positions["final_greeting"] ,
-                "contact_info":customization.items_positions["contact_info"],
-                "signature_1": customization.items_positions["signature_1"],
-                "signature_2": customization.items_positions["signature_2"]}
-        else:
-            items_positions={}
-        
-        try:
-            certificate_exists = CertificateEvent.query.get(certificate_event_id) is not None
-            if not certificate_exists:
-                return jsonify({'success': False, 'error': 'Certificate not found'}), 404
-
-            stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_key="ggGBs2hu9j")
-            db.session.execute(stmt)
-            db.session.commit()
-
-        except Exception as e:
-            db.session.rollback()  # Rollback in case of error
-        
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False, 'error': result.stderr})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-    
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required
 def send_email():
