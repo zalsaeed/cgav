@@ -15,7 +15,7 @@ import db_classes
 import setting_functions, show_certificate_function, delete_confirmation_function, load_more_certificates_function, certificate_details_function, download_certificate_function
 import template_functions,generate_functions
 # from db_classes import Template
-from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
+from db_classes import CertificateEvent, EventType, CertificateForm,Template
 import uuid
 import csv
 import db_connection
@@ -445,11 +445,11 @@ def get_user_info():
     }
     return jsonify(user_info)
 
-class Certificate(db.Model):
-    __tablename__ = 'Certificate'
-    hash = db.Column(db.String(25), primary_key=True)
-    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+# class Certificate(db.Model):
+#     __tablename__ = 'Certificate'
+#     hash = db.Column(db.String(25), primary_key=True)
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
 class VerifyCertificateForm(FlaskForm):
     certificate_hash = StringField('Certificate Code', validators=[DataRequired()])

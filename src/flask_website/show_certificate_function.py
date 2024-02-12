@@ -1,4 +1,4 @@
-from certificate_models import CertificateEvent
+from db_classes import CertificateEvent
 from flask import render_template
 
 def certificates():

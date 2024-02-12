@@ -1,4 +1,4 @@
-from certificate_models import CertificateEvent
+from db_classes import CertificateEvent
 from flask import request, jsonify, render_template
 from flask_mail import Message
 from sqlalchemy.orm.session import object_session

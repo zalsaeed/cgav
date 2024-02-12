@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import update
 import db_connection
 import db_classes
-from certificate_models import CertificateCustomizations,Template
+from db_classes import CertificateCustomizations,Template
 
 app = db_connection.app
 db = db_connection.db

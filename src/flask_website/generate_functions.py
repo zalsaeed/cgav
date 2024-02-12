@@ -3,7 +3,7 @@ import json
 from flask import Flask, url_for, jsonify
 from sqlalchemy import update
 from flask_login import  LoginManager, current_user
-from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
+from db_classes import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
 import subprocess
 import db_connection
 
