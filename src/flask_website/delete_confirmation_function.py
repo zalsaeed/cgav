@@ -29,7 +29,7 @@ def delete_confirmation(certificate_event_id):
                 db.session.commit()
 
                 # Send email notification
-                send_delete_confirmation_email(certificate)
+               # send_delete_confirmation_email(certificate)
 
                 # Provide a success response
                 return jsonify({'success': True}), 200  # Return 200 OK status
@@ -46,21 +46,21 @@ def delete_confirmation(certificate_event_id):
 
 
 # Function to send email notification
-def send_delete_confirmation_email(certificate):
-    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
-
-    if isinstance(recipient_email, str):
-        recipient_email = [recipient_email]  # Convert the string to a list with a single element
-
-    # Extract information from the certificate object
-    certificate_title = certificate.certificate_title
-    presenter_name = certificate.presenter_name
-    # Add more fields as needed
-
-    # Construct the email message
-    subject = f'Certificate Deleted: {certificate_title}'
-    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
-
-    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
-    msg.body = body
-    db_connection.mail.send(msg)
+#def send_delete_confirmation_email(certificate):
+#    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
+#
+#    if isinstance(recipient_email, str):
+#        recipient_email = [recipient_email]  # Convert the string to a list with a single element
+#
+#    # Extract information from the certificate object
+#    certificate_title = certificate.certificate_title
+#    presenter_name = certificate.presenter_name
+#    # Add more fields as needed
+#
+#    # Construct the email message
+#    subject = f'Certificate Deleted: {certificate_title}'
+#    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+#
+#    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
+#    msg.body = body
+#    db_connection.mail.send(msg)

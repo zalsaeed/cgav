@@ -145,37 +145,61 @@
   }
 
   function handleDeleteConfirmation() {
-    document.getElementById('delete-confirmation-popup').style.display = 'none';
-    document.getElementById('loading-popup').style.display = 'block';
+  document.getElementById('delete-confirmation-popup').style.display = 'none';
+  document.getElementById('loading-popup').style.display = 'block';
 
-    const eventName = document.getElementById('event_name').value;
+  const eventName = document.getElementById('event_name').value;
 
-    // Make an AJAX request to delete the certificate
-    fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ event_name: eventName }),
+  // Make an AJAX request to delete the certificate
+  fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ event_name: eventName }),
+  })
+    .then(response => response.json())
+    .then(result => {
+      document.getElementById('loading-popup').style.display = 'none';
+
+      if (result.success) {
+        // Show success message
+        Swal.fire({
+          title: 'Success!',
+          text: 'Certificate deleted successfully',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirect to certificates page or perform any other action
+            redirectToCertificates();
+          }
+        });
+      } else {
+        // Show error message
+        Swal.fire({
+          title: 'Error!',
+          text: result.error || 'An error occurred while deleting the certificate',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
     })
-      .then(response => response.json())
-      .then(result => {
-        document.getElementById('loading-popup').style.display = 'none';
-
-        if (result.success) {
-          document.getElementById('success-popup').style.display = 'block';
-        } else {
-          document.getElementById('error-popup').style.display = 'block';
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('loading-popup').style.display = 'none';
-        document.getElementById('error-popup').style.display = 'block';
+    .catch(error => {
+      console.error('Error:', error);
+      document.getElementById('loading-popup').style.display = 'none';
+      // Show error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'An error occurred while deleting the certificate',
+        icon: 'error',
+        confirmButtonText: 'OK'
       });
+    });
 
     return false;
   }
+
 
   function redirectToCertificates() {
     window.location.href = '/certificates';
