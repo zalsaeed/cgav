@@ -451,9 +451,9 @@ def get_user_info():
 #     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
 #     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
-class VerifyCertificateForm(FlaskForm):
-    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
-    submit = SubmitField('Verify')
+#class VerifyCertificateForm(FlaskForm):
+#    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
+#    submit = SubmitField('Verify')
 
 
 @app.route('/api/verify_certificate/<secret_key>', methods=['GET'])
