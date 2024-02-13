@@ -20,6 +20,7 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
 # Local App/Library Specific Imports
+import add_certificate_function
 import db_classes
 import setting_functions
 import show_certificate_function
@@ -30,6 +31,7 @@ import download_certificate_function
 import template_functions
 import generate_functions
 import db_connection
+import users_functions
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
@@ -94,88 +96,32 @@ def sample():
 # register route
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = db_classes.RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('success')
-        return redirect(url_for('login'))
-
-    return render_template('register.html', form=form)
+    return users_functions.register()
 
 
 # login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = db_classes.LoginForm()
-    if form.validate_on_submit():
-        user = db_classes.users.query.filter_by(email=form.email.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for('certificates'))
-    return render_template('login.html', form=form)
+    return users_functions.login()
 
 
 #Admin route
 @app.route('/admin')
 @login_required
 def admin():
-    users_list = db_classes.users.query.all()
-    user_role = current_user.user_role
-    if user_role == 1:
-        return render_template('admin.html',users_list=users_list)
-    else:
-        flash('Access denied')
-        return redirect(url_for('certificates'))
+    return users_functions.admin()
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_user(id):
-    form = db_classes.UpdateForm()
-    user_to_edit = db_classes.users.query.get(id)
-    existing_email = db_classes.users.query.filter_by(email=form.email.data).first()
-    if form.validate_on_submit():
-        if form.email.data == user_to_edit.email:
-            email_to_save = user_to_edit.email
-        elif existing_email:
-            flash('email already exist')
-            return redirect(url_for('update_user',id=user_to_edit.id))
-        else:
-            email_to_save = form.email.data
-
-
-        if form.password.data == user_to_edit.password:
-            password_to_save = form.password.data
-        else:
-            password_to_save = bcrypt.generate_password_hash(form.password.data)
-        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = email_to_save, Fname = form.Fname.data, password = password_to_save)
-        db.session.execute(user_to_edit)
-        db.session.commit()
-        flash('success')
-        return redirect(url_for('settings'))
-    else:
-        return render_template('update.html',form=form,user_to_edit=user_to_edit)
+    return users_functions.update_user(id)
     
 #delete user
 @app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(id):
-    if current_user.id == id :
-        flash('you are currently using this user')
-        return redirect(url_for('settings'))
-    else:
-
-        user_to_delete = db_classes.users.query.get(id)
-        uname = user_to_delete.Fname
-        db.session.delete(user_to_delete)
-        db.session.commit()
-        flash(f'you deleted {uname} successfuly')
-        return redirect(url_for('settings'))
+    return users_functions.delete_user(id)
         
 
 
@@ -239,133 +185,27 @@ def logout():
 
 
 
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'certificate-templates')
+#app.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'certificate-templates')
 
 # Ensure the upload_folder exists
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+#os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 
 
 @app.route('/add_certificate', methods=['GET', 'POST'])
 @login_required
 def add_certificate():
-    form = CertificateForm()
-    message = ""
-    show_second_signatory = 'second_signatory' in request.args
-
-    # Retrieve active event types and templates from the database
-    active_event_types = EventType.query.filter_by(is_active=True).all()
-    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in
-                               active_event_types]
-    # Retrieve the selected template
-    form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
-
-    templates = Template.query.all()
-    form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
-    
-    templates = Template.query.all()
-    form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
-
-    if form.validate_on_submit():
-
-        selected_template_id = form.template_choice.data
-        selected_template = Template.query.filter_by(template_id=selected_template_id).first()
-        template_path = selected_template.template_image
-
-        file = form.file.data
-        if file and allowed_file(file.filename):
-            # Read the file into a StringIO object for parsing as CSV
-            file_stream = StringIO(file.read().decode('utf-8-sig'), newline=None)
-            csv_reader = csv.DictReader(file_stream)  # Use DictReader to read the CSV into a dictionary
-
-             # Updated required headers
-            required_headers = {'first_name', 'middle_name', 'last_name', 'email', 'phone', 'gender'}
-            if not required_headers.issubset(set(csv_reader.fieldnames)):
-                message = 'The CSV file does not have the required headers.'
-            else:
-                # The CSV has the required headers, so save the file and the event
-                file.seek(0)  # Seek back to the start of the file
-                filename = secure_filename(file.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(file_path)
-
-                signature_image_1 = form.signature_image_1.data
-                signature_image_2 = form.signature_image_2.data
-
-                # Path where signature images will be saved
-                signatures_folder = 'signatures'  # This should be the path to the signatures folder
-
-                if signature_image_1 and allowed_image_file(signature_image_1.filename):
-                    # Construct filename and save the first signature image
-                    filename_1 = secure_filename(signature_image_1.filename)
-                    image_path_1 = os.path.join(signatures_folder, filename_1)
-                    signature_image_1.save(image_path_1)
-
-                if signature_image_2 and allowed_image_file(signature_image_2.filename):
-                    # Construct filename and save the second signature image
-                    filename_2 = secure_filename(signature_image_2.filename)
-                    image_path_2 = os.path.join(signatures_folder, filename_2)
-                    signature_image_2.save(image_path_2)
-                else:
-                    # Set second signatory details to None or empty string
-                    signatory_name_2 = None
-                    signatory_position_2 = None
-                    image_path_2 = None
-               
-                new_certificate_event = CertificateEvent(
-                    certificate_event_id=str(uuid.uuid4()),
-                    certificate_title=form.certificate_title.data,
-                    event_type_id=form.event_type.data,
-                    template_path=template_path,
-                    presenter_name=form.presenter_name.data,
-                    secret_phrase=form.secret_phrase.data,
-                    event_date=form.date.data,
-                    certificate_description_female=form.certificate_description_female.data,
-                    certificate_description_male=form.certificate_description_male.data,
-                    file_path=file_path,  
-                    First_Signatory_Name=form.signatory_name_1.data,
-                    First_Signatory_Position=form.signatory_position_1.data,
-                    First_Signatory_Path=image_path_1,
-                    Second_Signatory_Name=form.signatory_name_2.data,
-                    Second_Signatory_Position=form.signatory_position_2.data,
-                    Second_Signatory_Path=image_path_2,
-                    greeting_female=form.greeting_female.data,
-                    greeting_male=form.greeting_male.data,  
-                    intro=form.intro.data,
-                    male_recipient_title=form.male_recipient_title.data,
-                    female_recipient_title=form.female_recipient_title.data,
-                )
-
-
-                # Add the new event to the session and commit it to the database
-                try:
-                    db.session.add(new_certificate_event)
-                    db.session.commit()
-                except Exception as e:
-                    print("Failed to commit to database:", e)
-                    # Optionally, roll back the session in case of failure
-                    db.session.rollback()
-
-                return redirect(url_for('certificates'))  # Redirect to the dashboard after successful upload
-        else:
-            message = 'Please upload a CSV file.'
-
-    return render_template(
-        'add_certificate.html',
-        form=form,
-        message=message,
-        show_second_signatory=show_second_signatory
-    )
+    return add_certificate_function.add_certificate()
 
 
 # Ensure you have your CertificateEvent model, EventType model, and CertificateForm form class defined as needed.
 
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in {'csv'}
-def allowed_image_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
+#def allowed_file(filename):
+#    return '.' in filename and \
+#        filename.rsplit('.', 1)[1].lower() in {'csv'}
+#def allowed_image_file(filename):
+#    return '.' in filename and \
+#        filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}
 
 
 @app.route('/settings')
@@ -449,9 +289,9 @@ def get_user_info():
 #     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
 #     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
-class VerifyCertificateForm(FlaskForm):
-    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
-    submit = SubmitField('Verify')
+#class VerifyCertificateForm(FlaskForm):
+#    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
+#    submit = SubmitField('Verify')
 
 
 @app.route('/api/verify_certificate/<secret_key>', methods=['GET'])

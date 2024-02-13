@@ -3,6 +3,7 @@ import os
 
 # Related Third Party Imports
 from flask import Flask
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -23,6 +24,10 @@ SCHEMA = os.environ.get("SCHEMA")
 app = Flask(__name__)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] =\
