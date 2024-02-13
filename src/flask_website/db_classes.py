@@ -240,3 +240,12 @@ class customizationForm(FlaskForm):
     h = IntegerField('*Height')
     w = IntegerField('*Width')
     submit = SubmitField('Save')
+
+class Certificate(db.Model):
+    hash = db.Column(db.String(25), primary_key=True)
+    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+
+class VerifyCertificateForm(FlaskForm):
+    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
+    submit = SubmitField('Verify')
