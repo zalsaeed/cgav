@@ -402,8 +402,6 @@ def change_email():
         return redirect(url_for('settings'))
     return render_template('change_email.html', form=form)
 
-
-
     # Route and form for changing password
 @app.route('/settings/change_password', methods=['GET', 'POST'])
 @login_required
