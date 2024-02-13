@@ -1,72 +1,76 @@
-import json
-from flask import Flask, render_template, url_for, redirect, request, jsonify,send_from_directory,flash, session
-import yaml
+# Standard Library Imports
+import os
+from io import StringIO
+import uuid
+import csv
+
+# Related Third Party Imports
+from flask import Flask, render_template, url_for, redirect, request, jsonify, send_from_directory, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FileField, SubmitField
-from wtforms.validators import InputRequired,DataRequired , Length, ValidationError, EqualTo, Email
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail, Message
-import os
 from werkzeug.security import check_password_hash, generate_password_hash
-import db_classes
-# from db_classes import Template
-from certificate_models import CertificateEvent, EventType, CertificateForm,CertificateCustomizations,Template
-import uuid
-import csv
-from io import StringIO
 from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
-import subprocess
-import shutil
-
 from werkzeug.utils import secure_filename
-
-# Import for custom email handling
-# from flask import render_template_string
-# from jinja2 import Template
 from dotenv import load_dotenv
+
+# Local App/Library Specific Imports
+import db_classes
+import setting_functions
+import show_certificate_function
+import delete_confirmation_function
+import load_more_certificates_function
+import certificate_details_function
+import download_certificate_function
+import template_functions
+import generate_functions
+import db_connection
+from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
 load_dotenv()
 
 # to access the data in .env file
-HOSTNAME = os.environ.get('HOSTNAME')
-DB_PORT = os.environ.get('DB_PORT')
-MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
-MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
-MYSQL_USER = os.environ.get('MYSQL_USER')
-MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-SCHEMA = os.environ.get("SCHEMA")
+# HOSTNAME = os.environ.get('HOSTNAME')
+# DB_PORT = os.environ.get('DB_PORT')
+# MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
+# MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
+# MYSQL_USER = os.environ.get('MYSQL_USER')
+# MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+# SCHEMA = os.environ.get("SCHEMA")
 
-app = db_classes.app
-db = db_classes.db
-bcrypt = db_classes.bcrypt
+app = db_connection.app
+db = db_connection.db
+bcrypt = db_connection.bcrypt
 # old uri 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 # new uri
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
+# app.config['SQLALCHEMY_DATABASE_URI'] =\
+#     f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 
 # TimeoutError Database need to change
-app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
-app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
+# app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
+# app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
 
-app.config['SECRET_KEY'] = 'thisisasecretkey'
-app.config['UPLOAD_FOLDER']='../certificate-templates'
+# app.config['SECRET_KEY'] = 'thisisasecretkey'
+# app.config['UPLOAD_FOLDER']='../certificate-templates'
 
 
-# Mail Server Configuration
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
-app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+# # Mail Server Configuration
+# app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+# app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+# app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+# app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
+# app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+# app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+# app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
-mail = Mail(app)
+# mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -82,6 +86,10 @@ def load_user(user_id):
 @app.route('/')
 def home():
     return redirect(url_for('login'))
+
+@app.route('/sample')
+def sample():
+    return render_template('samples.html')
 
 # register route
 @ app.route('/register', methods=['GET', 'POST'])
@@ -111,11 +119,6 @@ def login():
                 return redirect(url_for('certificates'))
     return render_template('login.html', form=form)
 
-
-# @app.route('/dashboard', methods=['GET', 'POST'])
-# @login_required
-# def dashboard():
-#     return render_template('index.html')
 
 #Admin route
 @app.route('/admin')
@@ -368,9 +371,10 @@ def allowed_image_file(filename):
 @app.route('/settings')
 @login_required
 def settings():
-    user = current_user
-    # Pass the user's first and last name to the template
-    return render_template('settings.html', first_name=user.Fname, last_name=user.Lname)
+    return setting_functions.settings()
+#     user = current_user
+#     # Pass the user's first and last name to the template
+#     return render_template('settings.html', first_name=user.Fname, last_name=user.Lname)
 
 
 
@@ -380,50 +384,53 @@ def settings():
 @app.route('/settings/change_name', methods=['GET', 'POST'])
 @login_required
 def change_name():
-    form = db_classes.ChangeNameForm()
-    if form.validate_on_submit():
-        current_user.Fname = form.name.data.split()[0]  # assuming the first name is the first word
-        current_user.Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
-        db.session.commit()
-        flash('Your name has been updated.', 'success')
-        return redirect(url_for('settings'))
-    return render_template('change_name.html', form=form)
+    return setting_functions.change_name()
+#     form = db_classes.ChangeNameForm()
+#     if form.validate_on_submit():
+#         current_user.Fname = form.name.data.split()[0]  # assuming the first name is the first word
+#         current_user.Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
+#         db.session.commit()
+#         flash('Your name has been updated.', 'success')
+#         return redirect(url_for('settings'))
+#     return render_template('change_name.html', form=form)
 
  
 
 @app.route('/settings/change_email', methods=['GET', 'POST'])
 @login_required
 def change_email():
-    form = db_classes.ChangeEmailForm()
-    if form.validate_on_submit():
-        current_user.email = form.email.data
-        db.session.commit()
-        flash('Your email has been updated.', 'success')
-        return redirect(url_for('settings'))
-    return render_template('change_email.html', form=form)
+    return setting_functions.change_email()
+#     form = db_classes.ChangeEmailForm()
+#     if form.validate_on_submit():
+#         current_user.email = form.email.data
+#         db.session.commit()
+#         flash('Your email has been updated.', 'success')
+#         return redirect(url_for('settings'))
+#     return render_template('change_email.html', form=form)
 
     # Route and form for changing password
 @app.route('/settings/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
-    form = db_classes.ChangePasswordForm()
-    message = None  # Initialize the message variable
+    return setting_functions.change_password()
+#     form = db_classes.ChangePasswordForm()
+#     message = None  # Initialize the message variable
 
-    if form.validate_on_submit():
-        if bcrypt.check_password_hash(current_user.password, form.old_password.data):
-            if form.new_password.data == form.confirm_new_password.data:
-                # Set new password with bcrypt and decode it to string
-                hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
-                current_user.password = hashed_password
-                db.session.commit()
-                message = 'Your password has been updated successfully.'
-            else:
-                message = 'New password and confirmation do not match.'
-        else:
-            message = 'Incorrect old password.'
+#     if form.validate_on_submit():
+#         if bcrypt.check_password_hash(current_user.password, form.old_password.data):
+#             if form.new_password.data == form.confirm_new_password.data:
+#                 # Set new password with bcrypt and decode it to string
+#                 hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+#                 current_user.password = hashed_password
+#                 db.session.commit()
+#                 message = 'Your password has been updated successfully.'
+#             else:
+#                 message = 'New password and confirmation do not match.'
+#         else:
+#             message = 'Incorrect old password.'
 
-    # Pass the message to the template. If the message is None, nothing will be displayed.
-    return render_template('change_password.html', form=form, message=message)
+#     # Pass the message to the template. If the message is None, nothing will be displayed.
+#     return render_template('change_password.html', form=form, message=message)
 
 
 @app.route('/get_user_info')
@@ -436,11 +443,11 @@ def get_user_info():
     }
     return jsonify(user_info)
 
-class Certificate(db.Model):
-    __tablename__ = 'Certificate'
-    hash = db.Column(db.String(25), primary_key=True)
-    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+# class Certificate(db.Model):
+#     __tablename__ = 'Certificate'
+#     hash = db.Column(db.String(25), primary_key=True)
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
 class VerifyCertificateForm(FlaskForm):
     certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
@@ -476,57 +483,19 @@ def verify_certificate_api(secret_key):
 @app.route('/certificates', methods=['GET'])
 @login_required
 def certificates():
-    # Fetch the latest 3 certificates and all certificates from the database
-    latest_certificates = CertificateEvent.query.limit(3).all()
-    all_certificates = CertificateEvent.query.all()
-
-    # Render the 'certificates.html' template with the certificate data
-    return render_template('certificates.html', latest_certificates=latest_certificates, all_certificates=all_certificates)
+    return show_certificate_function.certificates()
 
 
 @app.route('/load_more_certificates', methods=['GET'])
 @login_required
 def load_more_certificates():
-    try:
-        # Get the number of certificates to load and the excluded IDs from the query parameters
-        loaded_count = int(request.args.get('loaded_count', 0))
-        exclude_ids = request.args.get('exclude_ids', '').split(',')
-
-        # Fetch additional certificates from the database, excluding the ones already loaded
-        additional_certificates = CertificateEvent.query \
-            .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
-            .offset(loaded_count) \
-            .limit(3) \
-            .all()
-
-        # Prepare a list of additional certificate details for JSON response
-        additional_certificates_list = [
-            {
-                'certificate_title': certificate.certificate_title,
-                'presenter_name': certificate.presenter_name,
-                'certificate_event_id': certificate.certificate_event_id,
-                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-                'certificate_description_female': certificate.certificate_description_female,
-                'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
-            }
-            for certificate in additional_certificates
-        ]
-
-        # Return the list of additional certificate details as a JSON response
-        return jsonify(additional_certificates_list)
-
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    return load_more_certificates_function.load_more_certificates()
 
 
 @app.route('/certificate_details/<certificate_event_id>', methods=['GET'])
 @login_required
 def certificate_details(certificate_event_id):
-    # Fetch the details of a specific certificate by its event ID
-    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
-
-    # Render the 'certificate_details.html' template with the specific certificate details
-    return render_template('certificate_details.html', certificate=certificate)
+    return certificate_details_function.certificate_details(certificate_event_id)
 
 # Add routes for other actions ( generate, download, send) as needed
 
@@ -534,81 +503,17 @@ def certificate_details(certificate_event_id):
 @app.route('/delete_confirmation/<certificate_event_id>', methods=['GET', 'POST'])
 @login_required
 def delete_confirmation(certificate_event_id):
-    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
+    return delete_confirmation_function.delete_confirmation(certificate_event_id) 
 
-    # Check if the certificate is already attached to a session
-    existing_session = object_session(certificate)
-
-    if existing_session:
-        existing_session.expunge(certificate)
-
-    if request.method == 'POST':
-        try:
-            # Verify the event name for confirmation
-            event_name = request.json.get('event_name', '')
-
-            if event_name == certificate.certificate_title:
-                # Delete the certificate
-                db.session.delete(certificate)
-                db.session.commit()
-
-                # Send email notification
-                send_delete_confirmation_email(certificate)
-
-                # Provide a success response
-                return jsonify({'success': True}), 200  # Return 200 OK status
-
-            else:
-                # Provide an error response (incorrect event name)
-                return jsonify({'success': False, 'error': 'Incorrect event name'}), 400
-
-        except Exception as e:
-            # Provide an error response (server error)
-            return jsonify({'success': False, 'error': str(e)}), 500
-
-    return render_template('delete_confirmation.html', certificate=certificate)
-
-# Function to send email notification
-def send_delete_confirmation_email(certificate):
-    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
-
-    if isinstance(recipient_email, str):
-        recipient_email = [recipient_email]  # Convert the string to a list with a single element
-
-    # Extract information from the certificate object
-    certificate_title = certificate.certificate_title
-    presenter_name = certificate.presenter_name
-    # Add more fields as needed
-
-    # Construct the email message
-    subject = f'Certificate Deleted: {certificate_title}'
-    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
-
-    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
-    msg.body = body
-    mail.send(msg)
-
+@app.route('/download_latest_event_certificates', methods=['GET'])
+def download_latest_event_certificates():
+    return download_certificate_function.download_certificates()
 
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required
 def newtemp():
-    form = db_classes.NewTemplates()
-    if form.validate_on_submit():
-        file = form.template_image.data
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                               secure_filename(file.filename)))
+    return template_functions.newtemp()
 
-
-        new_template = Template(template_name=form.template_name.data,
-                                           id = current_user.id,
-                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
-        db.session.add(new_template)
-        db.session.commit()
-
-        flash('A new template has been added successfully.')
-        return redirect(url_for('selectTemp'))  # It's better to use url_for() here
-
-    return render_template('create_new_template.html', form=form)
 
 
 @app.route('/uploads/<filename>')
@@ -618,220 +523,31 @@ def uploaded_file(filename):
 @app.route('/Select_template/<temp_id>',methods=['GET',"POST"])
 @login_required
 def template(temp_id):
-    # temp = db_classes.Template.query.filter_by(template_name=tempname).first()
-    # tempid= temp.template_id if temp else None
-    temp = Template.query.get_or_404(temp_id)
-    form=db_classes.customizationForm()
-    json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/FakeData.json')
-    ar_json_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/Arabicdata.json')
-    custom_file = os.path.abspath('../src/flask_website/FakeDataForAppearance/customization.json')
+    return template_functions.template(temp_id)
 
-    # Read the JSON file
-    with open(json_file, 'r') as file:
-        data = json.load(file)
-    
-    with open(ar_json_file, 'r') as file:
-        arData = json.load(file)
-    
-    with open(custom_file,'r') as file:
-      customization_data = json.load(file)
-
-    
-    # if request.method == 'POST':
-    if form.validate_on_submit():
-        form_item = form.item.data  # Assuming form.item is a Flask-WTF field
-        form_x = form.x.data
-        form_y = form.y.data
-        form_h = form.h.data
-        form_w = form.w.data
-        if form_item in customization_data:
-            customization_data[form_item]['x'] = form_x
-            customization_data[form_item]['y'] = form_y
-            customization_data[form_item]['h'] = form_h
-            customization_data[form_item]['w'] = form_w
-        with open(custom_file, 'w') as file:
-            json.dump(customization_data, file, indent=2)
-        
-        existing_customization = CertificateCustomizations.query.filter_by(
-            id=current_user.id,
-            template_id=temp.template_id).first()
-        if existing_customization:
-            # existing_customization.items_positions = customization_data
-            # Reactivate the existing event type using update statement
-            custom = update(CertificateCustomizations).where(CertificateCustomizations.template_id == temp.template_id and CertificateCustomizations.id == current_user.id).values(items_positions = customization_data)
-            db.session.execute(custom)
-            db.session.commit()
-        else:
-            new_customization = CertificateCustomizations(customization_id=str(uuid.uuid4()),
-                                                          id = current_user.id,
-                                                          template_id = temp.template_id,
-                                                          items_positions = customization_data )
-            # Add and commit the new record to the database
-            db.session.add(new_customization)
-            db.session.commit()
-    flash(f'Customizations Added Successfully.')
-
-    return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
 
 
 @app.route("/Select_template", methods=['GET',"POST"])
 @login_required
 def selectTemp():
-     # Assuming the user ID is stored in the id field of the User model
-    if current_user.user_role == 1 :
-        user_templates = Template.query.all()
-    else:
-        user_templates = Template.query.filter_by(id=current_user.id).all()
-    return render_template("select_template.html", templates=user_templates)
+    return template_functions.selectTemp()
 
-########
-@app.route('/preview_certificate', methods=['POST'])
-def preview_certificate():
-    try:
-        # Get the selected template and other details from the request
-        data = request.get_json()
-        selected_template = data.get('selected_template')
-
-        # Load default event data
-        with open('events/sample-event.yaml', 'r') as file:
-            event_data = yaml.safe_load(file)
-
-        # Update the template path with the selected template
-        event_data['certificate_background'] = selected_template
-
-        # Run main.py with updated event data
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data)], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False, 'error': result.stderr})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-
-######
 @app.route('/fetch_latest_pdf', methods=['GET'])
 def fetch_latest_pdf():
-    # The path to the output directory, considering the Docker container's file system
-    search_directory = os.path.abspath("/root/src/flask_website/static/output")
+    return generate_functions.fetch_latest_pdf()
 
-    try:
-        all_folders = [os.path.join(search_directory, d) for d in os.listdir(search_directory) if os.path.isdir(os.path.join(search_directory, d))]
-        latest_folder = max(all_folders, key=os.path.getmtime)
-
-        for file in os.listdir(latest_folder):
-            if file.endswith(".pdf"):
-                full_file_path = os.path.join(latest_folder, file)
-                # Generate the relative path from the static folder
-                relative_path = os.path.relpath(full_file_path, "/root/src/flask_website/static")
-                pdf_url = url_for('static', filename=relative_path.replace(os.sep, '/'))
-
-                return jsonify({'pdfUrl': pdf_url})
-
-        return jsonify({'error': 'No PDF found'}), 404
-
-    except Exception as e:
-        app.logger.error(f"Error in fetch_latest_pdf: {str(e)}")
-        return jsonify({'error': 'An internal error occurred'}), 500
 
 
 @app.route('/run_main_script/<temp_id>', methods=['POST'])
 def run_main_script(temp_id):
-    try:
-        customization = CertificateCustomizations.query.filter_by(template_id=temp_id).first()
-        template= Template.query.filter_by(template_id=temp_id).first()
-        event_data = {
-            'template_path': template.template_image,
-        }
-        if customization:
-            items_positions={
-                "Certificate_Title":customization.items_positions["Certificate_Title"],
-                "Intro": customization.items_positions["Intro"],
-                "recipient_title":customization.items_positions["recipient_title"],
-                "recipient_name":customization.items_positions["recipient_name"],
-                "body":customization.items_positions["body"] ,
-                "final_greeting":customization.items_positions["final_greeting"] ,
-                "contact_info":customization.items_positions["contact_info"],
-                "signature_1": customization.items_positions["signature_1"],
-                "signature_2": customization.items_positions["signature_2"]}
-        else:
-            items_positions={}
-        # Adjust the path according to your folder structure
-        # script_path = os.path.join(os.getcwd(), 'main.py')
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
-        return jsonify({'success': True, 'output': result.stdout})
-    
-    except subprocess.CalledProcessError as e:
-        return jsonify({'success': False, 'error': str(e)})
+    return generate_functions.run_main_script(temp_id)
 
 
 @app.route('/generate_certificate/<certificate_event_id>', methods=['POST'])
 @login_required
 def generate_certificate(certificate_event_id):
-    try:
-        certificate = CertificateEvent.query.get(certificate_event_id)
-        customization = CertificateCustomizations.query.filter_by(template_id=certificate.template_id).first()
-        if not certificate:
-            return jsonify({'success': False, 'error': 'Certificate not found'}), 404
+    return generate_functions.generate_certificate(certificate_event_id)
 
-        event_data = {
-            'certificate_event_id': str(certificate.certificate_event_id),
-            'certificate_title': certificate.certificate_title,
-            'event_type_id': certificate.event_type_id,
-            'template_path': certificate.template_path,
-            'presenter_name': certificate.presenter_name,
-            'secret_phrase': certificate.secret_phrase,
-            'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-            'certificate_description_female': certificate.certificate_description_female,
-            'certificate_description_male': certificate.certificate_description_male,
-            'file_path': certificate.file_path,
-            'First_Signatory_Name': certificate.First_Signatory_Name,
-            'First_Signatory_Position': certificate.First_Signatory_Position,
-            'First_Signatory_Path': certificate.First_Signatory_Path,
-            'Second_Signatory_Name': certificate.Second_Signatory_Name,
-            'Second_Signatory_Position': certificate.Second_Signatory_Position,
-            'Second_Signatory_Path': certificate.Second_Signatory_Path,
-            'greeting_female': certificate.greeting_female,
-            'greeting_male': certificate.greeting_male,
-            'intro': certificate.intro,
-            'male_recipient_title': certificate.male_recipient_title,
-            'female_recipient_title': certificate.female_recipient_title,
-            # ... add other fields as needed ...
-        }
-
-        if customization:
-            items_positions={
-                "Certificate_Title":customization.items_positions["Certificate_Title"],
-                "Intro": customization.items_positions["Intro"],
-                "recipient_title":customization.items_positions["recipient_title"],
-                "recipient_name":customization.items_positions["recipient_name"],
-                "body":customization.items_positions["body"] ,
-                "final_greeting":customization.items_positions["final_greeting"] ,
-                "contact_info":customization.items_positions["contact_info"],
-                "signature_1": customization.items_positions["signature_1"],
-                "signature_2": customization.items_positions["signature_2"]}
-        else:
-            items_positions={}
-        
-        try:
-            certificate_exists = CertificateEvent.query.get(certificate_event_id) is not None
-            if not certificate_exists:
-                return jsonify({'success': False, 'error': 'Certificate not found'}), 404
-
-            stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_key="ggGBs2hu9j")
-            db.session.execute(stmt)
-            db.session.commit()
-
-        except Exception as e:
-            db.session.rollback()  # Rollback in case of error
-        
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
-        if result.returncode == 0:
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False, 'error': result.stderr})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
-    
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required
 def send_email():
@@ -867,7 +583,7 @@ def send_email():
                     msg.attach(email + '_certificate.pdf', 'application/pdf', certificate.read())
 
                 # Send the email
-                mail.send(msg)
+                db_connection.mail.send(msg)
             else:
                 # No certificate file found for the user
                 print(f"Certificate not found for {email}")
@@ -880,19 +596,6 @@ def send_email():
             flash("Default emails sent successfully!", "success")
 
     return render_template('send_email.html')
-
-
-@app.route('/download_latest_event_certificates', methods=['GET'])
-def download_latest_event_certificates():
-    # The path to the latest event folder
-    latest_event_folder = os.path.abspath("/root/src/flask_website/static/output")
-
-    # Create a zip file containing all PDFs in the folder
-    zip_file_path = os.path.join(os.getcwd(), 'latest_event_certificates.zip')
-    shutil.make_archive(zip_file_path[:-4], 'zip', latest_event_folder)
-
-    # Send the zip file for download
-    return send_from_directory(os.getcwd(), 'latest_event_certificates.zip', as_attachment=True)
 
 
 if __name__ == "__main__":
