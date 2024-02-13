@@ -30,16 +30,47 @@ import download_certificate_function
 import template_functions
 import generate_functions
 import db_connection
-import users_functions
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
 load_dotenv()
 
+# to access the data in .env file
+# HOSTNAME = os.environ.get('HOSTNAME')
+# DB_PORT = os.environ.get('DB_PORT')
+# MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
+# MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
+# MYSQL_USER = os.environ.get('MYSQL_USER')
+# MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
+# SCHEMA = os.environ.get("SCHEMA")
+
 app = db_connection.app
 db = db_connection.db
 bcrypt = db_connection.bcrypt
+# old uri 
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+# new uri
+# app.config['SQLALCHEMY_DATABASE_URI'] =\
+#     f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 
+# TimeoutError Database need to change
+# app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
+# app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
+
+# app.config['SECRET_KEY'] = 'thisisasecretkey'
+# app.config['UPLOAD_FOLDER']='../certificate-templates'
+
+
+# # Mail Server Configuration
+# app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+# app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+# app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+# app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
+# app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+# app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+# app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+# mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -49,6 +80,8 @@ login_manager.login_view = 'login'
 @login_manager.user_loader
 def load_user(user_id):
     return db_classes.users.query.get(int(user_id))
+
+
 
 @app.route('/')
 def home():
@@ -61,33 +94,89 @@ def sample():
 # register route
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
-    return users_functions.register()
+    form = db_classes.RegisterForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data)
+        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
+        db.session.add(new_user)
+        db.session.commit()
+        flash('success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html', form=form)
+
 
 # login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return users_functions.login()
+    form = db_classes.LoginForm()
+    if form.validate_on_submit():
+        user = db_classes.users.query.filter_by(email=form.email.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                return redirect(url_for('certificates'))
+    return render_template('login.html', form=form)
 
 
 #Admin route
 @app.route('/admin')
 @login_required
 def admin():
-    return users_functions.admin()
-
+    users_list = db_classes.users.query.all()
+    user_role = current_user.user_role
+    if user_role == 1:
+        return render_template('admin.html',users_list=users_list)
+    else:
+        flash('Access denied')
+        return redirect(url_for('certificates'))
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_user(id):
-    return users_functions.update_user(id)
+    form = db_classes.UpdateForm()
+    user_to_edit = db_classes.users.query.get(id)
+    existing_email = db_classes.users.query.filter_by(email=form.email.data).first()
+    if form.validate_on_submit():
+        if form.email.data == user_to_edit.email:
+            email_to_save = user_to_edit.email
+        elif existing_email:
+            flash('email already exist')
+            return redirect(url_for('update_user',id=user_to_edit.id))
+        else:
+            email_to_save = form.email.data
 
+
+        if form.password.data == user_to_edit.password:
+            password_to_save = form.password.data
+        else:
+            password_to_save = bcrypt.generate_password_hash(form.password.data)
+        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = email_to_save, Fname = form.Fname.data, password = password_to_save)
+        db.session.execute(user_to_edit)
+        db.session.commit()
+        flash('success')
+        return redirect(url_for('settings'))
+    else:
+        return render_template('update.html',form=form,user_to_edit=user_to_edit)
     
 #delete user
 @app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(id):
-    return users_functions.delete_user(id)
+    if current_user.id == id :
+        flash('you are currently using this user')
+        return redirect(url_for('settings'))
+    else:
+
+        user_to_delete = db_classes.users.query.get(id)
+        uname = user_to_delete.Fname
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash(f'you deleted {uname} successfuly')
+        return redirect(url_for('settings'))
+        
 
 
 # New route for Manage Event Types
@@ -283,12 +372,27 @@ def allowed_image_file(filename):
 @login_required
 def settings():
     return setting_functions.settings()
+#     user = current_user
+#     # Pass the user's first and last name to the template
+#     return render_template('settings.html', first_name=user.Fname, last_name=user.Lname)
+
+
+
+
 
 
 @app.route('/settings/change_name', methods=['GET', 'POST'])
 @login_required
 def change_name():
     return setting_functions.change_name()
+#     form = db_classes.ChangeNameForm()
+#     if form.validate_on_submit():
+#         current_user.Fname = form.name.data.split()[0]  # assuming the first name is the first word
+#         current_user.Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
+#         db.session.commit()
+#         flash('Your name has been updated.', 'success')
+#         return redirect(url_for('settings'))
+#     return render_template('change_name.html', form=form)
 
  
 
@@ -296,6 +400,14 @@ def change_name():
 @login_required
 def change_email():
     return setting_functions.change_email()
+#     form = db_classes.ChangeEmailForm()
+#     if form.validate_on_submit():
+#         current_user.email = form.email.data
+#         db.session.commit()
+#         flash('Your email has been updated.', 'success')
+#         return redirect(url_for('settings'))
+#     return render_template('change_email.html', form=form)
+
 
 
     # Route and form for changing password
@@ -303,7 +415,24 @@ def change_email():
 @login_required
 def change_password():
     return setting_functions.change_password()
+#     form = db_classes.ChangePasswordForm()
+#     message = None  # Initialize the message variable
 
+#     if form.validate_on_submit():
+#         if bcrypt.check_password_hash(current_user.password, form.old_password.data):
+#             if form.new_password.data == form.confirm_new_password.data:
+#                 # Set new password with bcrypt and decode it to string
+#                 hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+#                 current_user.password = hashed_password
+#                 db.session.commit()
+#                 message = 'Your password has been updated successfully.'
+#             else:
+#                 message = 'New password and confirmation do not match.'
+#         else:
+#             message = 'Incorrect old password.'
+
+#     # Pass the message to the template. If the message is None, nothing will be displayed.
+#     return render_template('change_password.html', form=form, message=message)
 
 
 @app.route('/get_user_info')
@@ -316,7 +445,11 @@ def get_user_info():
     }
     return jsonify(user_info)
 
-
+# class Certificate(db.Model):
+#     __tablename__ = 'Certificate'
+#     hash = db.Column(db.String(25), primary_key=True)
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
 #class VerifyCertificateForm(FlaskForm):
 #    certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
@@ -342,6 +475,9 @@ def verify_certificate_api(secret_key):
         }), 200
     else:
         return jsonify({'valid': False, 'error': 'Certificate is invalid or not found.'}), 404
+
+
+
 
 
 
