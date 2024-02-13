@@ -31,6 +31,7 @@ import download_certificate_function
 import template_functions
 import generate_functions
 import db_connection
+import users_functions
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
@@ -95,88 +96,32 @@ def sample():
 # register route
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = db_classes.RegisterForm()
-
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = db_classes.users(password=hashed_password, user_role= form.user_role.data, email=form.email.data, Fname=form.Fname.data, Lname=form.Lname.data)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('success')
-        return redirect(url_for('login'))
-
-    return render_template('register.html', form=form)
+    return users_functions.register()
 
 
 # login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = db_classes.LoginForm()
-    if form.validate_on_submit():
-        user = db_classes.users.query.filter_by(email=form.email.data).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, form.password.data):
-                login_user(user)
-                return redirect(url_for('certificates'))
-    return render_template('login.html', form=form)
+    return users_functions.login()
 
 
 #Admin route
 @app.route('/admin')
 @login_required
 def admin():
-    users_list = db_classes.users.query.all()
-    user_role = current_user.user_role
-    if user_role == 1:
-        return render_template('admin.html',users_list=users_list)
-    else:
-        flash('Access denied')
-        return redirect(url_for('certificates'))
+    return users_functions.admin()
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_user(id):
-    form = db_classes.UpdateForm()
-    user_to_edit = db_classes.users.query.get(id)
-    existing_email = db_classes.users.query.filter_by(email=form.email.data).first()
-    if form.validate_on_submit():
-        if form.email.data == user_to_edit.email:
-            email_to_save = user_to_edit.email
-        elif existing_email:
-            flash('email already exist')
-            return redirect(url_for('update_user',id=user_to_edit.id))
-        else:
-            email_to_save = form.email.data
-
-
-        if form.password.data == user_to_edit.password:
-            password_to_save = form.password.data
-        else:
-            password_to_save = bcrypt.generate_password_hash(form.password.data)
-        user_to_edit = update(db_classes.users).where(db_classes.users.id == id).values(user_role = form.user_role.data, email = email_to_save, Fname = form.Fname.data, password = password_to_save)
-        db.session.execute(user_to_edit)
-        db.session.commit()
-        flash('success')
-        return redirect(url_for('settings'))
-    else:
-        return render_template('update.html',form=form,user_to_edit=user_to_edit)
+    return users_functions.update_user(id)
     
 #delete user
 @app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
 @login_required
 def delete_user(id):
-    if current_user.id == id :
-        flash('you are currently using this user')
-        return redirect(url_for('settings'))
-    else:
-
-        user_to_delete = db_classes.users.query.get(id)
-        uname = user_to_delete.Fname
-        db.session.delete(user_to_delete)
-        db.session.commit()
-        flash(f'you deleted {uname} successfuly')
-        return redirect(url_for('settings'))
+    return users_functions.delete_user(id)
         
 
 
