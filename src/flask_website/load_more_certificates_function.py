@@ -1,7 +1,6 @@
 from db_classes import CertificateEvent
 from flask import request, jsonify
 
-
 def load_more_certificates():
     try:
         # Get the number of certificates to load and the excluded IDs from the query parameters
@@ -11,6 +10,7 @@ def load_more_certificates():
         # Fetch additional certificates from the database, excluding the ones already loaded
         additional_certificates = CertificateEvent.query \
             .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
+            .order_by(CertificateEvent.certificate_event_id.desc()) \
             .offset(loaded_count) \
             .limit(3) \
             .all()

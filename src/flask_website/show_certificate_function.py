@@ -3,7 +3,7 @@ from flask import render_template
 
 def certificates():
     # Fetch the latest 3 certificates and all certificates from the database
-    latest_certificates = CertificateEvent.query.limit(3).all()
+    latest_certificates = CertificateEvent.query.order_by(CertificateEvent.certificate_event_id.desc()).limit(3).all()
     all_certificates = CertificateEvent.query.all()
 
     # Render the 'certificates.html' template with the certificate data
