@@ -99,7 +99,7 @@ CREATE TABLE users
 
             CREATE TABLE addCertificate
             (
-                certificate_event_id VARCHAR(255) NOT NULL,
+                certificate_event_id INT(255) AUTO_INCREMENT NOT NULL,
                 certificate_title VARCHAR(255),--
                 event_type_id INT(255) NULL,
                 -- Allow NULL values for event_type_id
@@ -144,7 +144,7 @@ CREATE TABLE users
             (
                 hash VARCHAR(25) NOT NULL,
                 recipient_id VARCHAR(255),
-                certificate_event_id VARCHAR(255),
+                certificate_event_id INT(255),
                 PRIMARY KEY (hash),
                 FOREIGN KEY (recipient_id) REFERENCES recipient(recipient_id),
                 FOREIGN KEY (certificate_event_id) REFERENCES addCertificate(certificate_event_id)
@@ -152,7 +152,7 @@ CREATE TABLE users
 
             CREATE TABLE CertificateSigns
             (
-                certificate_event_id VARCHAR(255),
+                certificate_event_id INT(255),
                 sign_id VARCHAR(255),
                 FOREIGN KEY (certificate_event_id) REFERENCES addCertificate(certificate_event_id),
                 FOREIGN KEY (sign_id) REFERENCES signs(sign_id)

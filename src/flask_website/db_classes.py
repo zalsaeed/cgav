@@ -51,7 +51,7 @@ class instructor(db.Model):
 
 class CertificateEvent(db.Model):
     __tablename__ = 'addCertificate'
-    certificate_event_id = db.Column(db.String(255), primary_key=True)
+    certificate_event_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customization_id = db.Column(db.String(255))
     certificate_title = db.Column(db.String(255))
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
@@ -106,7 +106,7 @@ class Certificate(db.Model):
     __tablename__ = 'Certificate'
     hash = db.Column(db.String(25), primary_key=True)
     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('CertificateEvent.certificate_event_id'))
+    certificate_event_id = db.Column(db.Integer, db.ForeignKey('addCertificate.certificate_event_id'))
 
 # ======== Classes related to Flask Forms =================================================================
     
@@ -244,7 +244,7 @@ class customizationForm(FlaskForm):
 class Certificate(db.Model):
     hash = db.Column(db.String(25), primary_key=True)
     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+    certificate_event_id = db.Column(db.Integer, db.ForeignKey('addCertificate.certificate_event_id'))
 
 class VerifyCertificateForm(FlaskForm):
     certificate_hash = StringField('Certificate Code', validators=[DataRequired()])

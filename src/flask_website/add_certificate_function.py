@@ -94,7 +94,6 @@ def add_certificate():
                     image_path_2 = None
 
                 new_certificate_event = CertificateEvent(
-                    certificate_event_id=str(uuid.uuid4()),
                     certificate_title=form.certificate_title.data,
                     event_type_id=form.event_type.data,
                     template_path=template_path,
