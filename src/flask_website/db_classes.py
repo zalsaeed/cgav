@@ -1,5 +1,6 @@
 # Standard Library Imports
 from werkzeug.utils import secure_filename
+import uuid
 
 # Related Third Party Imports
 from flask import Flask
@@ -31,8 +32,12 @@ class users(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable=False)
     user_role = db.Column(db.Integer, nullable=True)
 
+def generate_recipient_id():
+    return str(uuid.uuid4())
+
 class recipient(db.Model):
-    recipient_id = db.Column(db.String(255), primary_key=True)
+    __tablename__ = 'recipient'
+    recipient_id = db.Column(db.String(255), primary_key=True, default=generate_recipient_id)
     first_name = db.Column(db.String(255))
     middle_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
@@ -41,6 +46,7 @@ class recipient(db.Model):
     phone_number = db.Column(db.String(20))
 
 class instructor(db.Model):
+    __tablename__ = 'instructor'
     instructor_id = db.Column(db.String(255), primary_key=True)
     first_name = db.Column(db.String(255))
     middle_name = db.Column(db.String(255))
@@ -51,7 +57,8 @@ class instructor(db.Model):
 
 class CertificateEvent(db.Model):
     __tablename__ = 'addCertificate'
-    certificate_event_id = db.Column(db.String(255), primary_key=True)
+    certificate_event_id = db.Column(db.Integer, primary_key=True)
+    created_by = db.Column(db.Integer)
     customization_id = db.Column(db.String(255))
     certificate_title = db.Column(db.String(255))
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
@@ -76,8 +83,8 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
-    secret_key = db.Column(db.String(255)) 
-    recipient_id = db.Column(db.String(255))
+    # secret_key = db.Column(db.String(255)) 
+    # recipient_id = db.Column(db.String(255))
     
 class Template(db.Model):
     __tablename__ = 'template'
@@ -97,16 +104,16 @@ class CertificateCustomizations(db.Model):
 
 
 class EventType(db.Model):
-    __tablename__ = 'Event_type'  # Ensure this matches the table name in the database
+    __tablename__ = 'Event_type'  
     event_type_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     event_type_name = db.Column(db.String(255))
     is_active = db.Column(db.Boolean, default=True)
 
-class Certificate(db.Model):
-    __tablename__ = 'Certificate'
-    hash = db.Column(db.String(25), primary_key=True)
+class Certificate_table(db.Model):
+    __tablename__ = 'Certificate_table'
+    certificate_hash = db.Column(db.String(25), primary_key=True)
     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('CertificateEvent.certificate_event_id'))
+    certificate_event_id = db.Column(db.Integer, db.ForeignKey('addCertificate.certificate_event_id'))
 
 # ======== Classes related to Flask Forms =================================================================
     
@@ -167,6 +174,7 @@ class UpdateForm(FlaskForm):
 
 class CertificateForm(FlaskForm):
     certificate_title = StringField('Event Title', validators=[DataRequired()])
+    created_by = db.Column(db.Integer)
     presenter_name = StringField('Presenter Name', validators=[DataRequired()])
     secret_phrase = StringField('Secret Phrase', validators=[DataRequired()])
     template_choice = SelectField('Certificate Template', choices=[])
@@ -241,10 +249,10 @@ class customizationForm(FlaskForm):
     w = IntegerField('*Width')
     submit = SubmitField('Save')
 
-class Certificate(db.Model):
-    hash = db.Column(db.String(25), primary_key=True)
-    recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
-    certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
+# class Certificate(db.Model):
+#     hash = db.Column(db.String(25), primary_key=True)
+#     recipient_id = db.Column(db.String(255), db.ForeignKey('recipient.recipient_id'))
+#     certificate_event_id = db.Column(db.String(255), db.ForeignKey('addCertificate.certificate_event_id'))
 
 class VerifyCertificateForm(FlaskForm):
     certificate_hash = StringField('Certificate Code', validators=[DataRequired()])
