@@ -75,13 +75,6 @@ def store_certificate_hash(certificate_hash, recipient_id, event_id):
     log = logging.getLogger(__name__)
 
     try:
-        # Check if the certificate with the given event ID already exists
-        event_id_exists = Certificate_table.query.filter_by(certificate_event_id=event_id).first() is not None
-
-        if event_id_exists:
-            log.error("Certificate Already Generated.")
-            return "Certificate Already Generated."
-
         # Create and add the new certificate
         new_certificate = Certificate_table(
             certificate_hash=certificate_hash,
