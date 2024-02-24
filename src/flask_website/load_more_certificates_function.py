@@ -12,9 +12,6 @@ def load_more_certificates():
         additional_certificates = CertificateEvent.query \
             .filter(CertificateEvent.created_by == current_user.id) \
             .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
-            .order_by(CertificateEvent.certificate_event_id.desc()) \
-            .offset(loaded_count) \
-            .limit(3) \
             .all()
 
         # Prepare a list of additional certificate details for JSON response
