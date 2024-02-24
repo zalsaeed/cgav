@@ -16,8 +16,11 @@
       <p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>
       <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
       <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
-      <p class="card-text">File Path: {{ certificate.file_path }}</p>
-      <p class="card-text">Description: {{ certificate.certificate_description_female }}</p>
+      <p class="card-text">CSV File Path: {{ certificate.file_path }}</p>
+      <p class="card-text">Description(for female): {{ certificate.certificate_description_female }}</p>
+      <p class="card-text">Description(for male): {{ certificate.certificate_description_male }}</p>
+      <p class="card-text">Greeting(for female): {{ certificate.female_recipient_title }}</p>
+      <p class="card-text">Greeting(for male): {{ certificate.male_recipient_title }}</p>
       <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
       <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
       <p class="card-text">Path 1: {{ certificate.First_Signatory_Path }}</p>
@@ -145,57 +148,57 @@
   }
 
   function handleDeleteConfirmation() {
-  document.getElementById('delete-confirmation-popup').style.display = 'none';
-  document.getElementById('loading-popup').style.display = 'block';
+    document.getElementById('delete-confirmation-popup').style.display = 'none';
+    document.getElementById('loading-popup').style.display = 'block';
 
-  const eventName = document.getElementById('event_name').value;
+    const eventName = document.getElementById('event_name').value;
 
-  // Make an AJAX request to delete the certificate
-  fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ event_name: eventName }),
-  })
-    .then(response => response.json())
-    .then(result => {
-      document.getElementById('loading-popup').style.display = 'none';
+    // Make an AJAX request to delete the certificate
+    fetch(`/delete_confirmation/{{ certificate.certificate_event_id }}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ event_name: eventName }),
+    })
+      .then(response => response.json())
+      .then(result => {
+        document.getElementById('loading-popup').style.display = 'none';
 
-      if (result.success) {
-        // Show success message
-        Swal.fire({
-          title: 'Success!',
-          text: 'Certificate deleted successfully',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Redirect to certificates page or perform any other action
-            redirectToCertificates();
-          }
-        });
-      } else {
+        if (result.success) {
+          // Show success message
+          Swal.fire({
+            title: 'Success!',
+            text: 'Certificate deleted successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Redirect to certificates page or perform any other action
+              redirectToCertificates();
+            }
+          });
+        } else {
+          // Show error message
+          Swal.fire({
+            title: 'Error!',
+            text: result.error || 'An error occurred while deleting the certificate',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('loading-popup').style.display = 'none';
         // Show error message
         Swal.fire({
           title: 'Error!',
-          text: result.error || 'An error occurred while deleting the certificate',
+          text: 'An error occurred while deleting the certificate',
           icon: 'error',
           confirmButtonText: 'OK'
         });
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('loading-popup').style.display = 'none';
-      // Show error message
-      Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred while deleting the certificate',
-        icon: 'error',
-        confirmButtonText: 'OK'
       });
-    });
 
     return false;
   }
@@ -221,7 +224,7 @@
     fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+          throw new Error('Network response was not ok');
         }
         return response.json();
       })
@@ -229,14 +232,17 @@
         if (data.success) {
           Swal.fire({
             title: 'Success!',
-            text: 'Certificate Generate Seccessfully .',
+            text: 'Certificate generated successfully.',
             icon: 'success',
             confirmButtonText: 'OK'
+          }).then(() => {
+            // Reload the page to reflect changes
+            location.reload();
           });
         } else {
           Swal.fire({
             title: 'Error!',
-            text: `Error initiating certificate generation: ${data.error}`,
+            text: `Error generating certificate: ${data.error}`,
             icon: 'error',
             confirmButtonText: 'OK'
           });
@@ -246,7 +252,7 @@
         console.error('Error:', error);
         Swal.fire({
           title: 'Error!',
-          text: `Error: ${error}`,
+          text: 'Certificate Already Generated',
           icon: 'error',
           confirmButtonText: 'OK'
         });
