@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="container mt-5">
-  <h1 class="mb-4 text-center">Add Event</h1>
+  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;">Add Event</h6>
   <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST"
     enctype="multipart/form-data">
 
@@ -245,10 +245,10 @@
       <p>* The file must be in CSV format</p>
     </div>
 
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
-      <button type="button" class="button cancel"
+    <div class="text-center">
+      <button type="button" class="button w-40 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-2"
         onclick="window.location.href='{{ url_for('certificates') }}'">Cancel</button>
-      <input type="submit" value="Submit" class="button">
+      <input type="submit" value="Submit" class="button w-40 text-white font-bold py-2 px-4 rounded m-2">
     </div>
 
 

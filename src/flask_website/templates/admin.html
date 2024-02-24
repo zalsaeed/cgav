@@ -1,87 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Admin page</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}">
-        <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
-            rel="stylesheet">
-        <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Flowbite -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-        <!-- font-awesome -->
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- Link to the external style.css -->
-        <link rel="stylesheet" href="static/css/style.css">
-    </head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap" rel="stylesheet">
+    <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Flowbite -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Link to the external style.css -->
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
     {% for mesg in get_flashed_messages() %}
-  <!-- Alert Success  -->
-  <div
-    class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600"
-  >
-    <p class="self-center">
-      {{ mesg }}
-    </p>
-    <strong class="text-xl align-center cursor-pointer alert-del"
-      >&times;</strong
-    >
-  </div>
-{% endfor %}
-<!-- component -->
-<div class="text-gray-900 bg-gray-200">
-    <div class="p-4 flex">
-        <h1 class="text-3xl">Users</h1>
+    <!-- Alert Success  -->
+    <div class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600">
+        <p class="self-center">
+            {{ mesg }}
+        </p>
+        <strong class="text-xl align-center cursor-pointer alert-del">&times;</strong>
     </div>
-    <div class="px-3 py-4 flex justify-center">
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
-            <tbody>
-                <tr class="border-b">
-                    <th class="text-left p-3 px-5">ID</th>
-                    <th class="text-left p-3 px-5">First Name</th>
-                    <th class="text-left p-3 px-5">Email</th>
-                    <th class="text-left p-3 px-5">Role</th>
-                    <th></th>
-                </tr>
-                {% for list in users_list %}
-                <tr class="border-b hover:bg-orange-100 bg-gray-100">
-                    <td class="p-3 px-5">
-                        {{ list.id }}
-                    </td>
-                    <td class="p-3 px-5">
-                        {{ list.Fname }}
-                    </td>
-                    <td class="p-3 px-5">
-                        {{ list.email }}
-                    </td>
-                    <td class="p-3 px-5">
-                        {{ list.user_role }}
-                    </td>
-                    <td class="p-3 px-5 flex justify-end">
-                        <a href="{{ url_for('update_user', id=list.id) }}" class="mr-3 text-sm bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">edit</a>
-                    </td>
-                    <td class="p-3 px-5 flex justify-end">
-                        <a href="{{ url_for('delete_user', id=list.id) }}" class="mr-3 text-sm bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
+    {% endfor %}
+    <!-- component -->
+    <div class="text-gray-900 bg-gray-200">
+        <div class="p-4 flex">
+            <h1 class="text-3xl">Users</h1>
+        </div>
+        <div class="px-3 py-4 flex justify-center">
+            <table class="w-full text-md bg-white shadow-md rounded mb-4">
+                <tbody>
+                    <tr class="border-b">
+                        <th class="text-left p-3 px-5">ID</th>
+                        <th class="text-left p-3 px-5">First Name</th>
+                        <th class="text-left p-3 px-5">Email</th>
+                        <th class="text-left p-3 px-5">Role</th>
+                        <th></th>
+                    </tr>
+                    {% for list in users_list %}
+                    <tr class="border-b hover:bg-orange-100 bg-gray-100">
+                        <td class="p-3 px-5">{{ list.id }}</td>
+                        <td class="p-3 px-5">{{ list.Fname }}</td>
+                        <td class="p-3 px-5">{{ list.email }}</td>
+                        <td class="p-3 px-5">{{ list.user_role }}</td>
+                        <td class="p-3 px-5 flex justify-end">
+                            <a href="{{ url_for('update_user', id=list.id) }}" class="mr-3 text-sm bg-[#427AA1] hover:bg-[#2c4e71] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
+                            <a href="{{ url_for('delete_user', id=list.id) }}" class="mr-3 text-sm bg-[#ccc] hover:bg-[#bbb] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </body>
 <script>
     // Script For Close alert

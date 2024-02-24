@@ -6,7 +6,7 @@
     <div class="sidebar">
         <!-- Sidebar content -->
         <h2>{{ first_name }} {{ last_name }}</h2>
-        {% if current_user.user_role ==1 %}
+        {% if current_user.user_role == 1 %}
             <div id="admin">Admin page</div>
         {% endif %}
         <div id="publicProfileTab">Public profile</div>
@@ -15,14 +15,10 @@
     <div class="content">
         <div class="public-profile-container">
             {% for mesg in get_flashed_messages() %}
-            <!-- Alert Success  -->
-            <div
-              class="flex justify-between text-white-200 shadow-inner rounded p-3 bg-yellow-600"
-            >
-              <p class="self-center">{{ mesg }}</p>
-              <strong class="text-xl align-center cursor-pointer alert-del"
-                >&times;</strong
-              >
+            <!-- Alert Success -->
+            <div class="flex justify-between text-white shadow-inner rounded p-3 bg-yellow-600">
+                <p class="self-center">{{ mesg }}</p>
+                <strong class="text-xl align-center cursor-pointer alert-del">&times;</strong>
             </div>
             {% endfor %}
             <h2>Public Profile</h2>
@@ -30,22 +26,17 @@
                 <label for="displayName">Name:</label>
                 <span id="displayName">{{ first_name }} {{ last_name }}</span>
                 <!-- Button for changing the name -->
-                <a href="{{ url_for('change_name') }}" class="form-control mr-3 text-sm bg-blue-500
-                hover:bg-blue-700 text-white py-1 px-2 rounded">Change Name</a>
+                <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Name</a>
             </div>
             <div class="profile-field">
                 <label for="displayEmail">Email:</label>
                 <span id="displayEmail">{{ current_user.email }}</span>
                 <!-- Button for changing the email -->
-                <a href="{{ url_for('change_email') }}" class="form-control mr-3 text-sm bg-blue-500
-                hover:bg-blue-700 text-white py-1 px-2 rounded
-                focus:outline-none focus:shadow-outline">Change Email</a>
+                <a href="{{ url_for('change_email') }}" class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Change Email</a>
             </div>
             <!-- Button for changing the password -->
             <div class="profile-field">
-                <a href="{{ url_for('change_password') }}" class="form-control mr-3 text-sm bg-blue-500
-                hover:bg-blue-700 text-white py-1 px-2 rounded
-                focus:outline-none focus:shadow-outline">Change Password</a>
+                <a href="{{ url_for('change_password') }}" class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Change Password</a>
             </div>
         </div>
     </div>
@@ -80,35 +71,25 @@ function loadPublicProfile() {
             const profileContent = `
                 <div class="public-profile-container">
                     {% for mesg in get_flashed_messages() %}
-                    <!-- Alert Success  -->
-                    <div
-                      class="flex justify-between text-white-200 shadow-inner rounded p-3 bg-yellow-600"
-                    >
+                    <!-- Alert Success -->
+                    <div class="flex justify-between text-white shadow-inner rounded p-3 bg-yellow-600">
                       <p class="self-center">{{ mesg }}</p>
-                      <strong class="text-xl align-center cursor-pointer alert-del"
-                        >&times;</strong
-                      >
+                      <strong class="text-xl align-center cursor-pointer alert-del">&times;</strong>
                     </div>
                     {% endfor %}
                     <h2>Public Profile</h2>
                     <div class="profile-field">
                         <label>Name:</label>
                         <span>${response.Fname} ${response.Lname}</span>
-                        <a href="/settings/change_name" class="form-control mr-3 text-sm bg-blue-500
-                  hover:bg-blue-700 text-white py-1 px-2 rounded
-                  focus:outline-none focus:shadow-outline">Change Name</a>
+                        <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Name</a>
                     </div>
                     <div class="profile-field">
                         <label>Email:</label>
                         <span>${response.email}</span>
-                        <a href="/settings/change_email" class="form-control mr-3 text-sm bg-blue-500
-                  hover:bg-blue-700 text-white py-1 px-2 rounded
-                  focus:outline-none focus:shadow-outline">Change Email</a>
+                        <a href="{{ url_for('change_email') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Email</a>
                     </div>
                     <div class="profile-field">
-                        <a href="/settings/change_password" class="form-control mr-3 text-sm bg-red-500
-                  hover:bg-red-700 text-white py-1 px-2 rounded
-                  focus:outline-none focus:shadow-outline">Change Password</a>
+                        <a href="{{ url_for('change_password') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Password</a>
                     </div>
                 </div>
             `;
@@ -125,9 +106,7 @@ function loadPublicProfile() {
             showError('An error occurred while loading the profile.');
             console.log(error); // Log the error for debugging
         }
-        
     }).always(hideLoading); // Hide loading indicator when the request is complete
-    
 }
 
 $(document).ready(function() {
