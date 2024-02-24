@@ -10,7 +10,7 @@ from sqlalchemy import update
 from flask_login import LoginManager, current_user
 
 # Local App/Library Specific Imports
-from db_classes import CertificateEvent, EventType, CertificateForm,CertificateCustomizations, Template
+from db_classes import CertificateEvent, EventType, CertificateForm,CertificateCustomizations, Template,Certificate_table
 import db_connection
 
 
@@ -47,6 +47,10 @@ def fetch_latest_pdf():
         app.logger.error(f"Error in fetch_latest_pdf: {str(e)}")
         return jsonify({'error': 'An internal error occurred'}), 500
 
+def certificate_event_id_already_stored(certificate_event_id):
+    # Query the database to check if the certificate event ID already exists
+    return Certificate_table.query.filter_by(certificate_event_id=certificate_event_id).first() is not None
+
 def run_main_script(temp_id):
     try:
         customization = CertificateCustomizations.query.filter_by(template_id=temp_id).first()
@@ -77,13 +81,18 @@ def run_main_script(temp_id):
 
 def generate_certificate(certificate_event_id):
     try:
+        # Check if the certificate event ID is already stored
+        if certificate_event_id_already_stored(certificate_event_id):
+            return jsonify({'success': False, 'error': 'Certificate event ID already exists'}), 400
+
+
         certificate = CertificateEvent.query.get(certificate_event_id)
         customization = CertificateCustomizations.query.filter_by(template_id=certificate.template_id).first()
         if not certificate:
             return jsonify({'success': False, 'error': 'Certificate not found'}), 404
 
         event_data = {
-            'certificate_event_id': str(certificate.certificate_event_id),
+            'certificate_event_id': int(certificate.certificate_event_id),
             'certificate_title': certificate.certificate_title,
             'event_type_id': certificate.event_type_id,
             'template_path': certificate.template_path,
@@ -104,7 +113,7 @@ def generate_certificate(certificate_event_id):
             'intro': certificate.intro,
             'male_recipient_title': certificate.male_recipient_title,
             'female_recipient_title': certificate.female_recipient_title,
-            # ... add other fields as needed ...
+            
         }
 
         if customization:
@@ -126,14 +135,17 @@ def generate_certificate(certificate_event_id):
             if not certificate_exists:
                 return jsonify({'success': False, 'error': 'Certificate not found'}), 404
 
-            stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_key="ggGBs2hu9j")
+            stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_phrase="ggGBs2hu9j")
             db.session.execute(stmt)
             db.session.commit()
 
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
         
-        result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
+        # result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
+        script_path = os.path.abspath(os.path.join('', 'flask_website', 'main.py'))
+        result = subprocess.run(['python', script_path, '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
+
         if result.returncode == 0:
             return jsonify({'success': True})
         else:
