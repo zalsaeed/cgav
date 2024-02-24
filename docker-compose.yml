@@ -24,20 +24,3 @@ services:
     ports:
       - "${DB_PORT}:3306"
     hostname: "${HOSTNAME}"
-
-  # test:
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile.test
-  #   volumes:
-  #     - ./src:/usr/src/
-  #   depends_on:
-  #     - web
-  #     - db
-  #   env_file:
-  #     - .env
-  #   links:
-  #     - web
-  #     - db
-
-
