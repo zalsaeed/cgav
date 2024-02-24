@@ -29,12 +29,6 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         self.base = automap_base()
         self.base.prepare(autoload_with=self.db.engine)
 
-    
-
-    
-
-    
-
     def test_insert_row_in_users_table(self):
 
         info = {
@@ -62,4 +56,4 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main()    
