@@ -1,6 +1,6 @@
 from db_classes import CertificateEvent
 from flask import request, jsonify
-
+from flask_login import current_user
 
 def load_more_certificates():
     try:
@@ -10,6 +10,7 @@ def load_more_certificates():
 
         # Fetch additional certificates from the database, excluding the ones already loaded
         additional_certificates = CertificateEvent.query \
+            .filter(CertificateEvent.created_by == current_user.id) \
             .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
             .offset(loaded_count) \
             .limit(3) \
