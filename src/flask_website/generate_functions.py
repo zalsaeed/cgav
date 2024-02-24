@@ -71,7 +71,7 @@ def run_main_script(temp_id):
                 "signature_2": customization.items_positions["signature_2"]}
         else:
             items_positions={}
-        # Adjust the path according to your folder structure
+    
         # script_path = os.path.join(os.getcwd(), 'main.py')
         result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         return jsonify({'success': True, 'output': result.stdout})
