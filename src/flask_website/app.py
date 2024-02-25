@@ -35,6 +35,8 @@ import db_connection
 import users_functions
 import event_types
 import mail
+from api_function import verify_certificate_api
+
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
@@ -177,25 +179,10 @@ def get_user_info():
     }
     return jsonify(user_info)
 
-@app.route('/api/verify_certificate/<secret_phrase>', methods=['GET'])
-def verify_certificate_api(secret_phrase):
-    certificate = CertificateEvent.query.filter_by(secret_phrase=secret_phrase).first()
-    if certificate:
-        # Use a fake recipient name as a placeholder
-        fake_recipient_name = "سمية بنت ناصر الناصر"
+@app.route('/api/verify_certificate/<certificate_hash>', methods=['GET'])
+def route_verify_certificate(certificate_hash):
+    return verify_certificate_api(certificate_hash)
 
-        return jsonify({
-            'valid': True,
-            'certificate_details': {
-                'recipient_name': fake_recipient_name,  # Static placeholder value
-                'certificate_title': certificate.certificate_title,
-                'presenter_name': certificate.presenter_name,
-                'event_date': certificate.event_date.strftime("%Y-%m-%d") if certificate.event_date else None,
-                # Include any other fields you want to return
-            }
-        }), 200
-    else:
-        return jsonify({'valid': False, 'error': 'Certificate is invalid or not found.'}), 404
 
 
 # route to show certificate
