@@ -38,7 +38,7 @@
 
 <body>
 
-    <div id="customizationadded" style="display: none;">
+    <!-- <div id="customizationadded" style="display: none;">
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600">
@@ -52,7 +52,7 @@
             </div>
         {% endif %}
     {% endwith %}
-        </div>
+        </div> -->
     <div class="text-center p-5">
         <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;">Certificate Appearance</h1>
     </div>
@@ -311,12 +311,7 @@
                     console.error('Error:', error);
                 });
             }
-    var alert_del = document.querySelectorAll('.alert-del');
-    alert_del.forEach((x) =>
-            x.addEventListener('click', function () {
-                flash1.style.display="none"
-            })
-    );
+   
     function previewCertificate(temp_id) {
         var loadingIndicator = document.getElementById('loadingIndicator');
         var imageElement = document.querySelector('.Image-container img');

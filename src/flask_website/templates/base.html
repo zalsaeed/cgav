@@ -25,6 +25,37 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
+<style>
+    .flash-message {
+        position: fixed;
+        top: 60px;
+        /* Adjust this value according to your header height */
+        right: 20px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .flash-message p {
+        margin: 0;
+    }
+
+    .flash-message button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .flash-message button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
 <body>
     <!-- Navbar  -->
     <nav class="bg-white border-gray-200 dark:bg-gray-900 shadow-md ">
@@ -199,7 +230,18 @@
             </div>
         </div>
     </nav>
-    {%block body%}{%endblock%}
+    {%block body%}
+    
+    {%endblock%}
+    <!-- Notificatin -->
+    {% for msg in get_flashed_messages() %}
+    <div class="flash-message" id="flashMessage">
+        <p>{{ msg }}</p>
+        <button onclick="dismissFlashMessage()">Dismiss</button>
+      </div>
+    {% endfor %}
+
+
     <!-- Footer  -->
 
 
@@ -216,5 +258,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 </body>
+<script>
 
+    function dismissFlashMessage() {
+
+        var flashMessage = document.getElementById('flashMessage');
+        flashMessage.style.display = 'none';
+}
+</script>
 </html>
