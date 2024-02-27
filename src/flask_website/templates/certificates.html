@@ -84,10 +84,12 @@
             });
 
             // If no more certificates to load, update the button and notify the user
+            console.log("Number of certificates:", certificates.length);
             if (certificates.length === 0) {
-              certificatesHeader.textContent = 'All Event';
-              loadMoreCertificatesBtn.textContent = 'No More Events';
-              loadMoreCertificatesBtn.disabled = true;
+                console.log("No more certificates to load.");
+                certificatesHeader.textContent = 'All Event';
+                loadMoreCertificatesBtn.textContent = 'No More Events';
+                loadMoreCertificatesBtn.disabled = true;
             }
           } else {
             console.error('Invalid response format:', certificates);
