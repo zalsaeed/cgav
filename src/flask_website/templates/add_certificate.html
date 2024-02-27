@@ -3,7 +3,7 @@
 {% block title %}Create Event with File Upload{% endblock %}
 {% block body %}
 <div class="container mt-5 mx-auto">
-  <h6 class="font-bold text-4xl text-center text-blue-600">Add Event</h6>
+  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;">Add Event</h6>
   <form id="upload-and-certificate-form" action="{{ url_for('add_certificate') }}" method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
