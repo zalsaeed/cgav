@@ -46,6 +46,9 @@
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
     <p>Are you sure you want to delete the certificate titled "{{ certificate.certificate_title }}"?</p>
+    <p style="color: #ff0000; font-weight: bold;"> Deleting this event will permanently remove it from the system.</p>
+    <p>This action will also prevent certificate verification via the API and trigger email 
+      notifications to recipients about the event's deletion.</p>
     <form onsubmit="return handleDeleteConfirmation()">
       <label for="event_name">Enter the event name for confirmation:</label>
       <input type="text" id="event_name" name="event_name" required>
