@@ -29,8 +29,10 @@ def delete_confirmation(certificate_event_id):
                 db.session.delete(certificate)
                 db.session.commit()
 
-                # Send email notification
-                mail.send_delete_confirmation_email(certificate)
+                # Check if the certificate is either sent or downloaded
+                if is_certificate_sent(certificate_event_id) or is_certificate_downloaded(certificate_event_id):
+                    # Send email notification for deletion
+                    mail.send_delete_confirmation_email(certificate)
 
                 # Provide a success response
                 return jsonify({'success': True}), 200  # Return 200 OK status
@@ -44,3 +46,31 @@ def delete_confirmation(certificate_event_id):
             return jsonify({'success': False, 'error': str(e)}), 500
 
     return render_template('delete_confirmation.html', certificate=certificate)
+
+
+def is_certificate_sent(certificate_event_id):
+   """
+   Check if a certificate is sent.
+
+     Args:
+   - certificate_event_id: The ID of the certificate event.
+
+     Returns:
+   - sent_status: Boolean indicating if the certificate is sent.
+   """
+   certificate = CertificateEvent.query.get_or_404(certificate_event_id)
+   return certificate.sent
+
+
+def is_certificate_downloaded(certificate_event_id):
+    """
+    Check if a certificate is downloaded.
+
+    Args:
+    - certificate_event_id: The ID of the certificate event.
+
+    Returns:
+    - downloaded_status: Boolean indicating if the certificate is downloaded.
+    """
+    certificate = CertificateEvent.query.get_or_404(certificate_event_id)
+    return certificate.downloaded
