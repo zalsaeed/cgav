@@ -36,7 +36,7 @@
       <button id="generate-btn" class="custom-button"
         onclick="handleGenerate('{{ certificate.certificate_event_id }}')">Generate</button>
 
-      <button id="download-btn" class="custom-button" onclick="handleDownload()">Download</button>
+      <button id="download-btn" class="custom-button" onclick="handleDownload('{{ certificate.certificate_event_id }}')">Download</button>
       <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
     </div>
   </div>
@@ -263,31 +263,28 @@
   }
 
 
-  // Downloud section 
-  function handleDownload() {
-    // Make an AJAX request to the new Flask route
-    fetch(`/download_certificates`, {
+  // Download section 
+  function handleDownload(eventId) {
+    fetch(`/download_certificates/${eventId}`, {
       method: 'GET',
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
+          throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         return response.blob();
       })
       .then(data => {
-        // Create a blob URL for the zip file and trigger the download
         const blobUrl = URL.createObjectURL(data);
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = 'latest_event_certificates.zip';
+        a.download = `event_${eventId}_certificates.zip`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
       })
       .catch(error => console.error('Error:', error));
   }
-
   ////////////////
   // Other buttons (Generate, downloud, send)
 </script>
