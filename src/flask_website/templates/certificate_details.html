@@ -282,8 +282,26 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+
+        // Show success notification
+        Swal.fire({
+          title: 'Success!',
+          text: 'Certificates downloaded successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
       })
-      .catch(error => console.error('Error:', error));
+      .catch(error => {
+        console.error('Error:', error);
+
+        // Show error notification
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to download certificates. Please try again later.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      });
   }
   ////////////////
   // Other buttons (Generate, downloud, send)
