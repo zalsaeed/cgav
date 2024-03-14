@@ -211,8 +211,8 @@ def certificate_details(certificate_event_id):
 def delete_confirmation(certificate_event_id):
     return delete_confirmation_function.delete_confirmation(certificate_event_id) 
 
-@app.route('/download_latest_event_certificates', methods=['GET'])
-def download_latest_event_certificates():
+@app.route('/download_certificates', methods=['GET'])
+def download_certificates():
     return download_certificate_function.download_certificates()
 
 @app.route("/create_new_template", methods=['GET', "POST"])

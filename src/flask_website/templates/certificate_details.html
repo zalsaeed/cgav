@@ -266,7 +266,7 @@
   // Downloud section 
   function handleDownload() {
     // Make an AJAX request to the new Flask route
-    fetch(`/download_latest_event_certificates`, {
+    fetch(`/download_certificates`, {
       method: 'GET',
     })
       .then(response => {
