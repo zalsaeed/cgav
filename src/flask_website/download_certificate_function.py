@@ -1,3 +1,6 @@
+from db_classes import CertificateEvent
+from db_connection import db
+
 import os
 import shutil
 from flask import send_from_directory
@@ -20,6 +23,11 @@ def download_certificates(event_id):
     zip_file_name = f'event_{event_id}_certificates.zip'
     zip_file_path = os.path.join(os.getcwd(), zip_file_name)
     shutil.make_archive(zip_file_path[:-4], 'zip', event_folder)
+
+    # Update certificate status to indicate it has been downloaded
+    certificate = CertificateEvent.query.get_or_404(event_id)
+    certificate.downloaded = True
+    db.session.commit()
 
     # Send the zip file for download
     return send_from_directory(os.getcwd(), zip_file_name, as_attachment=True)
