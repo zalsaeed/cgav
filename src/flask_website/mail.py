@@ -79,6 +79,8 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 
 import db_connection
+from db_classes import CertificateEvent
+from db_connection import db
 
 app = db_connection.app
 
@@ -103,6 +105,21 @@ logger = logging.getLogger(__name__)
 def send_email():
     logger.debug("Inside send_email function")
     if request.method == 'POST':
+        event_id = request.form.get('event_id')  # Get the event ID from the form
+
+        # Define the path to the output directory
+        output_directory = os.path.abspath("/root/src/flask_website/static/output")
+
+        # Search for the folder corresponding to the event ID
+        event_folder = None
+        for folder_name in os.listdir(output_directory):
+            if folder_name.startswith(f"{event_id}-"):
+                event_folder = os.path.join(output_directory, folder_name)
+                break
+
+        if event_folder is None:
+            return "Event folder not found", 404
+
         selected_emails = request.form.getlist('emails')
         logger.debug("Selected Emails: %s", selected_emails)
 
@@ -115,7 +132,7 @@ def send_email():
         # Iterate over selected emails
         for email in selected_emails:
             # Find the PDF file for the user
-            certificate_folder = os.path.join(os.path.dirname(__file__), 'static/output/sample-event-2024-01-30t18:53:15.396730')
+            certificate_folder = event_folder  # Use the event folder
             logger.debug("Certificate Folder: %s", certificate_folder)
             pdf_files = [f for f in os.listdir(certificate_folder) if f.startswith(f"{email}-") and f.endswith(".pdf")]
             logger.debug("PDF Files: %s", pdf_files)
@@ -141,6 +158,12 @@ def send_email():
 
                 # Send the email
                 mail.send(msg)
+                
+                # Update certificate status to indicate it has been sent
+                certificate = CertificateEvent.query.get_or_404(event_id)
+                certificate.sended = True
+                db.session.commit()
+
             else:
                 # No certificate file found for the user
                 logger.debug("Certificate not found for %s", email)
