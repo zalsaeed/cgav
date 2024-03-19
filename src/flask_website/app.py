@@ -148,6 +148,22 @@ def logout():
 def add_certificate():
     return add_certificate_function.add_certificate()
 
+@app.route('/ar_form', methods=['GET', 'POST'])
+@login_required
+def ar_form():
+    return add_certificate_function.ar_form()
+
+@app.route('/en_form', methods=['GET', 'POST'])
+@login_required
+def en_form():
+    return add_certificate_function.en_form()
+
+@app.route('/aren_form', methods=['GET', 'POST'])
+@login_required
+def aren_form():
+    return add_certificate_function.aren_form()
+
+
 @app.route('/settings')
 @login_required
 def settings():
