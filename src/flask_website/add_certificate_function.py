@@ -120,13 +120,19 @@ def ar_form():
             try:
                 db.session.add(new_certificate_event)
                 db.session.commit()
+
+                # Retrieve the ID of the newly added certificate event
+                certificate_event_id = new_certificate_event.certificate_event_id
+
+                # Construct the URL for the event details page
+                event_details_url = url_for('certificate_details', certificate_event_id=certificate_event_id)
+
                 flash('Certificate event successfully added.')
-                return redirect(url_for('certificates'))  # Fixed redirect here
+                # Redirect to the event details page
+                return redirect(event_details_url)
             except Exception as e:
                 db.session.rollback()
                 message = f"Failed to add certificate: {str(e)}"
-        else:
-            message = 'Please upload a CSV file.'
 
     return render_template(
         'ar_form.html',  # Change the template name if necessary
@@ -226,13 +232,19 @@ def en_form():
             try:
                 db.session.add(new_certificate_event)
                 db.session.commit()
+
+                # Retrieve the ID of the newly added certificate event
+                certificate_event_id = new_certificate_event.certificate_event_id
+
+                # Construct the URL for the event details page
+                event_details_url = url_for('certificate_details', certificate_event_id=certificate_event_id)
+
                 flash('Certificate event successfully added.')
-                return redirect(url_for('certificates'))  # Fixed redirect here
+                # Redirect to the event details page
+                return redirect(event_details_url)
             except Exception as e:
                 db.session.rollback()
                 message = f"Failed to add certificate: {str(e)}"
-        else:
-            message = 'Please upload a CSV file.'
 
     return render_template(
         'en_form.html',  # Change the template name if necessary
@@ -330,15 +342,21 @@ def aren_form():
                     )
 
                     try:
-                        # Commit the new CertificateEvent to the database
                         db.session.add(new_certificate_event)
                         db.session.commit()
-                        return redirect(url_for('certificates'))
+
+                        # Retrieve the ID of the newly added certificate event
+                        certificate_event_id = new_certificate_event.certificate_event_id
+
+                        # Construct the URL for the event details page
+                        event_details_url = url_for('certificate_details', certificate_event_id=certificate_event_id)
+
+                        flash('Certificate event successfully added.')
+                        # Redirect to the event details page
+                        return redirect(event_details_url)
                     except Exception as e:
                         db.session.rollback()
                         message = f"Failed to add certificate: {str(e)}"
-        else:
-            message = 'Please upload a CSV file.'
 
     return render_template(
         'aren_form.html',  # Change the template name if necessary
