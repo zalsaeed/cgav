@@ -169,6 +169,7 @@ IF NOT EXISTS addCertificate
     greeting_male TEXT,
     sended BOOLEAN DEFAULT FALSE,   -- New field for tracking if the certificate is sent
     downloaded BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is downloaded
+    generated_ BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is generated
     PRIMARY KEY
 (certificate_event_id),
     FOREIGN KEY
