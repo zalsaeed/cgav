@@ -137,7 +137,9 @@ def generate_certificate(certificate_event_id):
 
             stmt = update(CertificateEvent).where(CertificateEvent.certificate_event_id == certificate_event_id).values(secret_phrase="ggGBs2hu9j")
             db.session.execute(stmt)
+            certificate.generated_ = True
             db.session.commit()
+            
 
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
