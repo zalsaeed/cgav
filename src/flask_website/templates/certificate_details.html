@@ -37,8 +37,8 @@
       <button id="generate-btn" class="custom-button"
         onclick="handleGenerate('{{ certificate.certificate_event_id }}')">Generate</button>
 
-      <button id="download-btn" class="custom-button {% if not certificate.generated %}disabled {% endif %}"
-      {% if not certificate.generated %}title="Generate event certificates first" {% endif %}
+      <button id="download-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
+      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %}
       onclick="handleDownload('{{ certificate.certificate_event_id }}')">Download</button>
       
       <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
@@ -151,7 +151,7 @@
     background-color: #ccc; /* Gray background color */
     cursor: not-allowed; /* Change cursor to indicate button is not clickable */
   }
-  
+
 </style>
 
 <script>
