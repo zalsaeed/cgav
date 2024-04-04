@@ -13,10 +13,6 @@ from db_classes import recipient, Certificate_table
 from db_connection import db, app
 import sqlalchemy.exc
 
-# app = db_connection.app
-# db = db_connection.db
-# bcrypt = db_connection.bcrypt
-
 # set up logger
 for handler in logging.root.handlers[:]:  
     logging.root.removeHandler(handler)

@@ -91,19 +91,6 @@ IF NOT EXISTS instructor
 );
 
 CREATE TABLE
-IF NOT EXISTS signs
-(
-    sign_id VARCHAR
-(255) NOT NULL,
-    sign_name VARCHAR
-(255),
-    sign_image VARCHAR
-(320),
-    PRIMARY KEY
-(sign_id)
-);
-
-CREATE TABLE
 IF NOT EXISTS CertificateCustomizations
 (
     customization_id VARCHAR

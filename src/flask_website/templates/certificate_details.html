@@ -214,10 +214,14 @@
     document.getElementById('success-popup').style.display = 'none';
     document.getElementById('error-popup').style.display = 'none';
   }
+
   function handleSend() {
-    // Implement send functionality
-    window.location.href = '/send_email';
+    // Get the event ID
+    const eventId = '{{ certificate.certificate_event_id }}';
+    // Redirect the user to the send_email page with the event ID as a query parameter
+    window.location.href = `/send_email?eventId=${eventId}`;
   }
+
 
   ///////////////////
   function handleGenerate(certificateEventId) {

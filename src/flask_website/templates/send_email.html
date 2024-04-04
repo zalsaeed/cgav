@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-bold mb-4">Send Emails</h2>
-    <form action="{{ url_for('send_email') }}" method="post" enctype="multipart/form-data" id="emailForm">
+    <form action="/send_email?eventId={{ eventId }}" method="post" enctype="multipart/form-data" id="emailForm">
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">Select Emails:</label>
 
@@ -17,17 +17,14 @@
             </div>
 
             <!-- Checkboxes for emails -->
+            {% for recipient in recipients %}
             <div class="mt-2">
-                <input type="checkbox" name="emails" value="wsam76@hotmail.com" data-username="wsam76" id="user1"
+                <input type="checkbox" name="emails" value="{{ recipient.email }}"
+                    data-username="{{ recipient.username }}" id="{{ recipient.username }}"
                     class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="user1" class="text-sm text-gray-700">wsam76@hotmail.com</label>
+                <label for="{{ recipient.username }}" class="text-sm text-gray-700">{{ recipient.email }}</label>
             </div>
-
-            <div class="mt-2">
-                <input type="checkbox" name="emails" value="iiw7.jr@gmail.com" data-username="iiw7" id="user2"
-                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="user2" class="text-sm text-gray-700">iiw7.jr@gmail.com</label>
-            </div>
+            {% endfor %}
             <!-- Button to open the pop-up -->
             <button type="button"
                 class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
@@ -186,10 +183,16 @@
                 return;
             }
 
-            // Submit the form using AJAX
+            // Retrieve the eventId from the current URL
+            var eventId = new URLSearchParams(window.location.search).get('eventId');
+
+            // Update the form action URL to include the eventId as a query parameter
+            var formAction = event.target.action + '?eventId=' + encodeURIComponent(eventId);
+
+            // Submit the form using AJAX with the updated action URL
             var formData = new FormData(event.target);
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', event.target.action, true);
+            xhr.open('POST', formAction, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     // Emails sent successfully
@@ -206,6 +209,8 @@
             };
             xhr.send(formData);
         });
+
+
     </script>
 
 </div>
