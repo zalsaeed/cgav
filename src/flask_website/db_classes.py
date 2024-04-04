@@ -83,6 +83,9 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
+    downloaded = db.Column(db.Boolean, default=False)  # New field to indicate if the event was downloaded
+    sended = db.Column(db.Boolean, default=False)  # New field to indicate if the event was sent
+    generated_ = db.Column(db.Boolean, default=False)  # New field to indicate if the event was generated
     # secret_key = db.Column(db.String(255)) 
     # recipient_id = db.Column(db.String(255))
     

@@ -11,7 +11,7 @@
 </div>
 
   <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Event</h2>
-  <div class="row">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     <!-- Display the latest 3 certificates -->
     {% for certificate in latest_certificates %}
     <div class="col-md-4 mb-4 latest-certificate" id="certificate-{{ certificate.certificate_event_id }}">
@@ -28,7 +28,7 @@
     {% endfor %}
   </div>
 
-  <div id="all-certificates" class="row">
+  <div id="all-certificates" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     <!-- AJAX will populate this section -->
   </div>
 
@@ -84,10 +84,12 @@
             });
 
             // If no more certificates to load, update the button and notify the user
+            console.log("Number of certificates:", certificates.length);
             if (certificates.length === 0) {
-              certificatesHeader.textContent = 'All Event';
-              loadMoreCertificatesBtn.textContent = 'No More Events';
-              loadMoreCertificatesBtn.disabled = true;
+                console.log("No more certificates to load.");
+                certificatesHeader.textContent = 'All Event';
+                loadMoreCertificatesBtn.textContent = 'No More Events';
+                loadMoreCertificatesBtn.disabled = true;
             }
           } else {
             console.error('Invalid response format:', certificates);

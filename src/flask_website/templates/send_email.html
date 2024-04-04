@@ -106,6 +106,7 @@
         function updateEmailDetailsAndClosePopup() {
             var subject = document.getElementById('subject').value;
             var customContent = document.getElementById('custom-content').value;
+            var eventId = "certificate.certificate_event_id"; // Set the event ID dynamically
 
             // Check if subject or custom content is empty
             if (subject.trim() === '' || customContent.trim() === '') {

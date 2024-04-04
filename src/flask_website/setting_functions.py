@@ -53,7 +53,8 @@ def change_password():
                 hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
                 current_user.password = hashed_password
                 db.session.commit()
-                message = 'Your password has been updated successfully.'
+                flash('Your password has been updated successfully.')
+                return redirect(url_for('settings'))
             else:
                 message = 'New password and confirmation do not match.'
         else:

@@ -35,6 +35,8 @@ import db_connection
 import users_functions
 import event_types
 import mail
+from api_function import verify_certificate_api
+
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
 # Load environment variables from the .env file
@@ -146,6 +148,22 @@ def logout():
 def add_certificate():
     return add_certificate_function.add_certificate()
 
+@app.route('/ar_form', methods=['GET', 'POST'])
+@login_required
+def ar_form():
+    return add_certificate_function.ar_form()
+
+@app.route('/en_form', methods=['GET', 'POST'])
+@login_required
+def en_form():
+    return add_certificate_function.en_form()
+
+@app.route('/aren_form', methods=['GET', 'POST'])
+@login_required
+def aren_form():
+    return add_certificate_function.aren_form()
+
+
 @app.route('/settings')
 @login_required
 def settings():
@@ -177,25 +195,10 @@ def get_user_info():
     }
     return jsonify(user_info)
 
-@app.route('/api/verify_certificate/<secret_phrase>', methods=['GET'])
-def verify_certificate_api(secret_phrase):
-    certificate = CertificateEvent.query.filter_by(secret_phrase=secret_phrase).first()
-    if certificate:
-        # Use a fake recipient name as a placeholder
-        fake_recipient_name = "سمية بنت ناصر الناصر"
+@app.route('/api/verify_certificate/<certificate_hash>', methods=['GET'])
+def route_verify_certificate(certificate_hash):
+    return verify_certificate_api(certificate_hash)
 
-        return jsonify({
-            'valid': True,
-            'certificate_details': {
-                'recipient_name': fake_recipient_name,  # Static placeholder value
-                'certificate_title': certificate.certificate_title,
-                'presenter_name': certificate.presenter_name,
-                'event_date': certificate.event_date.strftime("%Y-%m-%d") if certificate.event_date else None,
-                # Include any other fields you want to return
-            }
-        }), 200
-    else:
-        return jsonify({'valid': False, 'error': 'Certificate is invalid or not found.'}), 404
 
 
 # route to show certificate
@@ -224,9 +227,14 @@ def certificate_details(certificate_event_id):
 def delete_confirmation(certificate_event_id):
     return delete_confirmation_function.delete_confirmation(certificate_event_id) 
 
-@app.route('/download_latest_event_certificates', methods=['GET'])
-def download_latest_event_certificates():
-    return download_certificate_function.download_certificates()
+@app.route('/get_certificate_list/<int:event_id>', methods=['GET'])
+def get_certificate_list(event_id):
+    return download_certificate_function.get_certificate_list(event_id)
+
+@app.route('/download_certificates/<int:event_id>', methods=['POST'])
+def download_certificates(event_id):
+    return download_certificate_function.download_certificates(event_id, request.json.get('selected_certificates'))
+
 
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required

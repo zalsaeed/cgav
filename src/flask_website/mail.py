@@ -188,6 +188,12 @@ def send_email():
 
                 # Send the email
                 mail.send(msg)
+                
+                # Update certificate status to indicate it has been sent
+                certificate = CertificateEvent.query.get_or_404(event_id)
+                certificate.sended = True
+                db.session.commit()
+
             else:
                 # No certificate file found for the user
                 logger.debug("Certificate not found for %s", email)
@@ -198,6 +204,46 @@ def send_email():
             flash("Default emails sent successfully!", "success")
 
         return redirect(url_for('send_email'))
+
+# Function to send delete email notification (delete_confirm_function.py)
+def send_delete_confirmation_email(certificate):
+    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
+
+    if isinstance(recipient_email, str):
+        recipient_email = [recipient_email]  # Convert the string to a list with a single element
+
+    # Extract information from the certificate object
+    certificate_title = certificate.certificate_title
+    presenter_name = certificate.presenter_name
+    # Add more fields as needed
+
+    # Construct the email message
+    subject = f'Certificate Deleted: {certificate_title}'
+    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+
+    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
+    msg.body = body
+    db_connection.mail.send(msg)
+
+# Function to send delete email notification (delete_confirm_function.py)
+def send_delete_confirmation_email(certificate):
+    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
+
+    if isinstance(recipient_email, str):
+        recipient_email = [recipient_email]  # Convert the string to a list with a single element
+
+    # Extract information from the certificate object
+    certificate_title = certificate.certificate_title
+    presenter_name = certificate.presenter_name
+    # Add more fields as needed
+
+    # Construct the email message
+    subject = f'Certificate Deleted: {certificate_title}'
+    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+
+    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
+    msg.body = body
+    db_connection.mail.send(msg)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
