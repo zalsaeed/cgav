@@ -52,7 +52,9 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <h2>Select Certificates to Download</h2>
     <div id="certificate-list"></div>
-    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download Selected</button>
+    <button id="select-all-btn" class="custom-button" onclick="selectAllCertificates(true)">Select All</button>
+    <button id="deselect-all-btn" class="custom-button" onclick="selectAllCertificates(false)" style="display: none;">Deselect All</button>
+    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download</button>
   </div>
 </div>
 
@@ -391,6 +393,17 @@
       console.error('Error:', error);
       Swal.fire('Error', 'Failed to download selected certificates. Please try again later.', 'error');
     });
+  }
+
+  function selectAllCertificates(selectAll) {
+  const checkboxes = document.querySelectorAll('input[name="certificates"]');
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = selectAll;
+  });
+
+  // Toggle the display of the 'Select All' and 'Deselect All' buttons
+  document.getElementById('select-all-btn').style.display = selectAll ? 'none' : 'block';
+  document.getElementById('deselect-all-btn').style.display = selectAll ? 'block' : 'none';
   }
 
   function closeModal() {
