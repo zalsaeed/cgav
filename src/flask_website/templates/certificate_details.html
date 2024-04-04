@@ -46,6 +46,16 @@
   </div>
 </div>
 
+<!-- Certificate List Modal -->
+<div id="certificate-list-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2>Select Certificates to Download</h2>
+    <div id="certificate-list"></div>
+    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download Selected</button>
+  </div>
+</div>
+
 <!-- Delete Confirmation Popup -->
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
@@ -151,6 +161,43 @@
     background-color: #ccc; /* Gray background color */
     cursor: not-allowed; /* Change cursor to indicate button is not clickable */
   }
+
+  /* modal styly*/
+  .modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
 </style>
 
@@ -274,44 +321,76 @@
 
 
   // Download section 
-  function handleDownload(eventId) {
-    fetch(`/download_certificates/${eventId}`, {
-      method: 'GET',
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-        return response.blob();
-      })
+   // Function to fetch and display available certificates
+   function handleDownload(eventId) {
+    fetch(`/get_certificate_list/${eventId}`, { method: 'GET' })
+      .then(response => response.json())
       .then(data => {
-        const blobUrl = URL.createObjectURL(data);
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = `event_${eventId}_certificates.zip`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const modalContent = document.getElementById('certificate-list');
+        modalContent.innerHTML = '';
 
-        // Show success notification
-        Swal.fire({
-          title: 'Success!',
-          text: 'Certificates downloaded successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK'
-        });
+        if (data.certificates && data.certificates.length > 0) {
+          data.certificates.forEach(certificate => {
+            if (certificate.endsWith('.pdf')) {
+              const label = document.createElement('label');
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.name = 'certificates';
+              checkbox.value = certificate;
+              label.appendChild(checkbox);
+              label.appendChild(document.createTextNode(` ${certificate}`));
+              modalContent.appendChild(label);
+              modalContent.appendChild(document.createElement('br'));
+            }
+          });
+          document.getElementById('certificate-list-modal').style.display = 'block';
+        } else {
+          modalContent.innerHTML = 'No certificates available for download.';
+        }
       })
       .catch(error => {
         console.error('Error:', error);
-
-        // Show error notification
-        Swal.fire({
-          title: 'Error!',
-          text: 'Failed to download certificates. Please generate the event first. If you have already generated it, please try again later.',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
+        Swal.fire('Error', 'Failed to fetch certificates. Please try again later.', 'error');
       });
+  }
+
+  // Function to download selected certificates
+  function downloadSelectedCertificates(eventId) {
+    const selectedCertificates = Array.from(document.querySelectorAll('input[name="certificates"]:checked'))
+                                      .map(checkbox => checkbox.value);
+
+    if (selectedCertificates.length === 0) {
+      Swal.fire('Error', 'Please select at least one certificate to download.', 'error');
+      return;
+    }
+
+    fetch(`/download_certificates/${eventId}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ selected_certificates: selectedCertificates })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(response.statusText);
+      return response.blob();
+    })
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `selected_certificates_${eventId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      document.getElementById('certificate-list-modal').style.display = 'none';
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      Swal.fire('Error', 'Failed to download selected certificates. Please try again later.', 'error');
+    });
+  }
+
+  function closeModal() {
+    document.getElementById('certificate-list-modal').style.display = 'none';
   }
   ////////////////
   // Other buttons (Generate, downloud, send)
