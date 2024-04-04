@@ -16,30 +16,36 @@ def download_certificates(event_id, selected_certificates=None):
             break
 
     if event_folder is None:
-        return "Event folder not found", 404
+        return jsonify({"error": "Event folder not found"}), 404
 
     zip_file_name = f'event_{event_id}_certificates.zip'
-    zip_file_path = os.path.join(os.getcwd(), zip_file_name)
+    zip_file_path = os.path.join(tempfile.gettempdir(), zip_file_name)
 
-    if selected_certificates:
-        # Create a zip file with selected certificates
-        with tempfile.TemporaryDirectory() as temp_dir:
-            for certificate in selected_certificates:
-                certificate_path = os.path.join(event_folder, certificate)
-                if os.path.isfile(certificate_path):
-                    shutil.copy(certificate_path, temp_dir)
+    try:
+        if selected_certificates:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                for certificate in selected_certificates:
+                    certificate_path = os.path.join(event_folder, certificate)
+                    if os.path.isfile(certificate_path):
+                        shutil.copy(certificate_path, temp_dir)
+                shutil.make_archive(zip_file_path[:-4], 'zip', temp_dir)
+        else:
+            shutil.make_archive(zip_file_path[:-4], 'zip', event_folder)
 
-            shutil.make_archive(zip_file_path[:-4], 'zip', temp_dir)
-    else:
-        # Create a zip file with all certificates in the event folder
-        shutil.make_archive(zip_file_path[:-4], 'zip', event_folder)
+        # Update certificate status
+        certificate = CertificateEvent.query.get_or_404(event_id)
+        certificate.downloaded = True
+        db.session.commit()
 
-    # Update certificate status
-    certificate = CertificateEvent.query.get_or_404(event_id)
-    certificate.downloaded = True
-    db.session.commit()
+        response = send_from_directory(tempfile.gettempdir(), zip_file_name, as_attachment=True)
 
-    return send_from_directory(os.getcwd(), zip_file_name, as_attachment=True)
+        # Remove the zip file after sending
+        os.remove(zip_file_path)
+
+        return response
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 def get_certificate_list(event_id):
     output_directory = os.path.abspath("/root/src/flask_website/static/output")
