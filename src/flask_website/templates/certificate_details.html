@@ -50,10 +50,15 @@
 <div id="certificate-list-modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
-    <h2>Select Certificates to Download</h2>
+    <h1>Select Certificates to Download</h1>
+
+    <!-- 'Select All' checkbox -->
+    <div class="select-all-container">
+      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)">
+      <label for="select-all-checkbox">Select All</label>
+    </div>
+
     <div id="certificate-list"></div>
-    <button id="select-all-btn" class="custom-button" onclick="selectAllCertificates(true)">Select All</button>
-    <button id="deselect-all-btn" class="custom-button" onclick="selectAllCertificates(false)" style="display: none;">Deselect All</button>
     <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download</button>
   </div>
 </div>
@@ -165,41 +170,75 @@
   }
 
   /* modal styly*/
+  /* Certificate List Modal */
   .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
-  padding-top: 60px;
-}
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+      padding-top: 60px;
+  }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+  .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 0.375rem;
+      width: 60%; /* Adjust as needed */
+      max-width: 600px; /* Set a maximum width */
+  }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+  .modal-header {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #427AA1; /* Theme color */
+      text-align: center;
+  }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
+  .modal-body {
+      margin: 20px 0;
+  }
+
+  .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+  }
+
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px; /* Adjust this value as needed to create more space */
+  }
+
+  /* Remove margins that might cause alignment issues */
+  .select-all-container input[type="checkbox"],
+  .select-all-container label {
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .select-all-container label {
+    margin-left: 5px; /* Adjust the space between the checkbox and the label */
+    cursor: pointer; /* Indicates the label is clickable */
+  }
+
 
 </style>
 
@@ -395,15 +434,11 @@
     });
   }
 
-  function selectAllCertificates(selectAll) {
-  const checkboxes = document.querySelectorAll('input[name="certificates"]');
+  function toggleSelectAll(source) {
+  const checkboxes = document.querySelectorAll('#certificate-list input[type="checkbox"]');
   checkboxes.forEach(checkbox => {
-    checkbox.checked = selectAll;
+    checkbox.checked = source.checked;
   });
-
-  // Toggle the display of the 'Select All' and 'Deselect All' buttons
-  document.getElementById('select-all-btn').style.display = selectAll ? 'none' : 'block';
-  document.getElementById('deselect-all-btn').style.display = selectAll ? 'block' : 'none';
   }
 
   function closeModal() {
