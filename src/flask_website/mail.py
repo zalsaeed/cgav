@@ -89,7 +89,8 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
 import logging
-from db_classes import Certificate_table, recipient  # Assuming you have SQLAlchemy models defined in models.py
+from db_classes import Certificate_table, recipient, CertificateEvent  # Assuming you have SQLAlchemy models defined in models.py
+from db_connection import db
 
 app = Flask(__name__)
 
