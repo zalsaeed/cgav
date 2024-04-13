@@ -67,16 +67,17 @@
 <!-- Delete Confirmation Popup -->
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
-    <p>Are you sure you want to delete the certificate titled "{{ certificate.certificate_title }}"?</p>
-    <p style="color: #ff0000; font-weight: bold;"> Deleting this event will permanently remove it from the system.</p>
-    <p>This action will also prevent certificate verification via the API and trigger email 
-      notifications to recipients about the event's deletion.</p>
-    <form onsubmit="return handleDeleteConfirmation()">
-      <label for="event_name">Enter the event name for confirmation:</label>
+    <p>Are you sure you want to delete the event titled "{{ certificate.certificate_title }}"?</p>
+    <p style="color: #ff0000; font-weight: bold;">Deleting this event will permanently remove it from the system.</p>
+    <p>This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
+    <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
+      <label for="event_name">To confirm, please enter the exact name of the event:</label>
       <input type="text" id="event_name" name="event_name" required>
-      <button type="submit" class="custom-button">Confirm Delete</button>
+      <div class="button-container">
+        <button type="submit" class="custom-button">Confirm</button>
+        <button type="button" onclick="closePopup()" class="custom-button cancel-button">Cancel</button>
+      </div>
     </form>
-    <button onclick="closePopup()" class="custom-button">Cancel</button>
   </div>
 </div>
 
@@ -262,6 +263,12 @@
     background-color: #e82c20; /* Darker red on hover */
   }
 
+  .button-container {
+  display: flex;
+  justify-content: center; /* Center align the buttons horizontally */
+  gap: 10px; /* Add space between the buttons */
+  margin-top: 10px; /* Add space above the button container */
+}
 
 </style>
 
