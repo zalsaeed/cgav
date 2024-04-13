@@ -428,7 +428,13 @@
                                       .map(checkbox => checkbox.value);
 
     if (selectedCertificates.length === 0) {
-      Swal.fire('Error', 'Please select at least one certificate to download.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Please select at least one certificate to download.',
+        icon: 'error'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
       return;
     }
 
@@ -438,22 +444,39 @@
       body: JSON.stringify({ selected_certificates: selectedCertificates })
     })
     .then(response => {
-      if (!response.ok) throw new Error(response.statusText);
+      if (!response.ok) throw new Error('Failed to download certificates');
       return response.blob();
     })
     .then(blob => {
-      const blobUrl = URL.createObjectURL(blob);
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      // Create a new anchor element for downloading
       const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `selected_certificates_${eventId}.zip`;
+      a.href = url;
+      a.download = `event_${eventId}_certificates.zip`;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-      document.getElementById('certificate-list-modal').style.display = 'none';
+      // Clean up and remove the anchor element
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      Swal.fire({
+        title: 'Success',
+        text: 'Certificates downloaded successfully.',
+        icon: 'success'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
     })
     .catch(error => {
       console.error('Error:', error);
-      Swal.fire('Error', 'Failed to download selected certificates. Please try again later.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to download selected certificates. Please try again later.',
+        icon: 'error'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
     });
   }
 
