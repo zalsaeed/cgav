@@ -41,7 +41,8 @@
       {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %}
       onclick="handleDownload('{{ certificate.certificate_event_id }}')">Download</button>
       
-      <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
+      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
+      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()">Send</button>
     </div>
   </div>
 </div>
