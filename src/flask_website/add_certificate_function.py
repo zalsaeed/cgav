@@ -5,7 +5,9 @@ from io import StringIO
 import csv
 import os
 import uuid
+import logging
 
+            
 from db_classes import CertificateForm, EventType, Template, CertificateEvent
 from db_connection import db, app
 import db_connection
@@ -17,6 +19,11 @@ bcrypt = db_connection.bcrypt
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'certificate-templates')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -62,10 +69,15 @@ def ar_form():
         if file and allowed_file(file.filename):
             file_stream = StringIO(file.read().decode('utf-8-sig'), newline=None)
             csv_reader = csv.DictReader(file_stream)
+
+            logger.debug("Fieldnames from CSV: %s", csv_reader.fieldnames)
+
             required_headers = {'arfirst_name', 'armiddle_name', 'arlast_name', 'ar_email', 'ar_phone', 'ar_gender'}
 
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'
+                logger.debug("Missing headers in CSV file: %s", required_headers - set(csv_reader.fieldnames))
+
                 return render_template('ar_form.html', form=form, message=message,
                                        show_second_signatory=show_second_signatory)
 
