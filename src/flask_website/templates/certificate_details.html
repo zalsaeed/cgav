@@ -41,7 +41,8 @@
       {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %}
       onclick="handleDownload('{{ certificate.certificate_event_id }}')">Download</button>
       
-      <button id="send-btn" class="custom-button" onclick="handleSend()">Send</button>
+      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
+      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()">Send</button>
     </div>
   </div>
 </div>
@@ -50,25 +51,34 @@
 <div id="certificate-list-modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
-    <h2>Select Certificates to Download</h2>
+    <h1>Select Certificates to Download</h1>
+
+    <!-- 'Select All' checkbox -->
+    <div class="select-all-container">
+      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)">
+      <label for="select-all-checkbox">Select All</label>
+    </div>
+
     <div id="certificate-list"></div>
-    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download Selected</button>
+    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download</button>
+    <button class="custom-button cancel-button" onclick="closeModal()">Cancel</button>
   </div>
 </div>
 
 <!-- Delete Confirmation Popup -->
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
-    <p>Are you sure you want to delete the certificate titled "{{ certificate.certificate_title }}"?</p>
-    <p style="color: #ff0000; font-weight: bold;"> Deleting this event will permanently remove it from the system.</p>
-    <p>This action will also prevent certificate verification via the API and trigger email 
-      notifications to recipients about the event's deletion.</p>
-    <form onsubmit="return handleDeleteConfirmation()">
-      <label for="event_name">Enter the event name for confirmation:</label>
+    <p>Are you sure you want to delete the event titled "{{ certificate.certificate_title }}"?</p>
+    <p style="color: #ff0000; font-weight: bold;">Deleting this event will permanently remove it from the system.</p>
+    <p>This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
+    <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
+      <label for="event_name">To confirm, please enter the exact name of the event:</label>
       <input type="text" id="event_name" name="event_name" required>
-      <button type="submit" class="custom-button">Confirm Delete</button>
+      <div class="button-container">
+        <button type="submit" class="custom-button">Confirm</button>
+        <button type="button" onclick="closePopup()" class="custom-button cancel-button">Cancel</button>
+      </div>
     </form>
-    <button onclick="closePopup()" class="custom-button">Cancel</button>
   </div>
 </div>
 
@@ -163,40 +173,102 @@
   }
 
   /* modal styly*/
+  /* Certificate List Modal */
   .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
-  padding-top: 60px;
-}
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  }
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 5% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* Margin top for alignment */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Width of the modal content */
+    max-width: 500px; /* Maximum width of the modal box */
+    border-radius: 0.375rem; /* Matching border radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
+  .modal-header {
+    font-size: 1.5rem;
+    color: #427AA1; /* Theme color */
+    text-align: center;
+    margin-bottom: 20px; /* Spacing below the header */
+  }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+  .modal-body {
+    margin-bottom: 20px; /* Spacing below the body */
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .select-all-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Space between checkbox and certificate list */
+  }
+
+  .select-all-container input[type="checkbox"],
+  .select-all-container label {
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .select-all-container label {
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  /* Additional styles for the cancel button */
+  .button.cancel-button {
+    background-color: #ff4136; /* Red cancel button */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .button.cancel-button:hover {
+    background-color: #e82c20; /* Darker shade on hover */
+  }
+
+  .cancel-button {
+    background-color: #ff4136; /* Red background for cancel button */
+    margin-left: 10px; /* Space between the buttons */
+  }
+  
+  .cancel-button:hover {
+    background-color: #e82c20; /* Darker red on hover */
+  }
+
+  .button-container {
+  display: flex;
+  justify-content: center; /* Center align the buttons horizontally */
+  gap: 10px; /* Add space between the buttons */
+  margin-top: 10px; /* Add space above the button container */
 }
 
 </style>
@@ -364,7 +436,13 @@
                                       .map(checkbox => checkbox.value);
 
     if (selectedCertificates.length === 0) {
-      Swal.fire('Error', 'Please select at least one certificate to download.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Please select at least one certificate to download.',
+        icon: 'error'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
       return;
     }
 
@@ -374,23 +452,47 @@
       body: JSON.stringify({ selected_certificates: selectedCertificates })
     })
     .then(response => {
-      if (!response.ok) throw new Error(response.statusText);
+      if (!response.ok) throw new Error('Failed to download certificates');
       return response.blob();
     })
     .then(blob => {
-      const blobUrl = URL.createObjectURL(blob);
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      // Create a new anchor element for downloading
       const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = `selected_certificates_${eventId}.zip`;
+      a.href = url;
+      a.download = `event_${eventId}_certificates.zip`;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
-      document.getElementById('certificate-list-modal').style.display = 'none';
+      // Clean up and remove the anchor element
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      Swal.fire({
+        title: 'Success',
+        text: 'Certificates downloaded successfully.',
+        icon: 'success'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
     })
     .catch(error => {
       console.error('Error:', error);
-      Swal.fire('Error', 'Failed to download selected certificates. Please try again later.', 'error');
+      Swal.fire({
+        title: 'Error',
+        text: 'Failed to download selected certificates. Please try again later.',
+        icon: 'error'
+      }).then(() => {
+        closeModal(); // Hide the modal after showing the alert
+      });
     });
+  }
+
+  function toggleSelectAll(source) {
+  const checkboxes = document.querySelectorAll('#certificate-list input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = source.checked;
+  });
   }
 
   function closeModal() {

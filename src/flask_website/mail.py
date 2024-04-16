@@ -84,7 +84,7 @@
 #     app.run(host='0.0.0.0', debug=True)
 
 
-from flask import Flask, request, flash, render_template, redirect, url_for
+from flask import Flask, request, flash, render_template, redirect, url_for, jsonify
 from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
@@ -207,44 +207,37 @@ def send_email():
         return redirect(url_for('send_email'))
 
 # Function to send delete email notification (delete_confirm_function.py)
-def send_delete_confirmation_email(certificate):
-    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
+def send_delete_confirmation_email(event_id):
+    # Fetch the event
+    event = db.session.query(CertificateEvent).get(event_id)
+    if not event:
+        return "Event not found", 404
 
-    if isinstance(recipient_email, str):
-        recipient_email = [recipient_email]  # Convert the string to a list with a single element
+    # Fetch the instructor who created the event
+    event_creator = db.session.query(instructor).get(event.created_by)
+    instructor_emails = [event_creator.email] if event_creator else []
 
-    # Extract information from the certificate object
-    certificate_title = certificate.certificate_title
-    presenter_name = certificate.presenter_name
-    # Add more fields as needed
+    # Collect emails from associated recipients
+    recipient_emails = [r.email for r in db.session.query(recipient.email).join(Certificate_table, Certificate_table.recipient_id == recipient.recipient_id).filter(Certificate_table.certificate_event_id == event_id).all()]
 
-    # Construct the email message
-    subject = f'Certificate Deleted: {certificate_title}'
-    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+    # Combine all unique emails to avoid duplicates
+    all_emails = list(set(recipient_emails + instructor_emails))
 
-    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
-    msg.body = body
-    db_connection.mail.send(msg)
-
-# Function to send delete email notification (delete_confirm_function.py)
-def send_delete_confirmation_email(certificate):
-    recipient_email = app.config['MAIL_USERNAME']  # Assuming recipient_email is a string or list
-
-    if isinstance(recipient_email, str):
-        recipient_email = [recipient_email]  # Convert the string to a list with a single element
-
-    # Extract information from the certificate object
-    certificate_title = certificate.certificate_title
-    presenter_name = certificate.presenter_name
-    # Add more fields as needed
+    if not all_emails:
+        return "No emails found for recipients or instructors", 404
 
     # Construct the email message
-    subject = f'Certificate Deleted: {certificate_title}'
-    body = f'Dear user,\n\nYour certificate "{certificate_title}" presented by {presenter_name} has been deleted successfully.'
+    subject = f'Event Deletion Notification: {event.certificate_title}'
+    body = f"Dear user,\n\nThe event titled '{event.certificate_title}' has been deleted from our system. As a result, you will no longer be able to verify certificates issued from this event via our API."
 
-    msg = Message(subject, recipients=recipient_email, sender=app.config['MAIL_USERNAME'])
+    # Create and send the email
+    msg = Message(subject, recipients=all_emails, sender='no-reply@example.com')
     msg.body = body
-    db_connection.mail.send(msg)
-
+    try:
+        mail.send(msg)
+        return "Email sent successfully", 200
+    except Exception as e:
+        return f"Failed to send email: {str(e)}", 500
+    
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
