@@ -8,7 +8,7 @@ import uuid
 import logging
 
             
-from db_classes import CertificateForm, EventType, Template, CertificateEvent
+from db_classes import CertificateForm, EventType, Template, CertificateEvent,EnglishCertificateForm
 from db_connection import db, app
 import db_connection
 
@@ -161,6 +161,7 @@ def ar_form():
 
 def en_form():
     form = CertificateForm()
+    En_form = EnglishCertificateForm()
     message = ""
     show_second_signatory = 'second_signatory' in request.args
 
@@ -171,11 +172,13 @@ def en_form():
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if request.method == 'POST':
-        if not form.validate_on_submit():  # Validate the form
-            for fieldName, errorMessages in form.errors.items():
+
+        # Validate the English form
+        if not En_form.validate_on_submit():  
+            for fieldName, errorMessages in En_form.errors.items():
                 for err in errorMessages:
                     flash(f"{fieldName}: {err}")
-            return render_template('en_form.html', form=form, message=message, show_second_signatory=show_second_signatory)
+            return render_template('en_form.html', form=form,En_form=En_form, message=message, show_second_signatory=show_second_signatory)
 
         # Process form submission
         selected_template_id = form.template_choice.data
@@ -190,7 +193,7 @@ def en_form():
 
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'
-                return render_template('en_form.html', form=form, message=message,
+                return render_template('en_form.html', form=form, En_form=En_form,message=message,
                                        show_second_signatory=show_second_signatory)
 
             file.seek(0)
@@ -217,6 +220,15 @@ def en_form():
 
             # Process signatures if needed
 
+            # Update variables to retrieve English form data
+            certificate_description_female_en = En_form.certificate_description_female_en.data
+            certificate_description_male_en = En_form.certificate_description_male_en.data
+            greeting_female_en = En_form.greeting_female_en.data
+            greeting_male_en = En_form.greeting_male_en.data
+            intro_en = En_form.intro_en.data
+            male_recipient_title_en = En_form.male_recipient_title_en.data
+            female_recipient_title_en = En_form.female_recipient_title_en.data
+                
             new_certificate_event = CertificateEvent(
                 created_by=current_user.id,
                 certificate_title=form.certificate_title.data,
@@ -225,20 +237,22 @@ def en_form():
                 presenter_name=form.presenter_name.data,
                 secret_phrase=form.secret_phrase.data,
                 event_date=form.date.data,
-                certificate_description_female=form.certificate_description_female.data,
-                certificate_description_male=form.certificate_description_male.data,
                 file_path=file_path,
+
                 First_Signatory_Name=form.signatory_name_1.data,
                 First_Signatory_Position=form.signatory_position_1.data,
                 First_Signatory_Path=image_path_1,  # Defined variable
                 Second_Signatory_Name=form.signatory_name_2.data,
                 Second_Signatory_Position=form.signatory_position_2.data,
                 Second_Signatory_Path=image_path_2,  # Defined variable
-                greeting_female=form.greeting_female.data,
-                greeting_male=form.greeting_male.data,
-                intro=form.intro.data,
-                male_recipient_title=form.male_recipient_title.data,
-                female_recipient_title=form.female_recipient_title.data,
+
+                certificate_description_female_en=certificate_description_female_en,
+                certificate_description_male_en=certificate_description_male_en,
+                greeting_female_en=greeting_female_en,
+                greeting_male_en=greeting_male_en,
+                intro_en=intro_en,
+                male_recipient_title_en=male_recipient_title_en,
+                female_recipient_title_en=female_recipient_title_en,
             )
 
             try:
@@ -258,17 +272,14 @@ def en_form():
                 db.session.rollback()
                 message = f"Failed to add certificate: {str(e)}"
 
-    return render_template(
-        'en_form.html',  # Change the template name if necessary
-        form=form,
-        message=message,
-        show_second_signatory=show_second_signatory
-    )
+    return render_template('en_form.html', form=form, En_form=En_form, message=message, show_second_signatory=show_second_signatory)
+
 
 
 
 def aren_form():
     form = CertificateForm()
+    En_form = EnglishCertificateForm()
     message = ""
     show_second_signatory = 'second_signatory' in request.args
 
@@ -297,7 +308,7 @@ def aren_form():
                 required_headers = {
                     'first_name','middle_name','last_name','arfirst_name','armiddle_name','arlast_name','email','phone','gender'
                 }
-
+                #logger.debug("Headers in CSV file: %s", set(csv_reader.fieldnames))
                 # Check if all required headers are present in the CSV file
                 if not required_headers.issubset(set(csv_reader.fieldnames)):
                     message = 'The CSV file does not have the required headers.'
@@ -328,32 +339,71 @@ def aren_form():
                         image_path_2 = os.path.join(signatures_folder, filename_2)
                         signature_image_2.save(image_path_2)
 
-                    # Create a new CertificateEvent instance
+           
+                    # Variables for English form data
+                    # Update variables to retrieve English form data
+                    certificate_description_female_en = En_form.certificate_description_female_en.data
+                    certificate_description_male_en = En_form.certificate_description_male_en.data
+                    greeting_female_en = En_form.greeting_female_en.data
+                    greeting_male_en = En_form.greeting_male_en.data
+                    intro_en = En_form.intro_en.data
+                    male_recipient_title_en = En_form.male_recipient_title_en.data
+                    female_recipient_title_en = En_form.female_recipient_title_en.data
+
+
+                    # Variables for Arabic form data
+                    certificate_description_female_ar = form.certificate_description_female.data
+                    certificate_description_male_ar = form.certificate_description_male.data
+                    greeting_female_ar = form.greeting_female.data
+                    greeting_male_ar = form.greeting_male.data
+                    intro_ar = form.intro.data
+                    male_recipient_title_ar = form.male_recipient_title.data
+                    female_recipient_title_ar = form.female_recipient_title.data
+
+                    # Create a new CertificateEvent instance  
                     new_certificate_event = CertificateEvent(
+                        certificate_description_female=certificate_description_female_ar,
+                        certificate_description_male=certificate_description_male_ar,
+                        greeting_female=greeting_female_ar,
+                        greeting_male=greeting_male_ar,
+                        intro=intro_ar,
+                        male_recipient_title=male_recipient_title_ar,
+                        female_recipient_title=female_recipient_title_ar,
                         created_by=current_user.id,
+
                         certificate_title=form.certificate_title.data,
                         event_type_id=form.event_type.data,
                         template_path=template_path,
                         presenter_name=form.presenter_name.data,
                         secret_phrase=form.secret_phrase.data,
                         event_date=form.date.data,
-                        certificate_description_female=form.certificate_description_female.data,
-                        certificate_description_male=form.certificate_description_male.data,
                         file_path=file_path,
                         First_Signatory_Name=form.signatory_name_1.data,
                         First_Signatory_Position=form.signatory_position_1.data,
-                        First_Signatory_Path=image_path_1,
+                        First_Signatory_Path=image_path_1,  
                         Second_Signatory_Name=form.signatory_name_2.data,
                         Second_Signatory_Position=form.signatory_position_2.data,
-                        Second_Signatory_Path=image_path_2,
-                        greeting_female=form.greeting_female.data,
-                        greeting_male=form.greeting_male.data,
-                        intro=form.intro.data,
-                        male_recipient_title=form.male_recipient_title.data,
-                        female_recipient_title=form.female_recipient_title.data,
+                        Second_Signatory_Path=image_path_2,  
+                    
+                        certificate_description_female_en=certificate_description_female_en,
+                        certificate_description_male_en=certificate_description_male_en,
+                        greeting_female_en=greeting_female_en,
+                        greeting_male_en=greeting_male_en,
+                        intro_en=intro_en,
+                        male_recipient_title_en=male_recipient_title_en,
+                        female_recipient_title_en=female_recipient_title_en,
+    
                     )
+                    # Log the current user
+                    logger.debug("Certificate event added by user ID: %s", current_user.id)
+
+                 
+
+                    
+
 
                     try:
+                        # Add Arabic CertificateEvent instance to the database
                         db.session.add(new_certificate_event)
                         db.session.commit()
 
@@ -363,16 +413,18 @@ def aren_form():
                         # Construct the URL for the event details page
                         event_details_url = url_for('certificate_details', certificate_event_id=certificate_event_id)
 
-                        flash('Certificate event successfully added.')
-                        # Redirect to the event details page
+                        flash('Certificate events successfully added.')
+
+                        # Redirect to the event details page 
                         return redirect(event_details_url)
                     except Exception as e:
                         db.session.rollback()
                         message = f"Failed to add certificate: {str(e)}"
 
+
     return render_template(
         'aren_form.html',  # Change the template name if necessary
-        form=form,
+        form=form,En_form=En_form,
         message=message,
         show_second_signatory=show_second_signatory
     )

@@ -5,7 +5,8 @@
 {% block body %}
 <div class="container mt-5 mx-auto">
   <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;">Add Event</h6>
-  <form id="upload-and-certificate-form" action="{{ url_for('aren_form') }}" method="POST" enctype="multipart/form-data">
+  <form id="upload-and-certificate-form" action="{{ url_for('aren_form') }}" method="POST"
+    enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
     <!-- Event Information Section -->
@@ -14,7 +15,8 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           {{ form.certificate_title.label(class="form-label block text-gray-700") }}
-          {{ form.certificate_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter event title") }}
+          {{ form.certificate_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter event title")
+          }}
           {% for error in form.certificate_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -31,7 +33,8 @@
 
         <div class="mb-4">
           {{ form.presenter_name.label(class="form-label block text-gray-700") }}
-          {{ form.presenter_name(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name") }}
+          {{ form.presenter_name(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name")
+          }}
           {% for error in form.presenter_name.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -74,7 +77,8 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           {{ form.signatory_name_1.label(class="form-label block text-gray-700") }}
-          {{ form.signatory_name_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first signature name") }}
+          {{ form.signatory_name_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first signature
+          name") }}
           {% for error in form.signatory_name_1.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -83,7 +87,8 @@
         <!-- Secret Field -->
         <div class="mb-4">
           {{ form.signatory_position_1.label(class="form-label") }}
-          {{ form.signatory_position_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first signatory position") }}
+          {{ form.signatory_position_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first
+          signatory position") }}
           {% for error in form.signatory_position_1.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -104,7 +109,8 @@
         <div class="grid grid-cols-3 gap-6">
           <div class="mb-4">
             {{ form.signatory_name_2.label(class="form-label block text-gray-700") }}
-            {{ form.signatory_name_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second signature name") }}
+            {{ form.signatory_name_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second
+            signature name") }}
             {% for error in form.signatory_name_2.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
@@ -113,7 +119,8 @@
           <!-- Secret Field -->
           <div class="mb-4">
             {{ form.signatory_position_2.label(class="form-label") }}
-            {{ form.signatory_position_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second signatory position") }}
+            {{ form.signatory_position_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second
+            signatory position") }}
             {% for error in form.signatory_position_2.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
@@ -130,38 +137,41 @@
       </div>
     </div>
 
-<!-- File upload section -->
-<div class="file-upload-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
-  <h2 class="mt-4 mb-2 text-xl text-blue-600">Attendance Information:</h2>
-  <div class="mb-3">
-    {{ form.file.label(class="form-label block text-gray-700") }}
-    {{ form.file(class="form-control w-full border p-2 rounded-lg") }}
-    {% for error in form.file.errors %}
-    <span style="color: red;">{{ error }}</span>
-    {% endfor %}
-    {% if message %}
-    <div class="error-message">
-      {{ message }}
+    <!-- File upload section -->
+    <div class="file-upload-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
+      <h2 class="mt-4 mb-2 text-xl text-blue-600">Attendance Information:</h2>
+      <div class="mb-3">
+        {{ form.file.label(class="form-label block text-gray-700") }}
+        {{ form.file(class="form-control w-full border p-2 rounded-lg") }}
+        {% for error in form.file.errors %}
+        <span style="color: red;">{{ error }}</span>
+        {% endfor %}
+        {% if message %}
+        <div class="error-message">
+          {{ message }}
+        </div>
+        {% endif %}
+      </div>
+      <p class="text-gray-600">* The file must be in CSV format</p>
+
+      <!-- Display required fields dynamically -->
+      <div class="mt-4">
+        <p class="text-gray-600">* Required_headers =
+          {'first_name','middle_name','last_name','arfirst_name','armiddle_name','arlast_name','email','phone','gender'}
+        </p>
+        <ul class="list-disc list-inside">
+
+
+
+        </ul>
+      </div>
     </div>
-    {% endif %}
-  </div>
-  <p class="text-gray-600">* The file must be in CSV format</p>
-
-  <!-- Display required fields dynamically -->
-  <div class="mt-4">
-    <p class="text-gray-600">* Required_headers = {'first_name','middle_name','last_name','arfirst_name','armiddle_name','arlast_name','email','phone','gender'}</p>
-    <ul class="list-disc list-inside">
-
-
-
-    </ul>
-  </div>
-</div>
 
     <!-- AR form section -->
     <div class="form-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
       <h2 class="mt-4 mb-2 text-xl text-blue-600">Arabic form:</h2>
       <div class="grid grid-cols-3 gap-6">
+
         <div class="mb-4">
           {{ form.intro.label(class="form-label") }}
           {{ form.intro(class="form-control") }}
@@ -170,18 +180,20 @@
           {% endfor %}
         </div>
 
-        <!-- female recipient -->
+        <!-- female recipient title -->
         <div class="mb-4">
           {{ form.female_recipient_title.label(class="form-label block text-gray-700") }}
-          {{ form.female_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name") }}
+          {{ form.female_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter
+          name") }}
           {% for error in form.female_recipient_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
-        <!-- male recipient -->
+        <!-- male recipient title -->
         <div class="mb-4">
           {{ form.male_recipient_title.label(class="form-label block text-gray-700") }}
-          {{ form.male_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name") }}
+          {{ form.male_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter
+          name") }}
           {% for error in form.male_recipient_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -195,7 +207,7 @@
         <div class="mb-4">
           <label for="greetingMale">Greeting for Males</label>
           <input type="text" id="greetingMale" name="greeting_male" class="form-control w-full border p-2 rounded-lg"
-            placeholder="Best wishes for his success and prosperity"/>
+            placeholder="Best wishes for his success and prosperity" />
         </div>
 
         <!-- description male -->
@@ -228,12 +240,12 @@
       </div>
     </div>
 
-     <div class="form-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
+    <div class="form-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
       <h2 class="mt-4 mb-2 text-xl text-blue-600">English form:</h2>
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
-          {{ form.intro.label(class="form-label") }}
-          {{ form.intro(class="form-control") }}
+          {{ En_form.intro_en.label(class="form-label") }}
+          {{ En_form.intro_en(class="form-control") }}
           {% for error in form.intro.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -241,17 +253,20 @@
 
         <!-- female recipiant -->
         <div class="mb-4">
-          {{ form.female_recipient_title.label(class="form-label block text-gray-700") }}
-          {{ form.female_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name") }}
-          {% for error in form.female_recipient_title.errors %}
+          <label for="female_recipient_title_en" class="form-label block text-gray-700">Female Recipient Title
+            (EN)</label>
+          {{ En_form.female_recipient_title_en(class="form-control w-full border p-2 rounded-lg",
+          id="female_recipient_title_en", placeholder="Enter presenter name") }}
+          {% for error in En_form.female_recipient_title_en.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
-        <!-- male recipiant -->
+        <!-- male recipient -->
         <div class="mb-4">
-          {{ form.male_recipient_title.label(class="form-label block text-gray-700") }}
-          {{ form.male_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name") }}
-          {% for error in form.male_recipient_title.errors %}
+          <label for="male_recipient_title_en" class="form-label block text-gray-700">Male Recipient Title (EN)</label>
+          {{ En_form.male_recipient_title_en(class="form-control w-full border p-2 rounded-lg",
+          id="male_recipient_title_en", placeholder="Enter presenter name") }}
+          {% for error in En_form.male_recipient_title_en.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
@@ -263,15 +278,15 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           <label for="greetingMale">Greeting for Males</label>
-          <input type="text" id="greetingMale" name="greeting_male" class="form-control w-full border p-2 rounded-lg"
-            placeholder="Best wishes for his success and prosperity"/>
+          <input type="text" id="greetingMale" name="greeting_male_en" class="form-control w-full border p-2 rounded-lg"
+            placeholder="Best wishes for his success and prosperity" />
         </div>
 
         <!-- description male -->
         <div class="mb-4 col-span-2">
-          {{ form.certificate_description_male.label(class="form-label") }}
-          {{ form.certificate_description_male(class="form-control w-full border p-2 rounded-lg") }}
-          {% for error in form.certificate_description_male.errors %}
+          {{ En_form.certificate_description_male_en.label(class="form-label") }}
+          {{ En_form.certificate_description_male_en(class="form-control w-full border p-2 rounded-lg") }}
+          {% for error in En_form.certificate_description_male_en.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
@@ -281,15 +296,15 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           <label for="greetingFemale">Greeting for Females</label>
-          <input type="text" id="greetingFemale" name="greeting_female" class="form-control"
+          <input type="text" id="greetingFemale" name="greeting_female_en" class="form-control"
             placeholder="Best wishes for her success and prosperity" />
         </div>
 
         <!-- description female -->
         <div class="mb-4 col-span-2">
-          {{ form.certificate_description_female.label(class="form-label") }}
-          {{ form.certificate_description_female(class="form-control w-full border p-2 rounded-lg") }}
-          {% for error in form.certificate_description_female.errors %}
+          {{ En_form.certificate_description_female_en.label(class="form-label") }}
+          {{ En_form.certificate_description_female_en(class="form-control w-full border p-2 rounded-lg") }}
+          {% for error in En_form.certificate_description_female_en.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
@@ -299,7 +314,8 @@
 
     <!-- Button Container -->
     <div class="fixed-bottom text-center mt-6">
-      <button type="button" onclick="window.location.href='{{ url_for('certificates') }}'" class="button w-40 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-2">Cancel</button>
+      <button type="button" onclick="window.location.href='{{ url_for('certificates') }}'"
+        class="button w-40 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded m-2">Cancel</button>
       <input type="submit" value="Submit" class="button w-40 text-white font-bold py-2 px-4 rounded m-2">
     </div>
   </form>

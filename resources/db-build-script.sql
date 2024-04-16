@@ -120,9 +120,15 @@ IF NOT EXISTS addCertificate
 (255),
     intro VARCHAR
 (255),
+intro_en VARCHAR
+(255),
     female_recipient_title VARCHAR
 (255),
+female_recipient_title_en VARCHAR
+(255),
     male_recipient_title VARCHAR
+(255),
+male_recipient_title_en VARCHAR
 (255),
     customization_id VARCHAR
 (255),
@@ -137,7 +143,9 @@ IF NOT EXISTS addCertificate
 (255),
     event_date DATETIME,
     certificate_description_female TEXT,
+    certificate_description_female_en TEXT,
     certificate_description_male TEXT,
+    certificate_description_male_en TEXT,
     file_path VARCHAR
 (255),
     first_Signatory_Name VARCHAR
@@ -153,7 +161,9 @@ IF NOT EXISTS addCertificate
     second_Signatory_Path VARCHAR
 (255),
     greeting_female TEXT,
+    greeting_female_en TEXT,
     greeting_male TEXT,
+    greeting_male_en TEXT,
     sended BOOLEAN DEFAULT FALSE,   -- New field for tracking if the certificate is sent
     downloaded BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is downloaded
     generated_ BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is generated

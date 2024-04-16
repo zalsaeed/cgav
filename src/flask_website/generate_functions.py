@@ -58,19 +58,6 @@ def run_main_script(temp_id):
         event_data = {
             'template_path': template.template_image,
         }
-        # if customization:
-        #     items_positions={
-        #         "Certificate_Title":customization.items_positions["Certificate_Title"],
-        #         "Intro": customization.items_positions["Intro"],
-        #         "recipient_title":customization.items_positions["recipient_title"],
-        #         "recipient_name":customization.items_positions["recipient_name"],
-        #         "body":customization.items_positions["body"] ,
-        #         "final_greeting":customization.items_positions["final_greeting"] ,
-        #         "contact_info":customization.items_positions["contact_info"],
-        #         "signature_1": customization.items_positions["signature_1"],
-        #         "signature_2": customization.items_positions["signature_2"]}
-        # else:
-        #     items_positions={}
         if customization:
             items_positions={
                 "Certificate_Title":customization.items_positions["Certificate_Title"],

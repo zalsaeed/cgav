@@ -90,6 +90,7 @@ from dotenv import load_dotenv
 import os
 import logging
 from db_classes import Certificate_table, recipient  # Assuming you have SQLAlchemy models defined in models.py
+import db_connection
 
 app = Flask(__name__)
 

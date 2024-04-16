@@ -64,7 +64,6 @@ class CertificateEvent(db.Model):
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
     template_path = db.Column(db.String(255))
     template_id = db.Column(db.Integer, db.ForeignKey('template.template_id'))
-    # Define the relationship to EventType
     event_type = relationship('EventType', backref='certificates')
     presenter_name = db.Column(db.String(255))  # New field
     secret_phrase = db.Column(db.String(255))  # New field
@@ -83,6 +82,17 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
+   
+    #En columns 
+    intro_en = db.Column(db.String(255))
+    female_recipient_title_en = db.Column(db.String(255))
+    male_recipient_title_en = db.Column(db.String(255))
+    greeting_female_en = db.Column(db.String(255))
+    greeting_male_en = db.Column(db.String(255))    
+    certificate_description_female_en = db.Column(db.Text)
+    certificate_description_male_en = db.Column(db.Text)
+    #End En columns 
+    
     downloaded = db.Column(db.Boolean, default=False)  # New field to indicate if the event was downloaded
     sended = db.Column(db.Boolean, default=False)  # New field to indicate if the event was sent
     generated_ = db.Column(db.Boolean, default=False)  # New field to indicate if the event was generated
@@ -176,6 +186,7 @@ class UpdateForm(FlaskForm):
     submit = SubmitField('save')
 
 class CertificateForm(FlaskForm):
+    
     certificate_title = StringField('Event Title', validators=[DataRequired()])
     created_by = db.Column(db.Integer)
     presenter_name = StringField('Presenter Name', validators=[DataRequired()])
@@ -214,6 +225,15 @@ class CertificateForm(FlaskForm):
         FileAllowed(['csv'], 'CSV files only!')])
     submit = SubmitField('Submit')
 
+class EnglishCertificateForm(FlaskForm):
+    intro_en = StringField('Intro', validators=[DataRequired()], render_kw={"placeholder": "The Computer College testifies that"})
+    female_recipient_title_en = StringField('Female Recipient Title', validators=[DataRequired()], render_kw={"placeholder": "Trainee:(Female)"})
+    male_recipient_title_en = StringField('Male Recipient Title', validators=[DataRequired()], render_kw={"placeholder": "Trainee:(Male)"})
+    greeting_female_en = StringField('Greeting for Females', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for her success"})
+    greeting_male_en = StringField('Greeting for Males', validators=[DataRequired()], render_kw={"placeholder": "Best wishes for his success"})
+    certificate_description_female_en = TextAreaField('Event Description for Female', validators=[DataRequired()])
+    certificate_description_male_en = TextAreaField('Event Description for Male', validators=[DataRequired()])
+    
 class NewTemplates(FlaskForm):
     template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
     template_image= FileField('*Upload Background', validators=[DataRequired()])
