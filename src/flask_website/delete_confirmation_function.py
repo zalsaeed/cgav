@@ -1,4 +1,6 @@
 from flask import jsonify, render_template, request
+import os
+import shutil
 from db_classes import db, CertificateEvent, Certificate_table, recipient
 import db_connection
 import mail
@@ -6,8 +8,6 @@ import mail
 app = db_connection.app
 db = db_connection.db
 bcrypt = db_connection.bcrypt
-
-
 
 def delete_confirmation(certificate_event_id):
     event = CertificateEvent.query.get_or_404(certificate_event_id)
@@ -18,13 +18,22 @@ def delete_confirmation(certificate_event_id):
         if event_name != event.certificate_title:
             return jsonify({'success': False, 'error': 'Incorrect event name'}), 400
 
-
         # Send email notification about the deletion attempt
         if event.sended or event.downloaded:
             try:
                 mail.send_delete_confirmation_email(certificate_event_id)
             except Exception as e:
                 return jsonify({'success': False, 'error': 'Failed to send deletion notification email: ' + str(e)}), 500
+
+        # Delete the event folder if it was generated
+        if event.generated_:
+            output_directory = os.path.abspath("/root/src/flask_website/static/output")
+            event_folder = next((os.path.join(output_directory, d) for d in os.listdir(output_directory) if d.startswith(f"{certificate_event_id}-")), None)
+            if event_folder and os.path.isdir(event_folder):
+                try:
+                    shutil.rmtree(event_folder)
+                except Exception as e:
+                    return jsonify({'success': False, 'error': 'Failed to delete event folder: ' + str(e)}), 500
 
         # Collect all recipients associated with the event
         associated_recipients = Certificate_table.query.filter_by(certificate_event_id=certificate_event_id).all()
@@ -46,7 +55,6 @@ def delete_confirmation(certificate_event_id):
             if not Certificate_table.query.filter_by(recipient_id=rec_id).first():
                 recipient_to_delete = recipient.query.get(rec_id)
                 db.session.delete(recipient_to_delete)
-
         try:
             db.session.commit()
             return jsonify({'success': True}), 200
