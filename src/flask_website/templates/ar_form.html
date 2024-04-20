@@ -147,18 +147,20 @@
     </div>
     {% endif %}
   </div>
-  <p class="text-gray-600">* The file must be in CSV format</p>
+  <p class="text-gray-600">
+    <strong>Note:</strong> Upload the attendance list as a CSV file. Ensure that the file format is correct to avoid upload errors.
+  </p>
 
-  <!-- Display required fields dynamically -->
-  <div class="mt-4">
-    <p class="text-gray-600">* Required_headers = {'arfirst_name', 'armiddle_name', 'arlast_name', 'ar_email', 'ar_phone', 'ar_gender'}</p>
-    <ul class="list-disc list-inside">
-
-
-
-    </ul>
-  </div>
+  <p class="text-gray-600 mt-4">
+    Not sure about the correct format?
+    <a href="{{ url_for('static', filename='sample_csv/sample-data_ar.csv') }}" download class="text-blue-600 hover:text-blue-800 font-bold">
+      Download a sample CSV file
+    </a>
+    to use as a template.
+  </p>
 </div>
+
+
 
 
 

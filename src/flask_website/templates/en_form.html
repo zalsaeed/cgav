@@ -138,31 +138,33 @@
 
     </div>
 
-    <!-- File upload section -->
-    <div class="file-upload-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
-      <h2 class="mt-4 mb-2 text-xl text-blue-600">Attendance Information:</h2>
-      <div class="mb-3">
-        {{ form.file.label(class="form-label block text-gray-700") }}
-        {{ form.file(class="form-control w-full border p-2 rounded-lg") }}
-        {% for error in form.file.errors %}
-        <span style="color: red;">{{ error }}</span>
-        {% endfor %}
-        {% if message %}
-        <div class="error-message">
-          {{ message }}
-        </div>
-        {% endif %}
-      </div>
-      <p class="text-gray-600">* The file must be in CSV format</p>
-
-      <!-- Display required fields dynamically -->
-      <div class="mt-4">
-        <p class="text-gray-600">* Required_headers = {'first_name', 'middle_name', 'last_name', 'email', 'phone',
-          'gender'}</p>
-        <ul class="list-disc list-inside">
-        </ul>
-      </div>
+<!-- File upload section -->
+<div class="file-upload-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
+  <h2 class="mt-4 mb-2 text-xl text-blue-600">Attendance Information:</h2>
+  <div class="mb-3">
+    {{ form.file.label(class="form-label block text-gray-700") }}
+    {{ form.file(class="form-control w-full border p-2 rounded-lg") }}
+    {% for error in form.file.errors %}
+    <span style="color: red;">{{ error }}</span>
+    {% endfor %}
+    {% if message %}
+    <div class="error-message">
+      {{ message }}
     </div>
+    {% endif %}
+  </div>
+  <p class="text-gray-600">
+    <strong>Note:</strong> Upload the attendance list as a CSV file. Ensure that the file format is correct to avoid upload errors.
+  </p>
+
+  <p class="text-gray-600 mt-4">
+    Not sure about the correct format?
+    <a href="{{ url_for('static', filename='sample_csv/sample-data_en.csv') }}" download class="text-blue-600 hover:text-blue-800 font-bold">
+      Download a sample CSV file
+    </a>
+    to use as a template.
+  </p>
+</div>
 
 
 
