@@ -47,6 +47,12 @@
       <button  class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
       {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="showPreviewModal('{{ certificate.certificate_event_id }}')">Preview Certificate</button>
       
+
+      <!-- Notification Text -->
+      <p class="info-text">
+        Sending or downloading certificates triggers an email notification to recipients upon event deletion.
+      </p>
+
     </div>
   </div>
 </div>
@@ -349,6 +355,17 @@
     margin: 0 5px; /* Spacing between buttons */
   }
 
+    /* Additional styles */
+  .info-text {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #17a2b8; /* Bootstrap's 'info' blue */
+    text-align: center;
+    background-color: #e9f4fa; /* Very light blue for soft alert background */
+    border-radius: 5px; /* Soften the edges */
+    padding: 5px; /* Some padding for visual comfort */
+    border-left: 3px solid #17a2b8; /* A left border for emphasis */
+  }
 
 </style>
 
