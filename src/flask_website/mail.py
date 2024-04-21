@@ -89,8 +89,8 @@ from flask_mail import Mail, Message
 from dotenv import load_dotenv
 import os
 import logging
-from db_classes import Certificate_table, recipient  # Assuming you have SQLAlchemy models defined in models.py
-import db_connection
+from db_classes import Certificate_table, recipient, CertificateEvent, users # Assuming you have SQLAlchemy models defined in models.py
+from db_connection import db
 
 app = Flask(__name__)
 
@@ -213,31 +213,56 @@ def send_delete_confirmation_email(event_id):
     if not event:
         return "Event not found", 404
 
-    # Fetch the instructor who created the event
-    event_creator = db.session.query(instructor).get(event.created_by)
-    instructor_emails = [event_creator.email] if event_creator else []
+    # Fetch the administrator's email from the user who created the event
+    admin = db.session.query(users).get(event.created_by)
+    if not admin:
+        return "Administrator not found", 404
+    admin_email = admin.email
 
     # Collect emails from associated recipients
-    recipient_emails = [r.email for r in db.session.query(recipient.email).join(Certificate_table, Certificate_table.recipient_id == recipient.recipient_id).filter(Certificate_table.certificate_event_id == event_id).all()]
+    recipients = db.session.query(recipient).join(Certificate_table, Certificate_table.recipient_id == recipient.recipient_id)\
+                        .filter(Certificate_table.certificate_event_id == event_id).all()
+    num_recipients = len(recipients)  # Number of recipients affected
 
-    # Combine all unique emails to avoid duplicates
-    all_emails = list(set(recipient_emails + instructor_emails))
-
-    if not all_emails:
-        return "No emails found for recipients or instructors", 404
-
-    # Construct the email message
+    # Event details for email
+    event_date_str = event.event_date.strftime('%Y-%m-%d')
     subject = f'Event Deletion Notification: {event.certificate_title}'
-    body = f"Dear user,\n\nThe event titled '{event.certificate_title}' has been deleted from our system. As a result, you will no longer be able to verify certificates issued from this event via our API."
 
-    # Create and send the email
-    msg = Message(subject, recipients=all_emails, sender='no-reply@example.com')
-    msg.body = body
+    # Detailed message for administrators
+    admin_body = f"""
+    Event Deletion Details\n
+    Event Title: {event.certificate_title}
+    Event Date: {event_date_str}
+    Event Type: {event.event_type.event_type_name}
+    Presented by: {event.presenter_name}
+    Event Description (Male): {event.certificate_description_male}
+    Event Description (Female): {event.certificate_description_female}
+    Number of Recipients Affected: {num_recipients}
+    Certificates Sent: {'Yes' if event.sended else 'No'}
+    Certificates Downloaded: {'Yes' if event.downloaded else 'No'}
+    Generated Certificates: {'Yes' if event.generated_ else 'No'}
+    First Signatory: {event.First_Signatory_Name}, Position: {event.First_Signatory_Position}
+    Second Signatory: {event.Second_Signatory_Name}, Position: {event.Second_Signatory_Position}
+
+    The event and all associated data have been permanently deleted from system. This includes all digital records and files related to the event.
+    """
+
+    # Send detailed email to administrator
+    admin_msg = Message(subject, recipients=[admin_email], sender='no-reply@example.com')
+    admin_msg.body = admin_body
     try:
-        mail.send(msg)
-        return "Email sent successfully", 200
+        mail.send(admin_msg)
     except Exception as e:
-        return f"Failed to send email: {str(e)}", 500
-    
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+        return f"Failed to send administrative email: {str(e)}", 500
+
+    # Notify each recipient with a personalized message
+    for r in recipients:
+        recipient_body = f"Dear {r.first_name} {r.last_name},\n\nWe regret to inform you that the event titled '{event.certificate_title}', scheduled for {event_date_str}, has been permanently deleted from our system. As a result, any certificates issued for this event will no longer be verifiable via our System."
+        recipient_msg = Message(subject, recipients=[r.email], sender='no-reply@example.com')
+        recipient_msg.body = recipient_body
+        try:
+            mail.send(recipient_msg)
+        except Exception as e:
+            return f"Failed to send email to {r.email}: {str(e)}", 500
+
+    return "Emails sent successfully", 200
