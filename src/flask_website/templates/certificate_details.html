@@ -43,7 +43,22 @@
       
       <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
       {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()">Send</button>
+
+      <button  class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
+      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="showPreviewModal('{{ certificate.certificate_event_id }}')">Preview Certificate</button>
+      
     </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <iframe id="preview-frame" style="width:100%; height:500px;" frameborder="0"></iframe>
+    <button class="custom-button" onclick="changeCertificate(-1)">Previous</button>
+    <button class="custom-button" onclick="changeCertificate(1)">Next</button>
+    <button id="preview-modal-close" class="custom-button cancel-button">Cancel</button>
   </div>
 </div>
 
@@ -269,7 +284,71 @@
   justify-content: center; /* Center align the buttons horizontally */
   gap: 10px; /* Add space between the buttons */
   margin-top: 10px; /* Add space above the button container */
-}
+  }
+
+  /* preview section */
+  .navigation button {
+      padding: 10px 20px;
+      margin: 10px;
+      background-color: #427AA1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+
+  .navigation button:hover {
+      background-color: #2c4e71;
+  }
+
+  /* Certificate Preview Modal */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* Adjust top margin for better positioning */
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 60%; /* Adjust width as needed */
+    max-width: 800px; /* Set a max-width */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Iframe for PDF display */
+  #preview-frame {
+    width: 100%; /* Full width */
+    height: 600px; /* Adjust height as needed */
+    border: none; /* Remove border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Optional: Add shadow for a "lifted paper" effect */
+  }
+  
+  /* Navigation Button Styling */
+  .modal-content button {
+    padding: 10px 20px;
+    margin-top: 10px; /* Spacing above buttons */
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  /* Adjust the color to fit your theme */
+  .modal-content button:hover {
+    background-color: #e7e7e7;
+  }
+  
+  /* Container for navigation buttons */
+  .button-container {
+    text-align: center; /* Center buttons horizontally */
+    margin-top: 20px; /* Space above the button container */
+  }
+  
+  .button-container button {
+    background-color: #f1f1f1; /* Light grey background */
+    color: #333; /* Dark text for contrast */
+    margin: 0 5px; /* Spacing between buttons */
+  }
+
 
 </style>
 
@@ -498,6 +577,70 @@
   function closeModal() {
     document.getElementById('certificate-list-modal').style.display = 'none';
   }
+
+  // Preview section 
+  // Globals to hold the paths of the certificates and the current index
+  var certificates = [];
+  var currentCertificateIndex = 0;
+
+  // Show the preview modal with the first certificate
+  function showPreviewModal(eventId) {
+    fetch(`/preview_certificates/${eventId}`)
+      .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+      })
+      .then(data => {
+        if (data.certificates && data.certificates.length > 0) {
+          certificates = data.certificates; // Store all certificates
+          currentCertificateIndex = 0; // Start with the first certificate
+          loadCertificate(); // Load it into the iframe
+          document.getElementById('preview-modal').style.display = 'block'; // Display the modal
+        } else {
+          alert('No certificates available for preview.');
+        }
+      })
+      .catch(error => {
+        alert('Error loading certificates: ' + error.message);
+      });
+  }
+
+  // Load the current certificate into the iframe
+  function loadCertificate() {
+    var iframe = document.getElementById('preview-frame');
+    if (iframe && certificates.length > 0) {
+      iframe.src = certificates[currentCertificateIndex];
+    }
+  }
+
+  // Change the certificate in the preview modal
+  function changeCertificate(direction) {
+    currentCertificateIndex += direction;
+    if (currentCertificateIndex >= certificates.length) {
+      currentCertificateIndex = 0; // Loop back to the first
+    } else if (currentCertificateIndex < 0) {
+      currentCertificateIndex = certificates.length - 1; // Loop back to the last
+    }
+    loadCertificate(); // Load the new certificate
+  }
+
+  // Close the preview modal and clear the iframe
+  function closePreviewModal() {
+    document.getElementById('preview-modal').style.display = 'none';
+    var iframe = document.getElementById('preview-frame');
+    iframe.src = ''; // Clear the source
+  }
+
+  // Document ready function to ensure all modal close buttons work properly
+  document.addEventListener('DOMContentLoaded', function() {
+    // Attach an event listener to the close button within the preview modal
+    var closeButton = document.getElementById('preview-modal-close');
+    if (closeButton) {
+      closeButton.addEventListener('click', closePreviewModal);
+    }
+  });
+
+
   ////////////////
   // Other buttons (Generate, downloud, send)
 </script>

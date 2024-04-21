@@ -29,6 +29,8 @@ import delete_confirmation_function
 import load_more_certificates_function
 import certificate_details_function
 import download_certificate_function
+import preview_certificate_function
+import get_certificate_function
 import template_functions
 import generate_functions
 import db_connection
@@ -235,6 +237,13 @@ def get_certificate_list(event_id):
 def download_certificates(event_id):
     return download_certificate_function.download_certificates(event_id, request.json.get('selected_certificates'))
 
+@app.route('/preview_certificates/<int:event_id>')
+def preview_certificates(event_id):
+    return preview_certificate_function.preview_certificates(event_id)
+
+@app.route('/get_certificate/<int:event_id>/<path:filename>')
+def get_certificate(event_id, filename):
+    return get_certificate_function.get_certificate(event_id, filename)
 
 @app.route("/create_new_template", methods=['GET', "POST"])
 @login_required
