@@ -257,7 +257,7 @@ def send_delete_confirmation_email(event_id):
 
     # Notify each recipient with a personalized message
     for r in recipients:
-        recipient_body = f"Dear {r.first_name} {r.last_name},\n\nWe regret to inform you that the event titled '{event.certificate_title}', scheduled for {event_date_str}, has been permanently deleted from our system. As a result, any certificates issued for this event will no longer be verifiable via our System."
+        recipient_body = f"Dear {r.first_name} {r.last_name},\n\nWe regret to inform you that the event titled '{event.certificate_title}', scheduled for {event_date_str}, has been permanently deleted from our system. As a result, your certificate for this event will no longer be verifiable via our System."
         recipient_msg = Message(subject, recipients=[r.email], sender='no-reply@example.com')
         recipient_msg.body = recipient_body
         try:
