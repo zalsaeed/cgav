@@ -12,24 +12,23 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">{{ certificate.certificate_title }}</h5>
-      <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
-      <p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>
-      <p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>
-      <p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>
-      <p class="card-text">CSV File Path: {{ certificate.file_path }}</p>
-      <p class="card-text">Description(for female): {{ certificate.certificate_description_female }}</p>
-      <p class="card-text">Description(for male): {{ certificate.certificate_description_male }}</p>
-      <p class="card-text">Greeting(for female): {{ certificate.female_recipient_title }}</p>
-      <p class="card-text">Greeting(for male): {{ certificate.male_recipient_title }}</p>
-      <p class="card-text">Signatory 1: {{ certificate.First_Signatory_Name }}</p>
-      <p class="card-text">Position 1: {{ certificate.First_Signatory_Position }}</p>
-      <p class="card-text">Path 1: {{ certificate.First_Signatory_Path }}</p>
-      {% if certificate.Second_Signatory_Name %}
-      <p class="card-text">Signatory 2: {{ certificate.Second_Signatory_Name }}</p>
-      <p class="card-text"> Position 2: {{ certificate.Second_Signatory_Position }}</p>
-      <p class="card-text">Path 2: {{ certificate.Second_Signatory_Path }}</p>
-      {% endif %}
-
+      {% if certificate.event_type %}<p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>{% endif %}
+      {% if certificate.presenter_name %}<p class="card-text">Presenter Name: {{ certificate.presenter_name }}</p>{% endif %}
+      {% if certificate.event_date %}<p class="card-text">Event Date: {{ certificate.event_date.strftime('%Y-%m-%d') }}</p>{% endif %}
+      {% if certificate.secret_phrase %}<p class="card-text">Secret Phrase: {{ certificate.secret_phrase }}</p>{% endif %}
+      {% if certificate.file_path %}<p class="card-text">CSV File Path: {{ certificate.file_path }}</p>{% endif %}
+      {% if certificate.certificate_description_female %}<p class="card-text">Description (Female AR): {{ certificate.certificate_description_female }}</p>{% endif %}
+      {% if certificate.certificate_description_male %}<p class="card-text">Description (Male AR): {{ certificate.certificate_description_male }}</p>{% endif %}
+      {% if certificate.certificate_description_female_en %}<p class="card-text">Description (Female EN): {{ certificate.certificate_description_female_en }}</p>{% endif %}
+      {% if certificate.certificate_description_male_en %}<p class="card-text">Description (Male EN): {{ certificate.certificate_description_male_en }}</p>{% endif %}
+      {% if certificate.greeting_female %}<p class="card-text">Greeting (Female AR): {{ certificate.greeting_female }}</p>{% endif %}
+      {% if certificate.greeting_male %}<p class="card-text">Greeting (Male AR): {{ certificate.greeting_male }}</p>{% endif %}
+      {% if certificate.greeting_female_en %}<p class="card-text">Greeting (Female EN): {{ certificate.greeting_female_en }}</p>{% endif %}
+      {% if certificate.greeting_male_en %}<p class="card-text">Greeting (Male EN): {{ certificate.greeting_male_en }}</p>{% endif %}
+      {% if certificate.First_Signatory_Name %}<p class="card-text">First Signatory: {{ certificate.First_Signatory_Name }} - {{ certificate.First_Signatory_Position }}</p>{% endif %}
+      {% if certificate.First_Signatory_Path %}<p class="card-text">Signature Path: {{ certificate.First_Signatory_Path }}</p>{% endif %}
+      {% if certificate.Second_Signatory_Name %}<p class="card-text">Second Signatory: {{ certificate.Second_Signatory_Name }} - {{ certificate.Second_Signatory_Position }}</p>{% endif %}
+      {% if certificate.Second_Signatory_Path %}<p class="card-text">Second Signature Path: {{ certificate.Second_Signatory_Path }}</p>{% endif %}
 
       <!-- Buttons -->
       <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
