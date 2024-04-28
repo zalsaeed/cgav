@@ -165,7 +165,7 @@ class RegisterForm(FlaskForm):
  
 class LoginForm(FlaskForm):
     email = StringField(validators=[
-                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
+                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "Example@hotmail.com"})
 
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
