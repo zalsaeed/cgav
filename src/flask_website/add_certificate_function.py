@@ -116,17 +116,21 @@ def ar_form():
                 certificate_description_female=form.certificate_description_female.data,
                 certificate_description_male=form.certificate_description_male.data,
                 file_path=file_path,
+
                 First_Signatory_Name=form.signatory_name_1.data,
                 First_Signatory_Position=form.signatory_position_1.data,
                 First_Signatory_Path=image_path_1,  # Defined variable
                 Second_Signatory_Name=form.signatory_name_2.data,
                 Second_Signatory_Position=form.signatory_position_2.data,
                 Second_Signatory_Path=image_path_2,  # Defined variable
+
                 greeting_female=form.greeting_female.data,
                 greeting_male=form.greeting_male.data,
                 intro=form.intro.data,
                 male_recipient_title=form.male_recipient_title.data,
                 female_recipient_title=form.female_recipient_title.data,
+
+                form_type = 'Arabic',
             )
 
             try:
@@ -253,6 +257,8 @@ def en_form():
                 intro_en=intro_en,
                 male_recipient_title_en=male_recipient_title_en,
                 female_recipient_title_en=female_recipient_title_en,
+
+                form_type = 'English',
             )
 
             try:
@@ -392,15 +398,12 @@ def aren_form():
                         intro_en=intro_en,
                         male_recipient_title_en=male_recipient_title_en,
                         female_recipient_title_en=female_recipient_title_en,
+
+                        form_type = 'Arabic_English',
     
                     )
                     # Log the current user
                     logger.debug("Certificate event added by user ID: %s", current_user.id)
-
-                 
-
-                    
-
 
                     try:
                         # Add Arabic CertificateEvent instance to the database

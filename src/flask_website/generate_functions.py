@@ -2,6 +2,7 @@
 import os
 import json
 import subprocess
+import logging
 
 # Related Third Party Imports
 from flask import Flask, url_for, jsonify
@@ -80,10 +81,10 @@ def run_main_script(temp_id):
         return jsonify({'success': False, 'error': str(e)})
 
 def generate_certificate(certificate_event_id):
-    try:
-        # Check if the certificate event ID is already stored
-        if certificate_event_id_already_stored(certificate_event_id):
-            return jsonify({'success': False, 'error': 'Certificate event ID already exists'}), 400
+
+        # # Check if the certificate event ID is already stored
+        # if certificate_event_id_already_stored(certificate_event_id):
+        #     return jsonify({'success': False, 'error': 'Certificate event ID already exists'}), 400
 
 
         certificate = CertificateEvent.query.get(certificate_event_id)
@@ -91,30 +92,95 @@ def generate_certificate(certificate_event_id):
         if not certificate:
             return jsonify({'success': False, 'error': 'Certificate not found'}), 404
 
-        event_data = {
-            'certificate_event_id': int(certificate.certificate_event_id),
-            'certificate_title': certificate.certificate_title,
-            'event_type_id': certificate.event_type_id,
-            'template_path': certificate.template_path,
-            'presenter_name': certificate.presenter_name,
-            'secret_phrase': certificate.secret_phrase,
-            'event_date': certificate.event_date.strftime('%Y-%m-%d'),
-            'certificate_description_female': certificate.certificate_description_female,
-            'certificate_description_male': certificate.certificate_description_male,
-            'file_path': certificate.file_path,
-            'First_Signatory_Name': certificate.First_Signatory_Name,
-            'First_Signatory_Position': certificate.First_Signatory_Position,
-            'First_Signatory_Path': certificate.First_Signatory_Path,
-            'Second_Signatory_Name': certificate.Second_Signatory_Name,
-            'Second_Signatory_Position': certificate.Second_Signatory_Position,
-            'Second_Signatory_Path': certificate.Second_Signatory_Path,
-            'greeting_female': certificate.greeting_female,
-            'greeting_male': certificate.greeting_male,
-            'intro': certificate.intro,
-            'male_recipient_title': certificate.male_recipient_title,
-            'female_recipient_title': certificate.female_recipient_title,
-            
-        }
+        # Prepare event data based on the form type
+        if certificate.form_type == 'Arabic':
+            event_data = {
+                'certificate_event_id': int(certificate.certificate_event_id),
+                'certificate_title': certificate.certificate_title,
+                'event_type': certificate.event_type_id,
+                'template_path': certificate.template_path,
+                'presenter_name': certificate.presenter_name,
+                'secret_phrase': certificate.secret_phrase,
+                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+                'certificate_description_female': certificate.certificate_description_female,
+                'certificate_description_male': certificate.certificate_description_male,
+                'file_path': certificate.file_path,
+                'First_Signatory_Name': certificate.First_Signatory_Name,
+                'First_Signatory_Position': certificate.First_Signatory_Position,
+                'First_Signatory_Path': certificate.First_Signatory_Path,
+                'Second_Signatory_Name': certificate.Second_Signatory_Name,
+                'Second_Signatory_Position': certificate.Second_Signatory_Position,
+                'Second_Signatory_Path': certificate.Second_Signatory_Path,
+                'greeting_female': certificate.greeting_female,
+                'greeting_male': certificate.greeting_male,
+                'intro': certificate.intro,
+                'male_recipient_title': certificate.male_recipient_title,
+                'female_recipient_title': certificate.female_recipient_title,
+                'form_type': certificate.form_type,
+            }
+        elif certificate.form_type == 'English':
+            event_data = {
+                'certificate_event_id': int(certificate.certificate_event_id),
+                'certificate_title': certificate.certificate_title,
+                'event_type': certificate.event_type_id,
+                'template_path': certificate.template_path,
+                'presenter_name': certificate.presenter_name,
+                'secret_phrase': certificate.secret_phrase,
+                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+                'file_path': certificate.file_path,
+                'First_Signatory_Name': certificate.First_Signatory_Name,
+                'First_Signatory_Position': certificate.First_Signatory_Position,
+                'First_Signatory_Path': certificate.First_Signatory_Path,
+                'Second_Signatory_Name': certificate.Second_Signatory_Name,
+                'Second_Signatory_Position': certificate.Second_Signatory_Position,
+                'Second_Signatory_Path': certificate.Second_Signatory_Path,
+                'certificate_description_female_en': certificate.certificate_description_female_en,
+                'certificate_description_male_en': certificate.certificate_description_male_en,
+                'greeting_female_en': certificate.greeting_female_en,
+                'greeting_male_en': certificate.greeting_male_en,
+                'intro_en': certificate.intro_en,
+                'male_recipient_title_en': certificate.male_recipient_title_en,
+                'female_recipient_title_en': certificate.female_recipient_title_en,
+                'form_type': certificate.form_type,
+            }
+        elif certificate.form_type == 'Arabic_English':
+            # Combine Arabic and English form data
+            event_data = {
+                # Arabic form data
+                'certificate_description_female': certificate.certificate_description_female,
+                'certificate_description_male': certificate.certificate_description_male,
+                'greeting_female': certificate.greeting_female,
+                'greeting_male': certificate.greeting_male,
+                'intro': certificate.intro,
+                'male_recipient_title': certificate.male_recipient_title,
+                'female_recipient_title': certificate.female_recipient_title,
+
+                # English form data
+                'certificate_description_female_en': certificate.certificate_description_female_en,
+                'certificate_description_male_en': certificate.certificate_description_male_en,
+                'greeting_female_en': certificate.greeting_female_en,
+                'greeting_male_en': certificate.greeting_male_en,
+                'intro_en': certificate.intro_en,
+                'male_recipient_title_en': certificate.male_recipient_title_en,
+                'female_recipient_title_en': certificate.female_recipient_title_en,
+
+                # Common data
+                'certificate_event_id': int(certificate.certificate_event_id),
+                'certificate_title': certificate.certificate_title,
+                'event_type': certificate.event_type_id,
+                'template_path': certificate.template_path,
+                'presenter_name': certificate.presenter_name,
+                'secret_phrase': certificate.secret_phrase,
+                'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+                'file_path': certificate.file_path,
+                'First_Signatory_Name': certificate.First_Signatory_Name,
+                'First_Signatory_Position': certificate.First_Signatory_Position,
+                'First_Signatory_Path': certificate.First_Signatory_Path,
+                'Second_Signatory_Name': certificate.Second_Signatory_Name,
+                'Second_Signatory_Position': certificate.Second_Signatory_Position,
+                'Second_Signatory_Path': certificate.Second_Signatory_Path,
+                'form_type': certificate.form_type,
+            }
 
         if customization:
             items_positions={
@@ -144,6 +210,7 @@ def generate_certificate(certificate_event_id):
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
         
+        logging.info("Retrieved data: %s", event_data)
         # result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         script_path = os.path.abspath(os.path.join('', 'flask_website', 'main.py'))
         result = subprocess.run(['python', script_path, '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
@@ -152,5 +219,6 @@ def generate_certificate(certificate_event_id):
             return jsonify({'success': True})
         else:
             return jsonify({'success': False, 'error': result.stderr})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+   
+    
+

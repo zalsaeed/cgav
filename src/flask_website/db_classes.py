@@ -82,7 +82,8 @@ class CertificateEvent(db.Model):
     intro = db.Column(db.String(255))
     male_recipient_title = db.Column(db.String(255))
     female_recipient_title = db.Column(db.String(255))
-   
+    form_type = db.Column(db.String(255))
+
     #En columns 
     intro_en = db.Column(db.String(255))
     female_recipient_title_en = db.Column(db.String(255))
@@ -207,6 +208,7 @@ class CertificateForm(FlaskForm):
         FileRequired(message='First signature image is required.'),
         FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
     ])
+    form_type = db.Column(db.String(255))
 
     # Fields for the second signatory
     signatory_name_2 = StringField('Second Signatory Name')

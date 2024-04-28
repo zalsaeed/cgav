@@ -74,7 +74,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-# Add a new route for running tests
+# New route for running tests
 @app.route('/run_tests', methods=['GET'])
 def run_tests():
     try:
@@ -84,7 +84,14 @@ def run_tests():
         
     except subprocess.CalledProcessError as e:
         return f'Error executing tests: {e}', 500
-    
+
+# Load translations based on the selected language
+def load_translations(selected_language):
+    with open(f'translations_{selected_language}.json', 'r', encoding='utf-8') as f:
+        translations = json.load(f)
+    return translations
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return db_classes.users.query.get(int(user_id))

@@ -115,6 +115,8 @@ IF NOT EXISTS addCertificate
     created_by INT NOT NULL,
     certificate_title VARCHAR
 (255),
+    form_type VARCHAR
+(255),
     event_type_id INT,
     template_path VARCHAR
 (255),

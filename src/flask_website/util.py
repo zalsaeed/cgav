@@ -109,10 +109,19 @@ def make_file_name_compatible(file_name: str) -> str:
     return file_name.lower().replace(" ", "-")
 
 
-def get_gendered_full_name(first_name: str, middle_name: str, last_name: str, gender: str):
-    if gender.lower() == "male":
-        return f"{first_name} بن {middle_name} {last_name}"
-    elif gender.lower() == "female":
-        return f"{first_name} بنت {middle_name} {last_name}"
+def get_gendered_full_name(first_name: str, middle_name: str, last_name: str, gender: str, form_type: str):
+    
+    if form_type == "Arabic" or form_type == "Arabic_English" : 
+        if gender.lower() == "male":
+            return f"{first_name} بن {middle_name} {last_name}"
+        elif gender.lower() == "female":
+            return f"{first_name} بنت {middle_name} {last_name}"
+        else:
+            raise RuntimeError(f"Gender '{gender}' unrecognized!")
     else:
-        raise RuntimeError(f"Gender '{gender}' unrecognized!")
+        if gender.lower() == "male":
+            return f"{first_name} {middle_name} {last_name}"
+        elif gender.lower() == "female":
+            return f"{first_name} {middle_name} {last_name}"
+        else:
+            raise RuntimeError(f"Gender '{gender}' unrecognized!")

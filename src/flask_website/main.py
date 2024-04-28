@@ -7,7 +7,7 @@ import fpdf
 import util
 import configuration_loader
 from csv_gen import CSVGen
-from certificate import Certificate
+from certificate import Certificate , BilingualCertificate
 
 from db_classes import recipient, Certificate_table
 from db_connection import db, app
@@ -37,15 +37,15 @@ def generate_recipient_id():
     # Generate a random UUID and convert it to a string
     return str(uuid.uuid4())
 
-def store_recipient_info(recipient_data):
+def store_recipient_info(recipient_data,first_name,middle_name,last_name):
     # Check if recipient already exists
     existing_recipient = recipient.query.filter_by(email=recipient_data['email']).first()
     
     if existing_recipient:
         # Update existing recipient information
-        existing_recipient.first_name = recipient_data['first_name']
-        existing_recipient.middle_name = recipient_data['middle_name']
-        existing_recipient.last_name = recipient_data['last_name']
+        existing_recipient.first_name = first_name
+        existing_recipient.middle_name = middle_name
+        existing_recipient.last_name = last_name
         existing_recipient.gender = recipient_data['gender']
         existing_recipient.phone_number = recipient_data.get('phone_number', None)  # Optional phone number
         db.session.commit()
@@ -53,9 +53,9 @@ def store_recipient_info(recipient_data):
     else:
         # Create new recipient entry
         new_recipient = recipient(
-            first_name=recipient_data['first_name'],
-            middle_name=recipient_data['middle_name'],
-            last_name=recipient_data['last_name'],
+            first_name=first_name,
+            middle_name=middle_name,
+            last_name=last_name,
             gender=recipient_data['gender'],
             email=recipient_data['email'],
             phone_number=recipient_data.get('phone_number', None),  # Optional phone number
@@ -101,26 +101,64 @@ def load_default_cutomization():
 
 def merge_with_default(data, default_data):
     key_mappings = {
-        'certificate_event_id':'certificate_event_id',
+        'certificate_event_id': 'certificate_event_id',
         'certificate_title': 'event_title',
-        'file_path': 'csv_file',
-        'certificate_description_female': 'female_certificate_body', 
-        'certificate_description_male': 'male_certificate_body',
-        'First_Signatory_Name': 'dean_name',
-        'First_Signatory_Position': 'dean_position',
-        'First_Signatory_Path': 'path_to_dean_signature',
-        'Second_Signatory_Name': 'csu_director_name',
-        'Second_Signatory_Position': 'csu_position',
-        'Second_Signatory_Path': 'path_to_csu_signature',  
-        'greeting_female': 'female_final_greeting',
-        'greeting_male': 'male_final_greeting',
-        'intro': 'intro',
-        'male_recipient_title': 'male_recipient_title',
-        'female_recipient_title': 'female_recipient_title',
-        'template_path': 'certificate_background',
+        'event_type': 'event_type',
+        'template_path': 'template_path',
+        'presenter_name': 'presenter_name',
+        'secret_phrase': 'secret_phrase',
         'event_date': 'event_date',
-        'event_type_id': 'event_type',  
+        'file_path': 'csv_file',
+        'First_Signatory_Name': 'First_Signatory_Name',
+        'First_Signatory_Position': 'First_Signatory_Position',
+        'First_Signatory_Path': 'First_Signatory_Path',
+        'Second_Signatory_Name': 'Second_Signatory_Name',
+        'Second_Signatory_Position': 'Second_Signatory_Position',
+        'Second_Signatory_Path': 'Second_Signatory_Path',
+        'form_type': 'form_type',
     }
+
+    # Add mappings for Arabic & English form
+    if data.get('form_type') == 'Arabic':
+        key_mappings.update({
+            'certificate_description_female': 'certificate_description_female',
+            'certificate_description_male': 'certificate_description_male',
+            'greeting_female': 'greeting_female',
+            'greeting_male': 'greeting_male',
+            'intro': 'intro',
+            'male_recipient_title': 'male_recipient_title',
+            'female_recipient_title': 'female_recipient_title',
+        })
+    elif data.get('form_type') == 'English':
+        key_mappings.update({
+            'certificate_description_female_en': 'certificate_description_female',
+            'certificate_description_male_en': 'certificate_description_male',
+            'greeting_female_en': 'greeting_female',
+            'greeting_male_en': 'greeting_male',
+            'intro_en': 'intro',
+            'male_recipient_title_en': 'male_recipient_title',
+            'female_recipient_title_en': 'female_recipient_title',
+        })
+    elif data.get('form_type') == 'Arabic_English':
+        key_mappings.update({
+            # Arabic form data
+            'certificate_description_female': 'certificate_description_female',
+            'certificate_description_male': 'certificate_description_male',
+            'greeting_female': 'greeting_female',
+            'greeting_male': 'greeting_male',
+            'intro': 'intro',
+            'male_recipient_title': 'male_recipient_title',
+            'female_recipient_title': 'female_recipient_title',
+
+            # English form data
+            'certificate_description_female_en': 'certificate_description_female_en',
+            'certificate_description_male_en': 'certificate_description_male_en',
+            'greeting_female_en': 'greeting_female_en',
+            'greeting_male_en': 'greeting_male_en',
+            'intro_en': 'intro_en',
+            'male_recipient_title_en': 'male_recipient_title_en',
+            'female_recipient_title_en': 'female_recipient_title_en',
+        })
 
     merged_data = {}
     for app_key, default_key in key_mappings.items():
@@ -137,8 +175,9 @@ def merge_customization_data(customization, default_customization):
         merged_customization[key] = customization.get(key, value)
 
     return merged_customization
-# Placeholder function for certificate generation 
-def generate_certificate(event_data, output_dir, item_postions):
+
+
+def generate_certificate(event_data, output_dir, item_positions):
     # Assuming util, configuration_loader, CSVGen, Certificate, etc. are defined in your script or imported modules
     event_dir = util.make_file_name_compatible(f"{event_data['event_title']}-{datetime.datetime.now().isoformat()}")
     output_dir = os.path.join(output_dir, event_dir)
@@ -147,78 +186,146 @@ def generate_certificate(event_data, output_dir, item_postions):
 
     # Read recipients data from CSV file specified in event_data
     list_of_recipients = util.read_csv_to_dict(event_data['csv_file'])
-    
+
     log.debug(f"List of recipients: {list_of_recipients}")
 
     report = CSVGen()
 
-    for recipient in list_of_recipients:
-        
-        full_name = util.get_gendered_full_name(recipient['first_name'],
-                                                recipient['middle_name'],
-                                                recipient['last_name'],
-                                                recipient['gender'])
+    for recipient_data in list_of_recipients:
+        log.debug("Before checking form type: %s", event_data['form_type'])
+        # Determine the appropriate field names based on the form type
+        if event_data['form_type'] == 'Arabic':
+            first_name = recipient_data['arfirst_name']
+            middle_name = recipient_data['armiddle_name']
+            last_name = recipient_data['arlast_name']
+            
 
-        certificate = Certificate(recipient_name=full_name,
-                                  recipient_title=event_data['male_recipient_title'] if recipient['gender'] == "male" else event_data['female_recipient_title'],
-                                  recipient_email=recipient['email'],
-                                  dean_name=event_data['dean_name'],
-                                  dean_position=event_data['dean_position'],
-                                  path_to_dean_signature=event_data['path_to_dean_signature'],
-                                  csu_director_name=event_data['csu_director_name'],
-                                  csu_position=event_data['csu_position'],
-                                  path_to_csu_head_signature=event_data['path_to_csu_signature'],
-                                  certificate_intro=event_data['intro'],
-                                  certificate_body = event_data['male_certificate_body'] if recipient['gender'] == "male" else event_data['female_certificate_body'],
-                                  greeting_txt=event_data['male_final_greeting'] if recipient['gender'] == "male" else event_data['female_final_greeting'],
-                                  certificate_template=event_data['certificate_background'],
-                                  certificate_event_id=event_data['certificate_event_id'])
+        elif event_data['form_type'] == 'English':
+            first_name = recipient_data['first_name']
+            middle_name = recipient_data['middle_name']
+            last_name = recipient_data['last_name']
 
-        certificate.generate_certificate(output_dir,item_postions)
+        if event_data['form_type'] == 'Arabic_English':
+            first_name_ar = recipient_data['arfirst_name']
+            middle_name_ar = recipient_data['armiddle_name']
+            last_name_ar = recipient_data['arlast_name']
 
-        report.add_datapoint({
-            "name": full_name,
-            "email": recipient['email'],
-            "event_name": event_data['event_title'],
-            "event_date": event_data['event_date'],
-            "event_type": event_data['event_type'],
-            "certificate_hash": certificate.certificate_hash,
-            "date_issued": datetime.datetime.now().date()
-        })
+            first_name_en = recipient_data['first_name'] if 'first_name' in recipient_data else recipient_data['arfirst_name']
+            middle_name_en = recipient_data['middle_name'] if 'middle_name' in recipient_data else recipient_data['armiddle_name']
+            last_name_en = recipient_data['last_name'] if 'last_name' in recipient_data else recipient_data['arlast_name']
 
-        store_recipient_info(recipient)
+        if (event_data['form_type'] == 'Arabic' or event_data['form_type'] == 'English'):
+            
+            full_name = util.get_gendered_full_name(first_name, middle_name, last_name, recipient_data['gender'],event_data['form_type'])
+            
+            # Store recipient info and get recipient ID
+            recipient_id = store_recipient_info(recipient_data,first_name,middle_name,last_name)
+            log.debug(f"Recipient ID: {recipient_id}")
+            certificate = Certificate(recipient_name=full_name,
+                                    recipient_title=event_data['male_recipient_title'] if recipient_data['gender'] == "male" else event_data['female_recipient_title'],
+                                    recipient_email=recipient_data['email'],
+                                    
+                                    dean_name=event_data['First_Signatory_Name'],
+                                    dean_position=event_data['First_Signatory_Position'],
+                                    path_to_dean_signature=event_data['First_Signatory_Path'],
+                                    csu_director_name=event_data['Second_Signatory_Name'],
+                                    csu_position=event_data['Second_Signatory_Position'],
+                                    path_to_csu_head_signature=event_data['Second_Signatory_Path'],
+                                    certificate_intro=event_data['intro'],
 
-        # Store recipient info and get recipient ID
-        recipient_id = store_recipient_info(recipient)
-        log.debug(f"Recipient ID: {recipient_id}")  
+                                    certificate_body=event_data['certificate_description_male'] if recipient_data['gender'] == "male" else event_data['certificate_description_female'],
+                                    greeting_txt=event_data['greeting_male'] if recipient_data['gender'] == "male" else event_data['greeting_female'],
+                                    certificate_template=event_data['template_path'],
+                                    certificate_event_id=event_data['certificate_event_id'])
+            
+        elif event_data['form_type'] == 'Arabic_English':
+                
+            full_name_ar = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
+            full_name_en = util.get_gendered_full_name(first_name_en, middle_name_en, last_name_en, recipient_data['gender'],event_data['form_type'])
+            
+            # Store recipient info and get recipient ID
+            recipient_id = store_recipient_info(recipient_data,first_name_ar,middle_name_ar,last_name_ar)
+            log.debug(f"Recipient ID: {recipient_id}")
 
+            certificate = BilingualCertificate(
+                                    # Arabic
+                                    recipient_name=full_name_ar,
+                                    recipient_title=event_data['male_recipient_title'] if recipient_data['gender'] == "male" else event_data['female_recipient_title'],
+                                    recipient_email=recipient_data['email'],
+                                    certificate_intro=event_data['intro'],
+                                    certificate_body=event_data['certificate_description_male'] if recipient_data['gender'] == "male" else event_data['certificate_description_female'],
+                                    greeting_txt=event_data['greeting_male'] if recipient_data['gender'] == "male" else event_data['greeting_female'],
 
-        # Now, recipient_id can be used in other functions that require it
+                                    # English
+                                    recipient_name_en=full_name_en,
+                                    recipient_title_en=event_data['male_recipient_title_en'] if recipient_data['gender'] == "male" else event_data['female_recipient_title_en'],
+                                    intro_en=event_data['intro_en'],
+                                    certificate_body_en=event_data['certificate_description_male_en'] if recipient_data['gender'] == "male" else event_data['certificate_description_female_en'],
+                                    greeting_txt_en=event_data['greeting_male_en'] if recipient_data['gender'] == "male" else event_data['greeting_female_en'],
+
+                                    dean_name=event_data['First_Signatory_Name'],
+                                    dean_position=event_data['First_Signatory_Position'],
+                                    path_to_dean_signature=event_data['First_Signatory_Path'],
+                                    csu_director_name=event_data['Second_Signatory_Name'],
+                                    csu_position=event_data['Second_Signatory_Position'],
+                                    path_to_csu_head_signature=event_data['Second_Signatory_Path'],
+
+                                    certificate_template=event_data['template_path'],
+                                    certificate_event_id=event_data['certificate_event_id'])
+
+        certificate.generate_certificate(output_dir, item_positions)
+
+        if (event_data['form_type'] == 'Arabic' or event_data['form_type'] == 'English'):
+            report.add_datapoint({
+                "name": full_name,
+                "email": recipient_data['email'],
+                "event_name": event_data['event_title'],
+                "event_date": event_data['event_date'],
+                "event_type": event_data['event_type'],
+                "certificate_hash": certificate.certificate_hash,
+                "date_issued": datetime.datetime.now().date()
+            })
+
+        elif event_data['form_type'] == 'Arabic_English':
+            report.add_datapoint({
+                "name_ar": full_name_ar,
+                "name_en": full_name_en,
+                "email": recipient_data['email'],
+                "event_name": event_data['event_title'],
+                "event_date": event_data['event_date'],
+                "event_type": event_data['event_type'],
+                "certificate_hash": certificate.certificate_hash,
+                "date_issued": datetime.datetime.now().date()
+            })
+
+        # # Store recipient info and get recipient ID
+        # recipient_id = store_recipient_info(recipient_data,first_name,middle_name,last_name)
+        # log.debug(f"Recipient ID: {recipient_id}")
+
+        # Store certificate hash
         hash = certificate.certificate_hash
-        log.debug(f"hash ID: {hash}") 
+        log.debug(f"Hash ID: {hash}")
 
-        store_certificate_hash(hash, recipient_id,event_data['certificate_event_id'])
-        
-     # Generate report CSV
+        store_certificate_hash(hash, recipient_id, event_data['certificate_event_id'])
+
+    # Generate report CSV
     report_filename = util.make_file_name_compatible(f"{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)
 
-    # report.write_to_csv(output_dir,
-    #                     util.make_file_name_compatible(f"{event_info['event_title']}-{event_info['event_date']}"))
 
-def main(event_data,items_positions):
+def main(event_data, item_positions):
     # Load default data and merge with incoming data
     default_event_data = load_default_data()
     default_customization = load_default_cutomization()
 
     merged_event_data = merge_with_default(event_data, default_event_data)
-    merged_customization = merge_customization_data(items_positions, default_customization)
+    merged_customization = merge_customization_data(item_positions, default_customization)
 
     # Define output directory
     output_dir = "flask_website/static/output"
 
     # Generate certificates
-    generate_certificate(merged_event_data, output_dir,merged_customization)
+    generate_certificate(merged_event_data, output_dir, merged_customization)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate certificates based on event data.")
