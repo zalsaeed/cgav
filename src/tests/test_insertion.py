@@ -156,71 +156,6 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         ))
         session.commit()
 
-    # def test_insert_row_in_addCertificate_table(self):
-    #     certificate_data = {
-    #         "created_by": 1,
-    #         "certificate_title": "1",
-    #         "event_type_id": 1,
-    #         "template_path": "/root/src/flask_website/certificate-templates/template.png",
-    #         "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",
-    #         "female_recipient_title": "المتدربة:",
-    #         "male_recipient_title": "المتدرب:",
-    #         "customization_id": None,
-    #         "template_id": None,
-    #         "instructor_id": None,
-    #         "event_start_date": None,
-    #         "event_end_date": None,
-    #         "presenter_name": "عمر الحمد",
-    #         "secret_phrase": "ggGBs2hu9j",
-    #         "event_date": "2024-02-22",
-    #         "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-    #         "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-    #         "file_path": "/root/src/flask_website/certificate-templates/sample-data.csv",
-    #         "first_Signatory_Name": "محمد بن فهد التميمي",
-    #         "first_Signatory_Position": "عميد كلية الهندسة",
-    #         "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
-    #         "second_Signatory_Name": "خالد بن صالح الصالح",
-    #         "second_Signatory_Position": "عميد عمادة خدمة المجتمع",
-    #         "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
-    #         "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
-    #         "greeting_male": "مع تمنياتنا له بالتوفيق والسداد"
-    #     }
-    #     certificate_table = self.base.classes.addCertificate
-    #     session = self.db.session
-        
-    #     # Check if a certificate with the same event_date and created_by already exists
-    #     # existing_certificate = session.query(certificate_table).filter_by(event_date=certificate_data['event_date'], created_by=certificate_data['created_by']).first()
-    #     # if existing_certificate is None:
-    #     session.add(certificate_table(
-    #             created_by=certificate_data['created_by'],
-    #             certificate_title=certificate_data['certificate_title'],
-    #             event_type_id=certificate_data['event_type_id'],
-    #             template_path=certificate_data['template_path'],
-    #             intro=certificate_data['intro'],
-    #             female_recipient_title=certificate_data['female_recipient_title'],
-    #             male_recipient_title=certificate_data['male_recipient_title'],
-    #             customization_id=certificate_data['customization_id'],
-    #             template_id=certificate_data['template_id'],
-    #             instructor_id=certificate_data['instructor_id'],
-    #             event_start_date=certificate_data['event_start_date'],
-    #             event_end_date=certificate_data['event_end_date'],
-    #             # secret_key=certificate_data['secret_key'],
-    #             presenter_name=certificate_data['presenter_name'],
-    #             secret_phrase=certificate_data['secret_phrase'],
-    #             event_date=certificate_data['event_date'],
-    #             certificate_description_female=certificate_data['certificate_description_female'],
-    #             certificate_description_male=certificate_data['certificate_description_male'],
-    #             file_path=certificate_data['file_path'],
-    #             first_Signatory_Name=certificate_data['first_Signatory_Name'],
-    #             first_Signatory_Position=certificate_data['first_Signatory_Position'],
-    #             first_Signatory_Path=certificate_data['first_Signatory_Path'],
-    #             second_Signatory_Name=certificate_data['second_Signatory_Name'],
-    #             second_Signatory_Position=certificate_data['second_Signatory_Position'],
-    #             second_Signatory_Path=certificate_data['second_Signatory_Path'],
-    #             greeting_female=certificate_data['greeting_female'],
-    #             greeting_male=certificate_data['greeting_male']
-    #         ))
-    #     session.commit()
        
     def test_insert_row_in_addCertificate_table(self):
         certificate_data = [
@@ -242,7 +177,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "event_date": "2024-02-22",
                 "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
                 "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-                "file_path": "/root/src/flask_website/certificate-templates/sample-data.csv",
+                "file_path": "/root/src/data/Arabic-data.csv",
                 "first_Signatory_Name": "محمد بن فهد التميمي",
                 "first_Signatory_Position": "عميد كلية الهندسة",
                 "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
@@ -250,7 +185,8 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "second_Signatory_Position": "عميد عمادة خدمة المجتمع",
                 "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
                 "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
-                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد"
+                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد",
+                "form_type" : "Arabic"
             },
             {
                 "created_by": 1,
@@ -270,7 +206,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "event_date": "2024-02-22",
                 "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
                 "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-                "file_path": "/root/src/flask_website/certificate-templates/sample-data.csv",
+                "file_path": "/root/src/data/English-data.csv",
                 "first_Signatory_Name": "محمد بن فهد التميمي",
                 "first_Signatory_Position": "عميد كلية الهندسة",
                 "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
@@ -278,16 +214,15 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "second_Signatory_Position": "عميد عمادة خدمة المجتمع",
                 "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
                 "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
-                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد"
+                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد",
+                "form_type" : "Arabic"
             },
             {
                 "created_by": 1,
                 "certificate_title": "3",
                 "event_type_id": 1,
-                "template_path": "/root/src/flask_website/certificate-templates/template.png",
-                "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",
-                "female_recipient_title": "المتدربة:",
-                "male_recipient_title": "المتدرب:",
+                "template_path": "/root/src/certificate-templates/template.png",
+              
                 "customization_id": None,
                 "template_id": None,
                 "instructor_id": None,
@@ -296,23 +231,30 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "presenter_name": "فهد العبدالرحيم ",
                 "secret_phrase": "ggGBs2hu9j",
                 "event_date": "2024-02-22",
-                "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-                "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-                "file_path": "/root/src/flask_website/certificate-templates/sample-data.csv",
+
+                "file_path": "/root/src/data/Arabic-data.csv",
                 "first_Signatory_Name": "محمد بن فهد التميمي",
                 "first_Signatory_Position": "عميد كلية الهندسة",
                 "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
                 "second_Signatory_Name": "خالد بن صالح الصالح",
                 "second_Signatory_Position": "عميد عمادة خدمة المجتمع",
                 "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
+
+                "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",
+                "female_recipient_title": "المتدربة:",
+                "male_recipient_title": "المتدرب:",
+                "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
+                "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
                 "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
-                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد"
+                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد",
+
+                "form_type" : "Arabic"
             },
             {
                 "created_by": 1,
                 "certificate_title": "4",
                 "event_type_id": 1,
-                "template_path": "/root/src/flask_website/certificate-templates/template.png",
+                "template_path": "/root/src/flask_website/data/template.png",
                 "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",
                 "female_recipient_title": "المتدربة:",
                 "male_recipient_title": "المتدرب:",
@@ -326,7 +268,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "event_date": "2024-02-22",
                 "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
                 "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
-                "file_path": "/root/src/flask_website/certificate-templates/sample-data.csv",
+                "file_path": "/root/src/data/Arabic-data.csv",
                 "first_Signatory_Name": "محمد بن فهد التميمي",
                 "first_Signatory_Position": "عميد كلية الهندسة",
                 "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
@@ -334,8 +276,91 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "second_Signatory_Position": "عميد عمادة خدمة المجتمع",
                 "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
                 "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
-                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد"
+                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد",
+                "form_type" : "Arabic"
             }
+        ]
+
+        English_certificate_data = [
+            {
+                "created_by": 1,
+                "certificate_title": "5",
+                "event_type_id": 1,
+                "template_path": "/root/src/flask_website/certificate-templates/template.png",
+                "intro": "Computer of Collage in Qassim University statify that",
+                "female_recipient_title": "Student:",
+                "male_recipient_title": "Student:",
+                
+                "customization_id": None,
+                "template_id": None,
+                "instructor_id": None,
+                "event_start_date": None,
+                "event_end_date": None,
+                "presenter_name": "Maha Alhamad",
+                "secret_phrase": "ggGBs2hu9j",
+                "event_date": "2025-02-22",
+
+                "certificate_description_female": "She attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025",
+                "certificate_description_male":"He attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025",
+                "file_path": "/root/src/data/English-data.csv",
+
+                "first_Signatory_Name": "Mohamad Fahad Altimimi",
+                "first_Signatory_Position": "Head of Collage",
+                "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
+                "second_Signatory_Name": "Khaled Hassan AlHassn",
+                "second_Signatory_Position": "Dean of Admission and Regestration",
+                "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
+
+                "greeting_female": "Best of luck for her",
+                "greeting_male": "Best of luck for him",
+
+                "form_type" : "English"
+            },
+        ]
+
+        Arabic_and_English_certificate_data = [
+            {
+                "created_by": 1,
+                "certificate_title": "6",
+                "event_type_id": 1,
+                "template_path": "/root/src/flask_website/certificate-templates/template.png",
+                "customization_id": None,
+                "template_id": None,
+                "instructor_id": None,
+                "event_start_date": None,
+                "event_end_date": None,
+                "presenter_name": "Maha Alhamad",
+                "secret_phrase": "ggGBs2hu9j",
+                "event_date": "2025-02-22",
+                "file_path": "/root/src/data/Arabic_and_English-data.csv",
+
+                # Arabic
+                "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",
+                "female_recipient_title": "المتدربة:",
+                "male_recipient_title": "المتدرب:",
+                "certificate_description_female": "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
+                "certificate_description_male": "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م",
+                "greeting_female": "مع تمنياتنا لها بالتوفيق والسداد",
+                "greeting_male": "مع تمنياتنا له بالتوفيق والسداد",
+
+                # English
+                "intro_en": "Computer of Collage in Qassim University statify that",
+                "female_recipient_title_en": "Student:",
+                "male_recipient_title_en": "Student:",
+                "certificate_description_female_en": "She attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025",
+                "certificate_description_male_en":"He attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025",
+                "greeting_female_en": "Best of luck for her",
+                "greeting_male_en": "Best of luck for him",
+
+                "first_Signatory_Name": "Mohamad Fahad Altimimi",
+                "first_Signatory_Position": "Head of Collage",
+                "first_Signatory_Path": "/root/src/signatures/sample-sig-1.png",
+                "second_Signatory_Name": "Khaled Hassan AlHassn",
+                "second_Signatory_Position": "Dean of Admission and Regestration",
+                "second_Signatory_Path": "/root/src/signatures/sample-sig-2.png",
+
+                "form_type" : "Arabic_English"
+            },
         ]
 
         certificate_table = self.base.classes.addCertificate
@@ -347,9 +372,6 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 certificate_title=data['certificate_title'],
                 event_type_id=data['event_type_id'],
                 template_path=data['template_path'],
-                intro=data['intro'],
-                female_recipient_title=data['female_recipient_title'],
-                male_recipient_title=data['male_recipient_title'],
                 customization_id=data['customization_id'],
                 template_id=data['template_id'],
                 instructor_id=data['instructor_id'],
@@ -358,18 +380,106 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 presenter_name=data['presenter_name'],
                 secret_phrase=data['secret_phrase'],
                 event_date=data['event_date'],
-                certificate_description_female=data['certificate_description_female'],
-                certificate_description_male=data['certificate_description_male'],
                 file_path=data['file_path'],
+
                 first_Signatory_Name=data['first_Signatory_Name'],
                 first_Signatory_Position=data['first_Signatory_Position'],
                 first_Signatory_Path=data['first_Signatory_Path'],
                 second_Signatory_Name=data['second_Signatory_Name'],
                 second_Signatory_Position=data['second_Signatory_Position'],
                 second_Signatory_Path=data['second_Signatory_Path'],
+            
+                intro=data['intro'],
+                female_recipient_title=data['female_recipient_title'],
+                male_recipient_title=data['male_recipient_title'],
+                certificate_description_female=data['certificate_description_female'],
+                certificate_description_male=data['certificate_description_male'],
                 greeting_female=data['greeting_female'],
-                greeting_male=data['greeting_male']
+                greeting_male=data['greeting_male'],
+
+                form_type = data['form_type']
             ))
+
+        for data in English_certificate_data:
+                session.add(certificate_table(
+                    created_by=data['created_by'],
+                    certificate_title=data['certificate_title'],
+                    event_type_id=data['event_type_id'],
+                    template_path=data['template_path'],
+                    customization_id=data['customization_id'],
+                    template_id=data['template_id'],
+                    instructor_id=data['instructor_id'],
+                    event_start_date=data['event_start_date'],
+                    event_end_date=data['event_end_date'],
+                    presenter_name=data['presenter_name'],
+                    secret_phrase=data['secret_phrase'],
+                    event_date=data['event_date'],
+
+                    
+                    file_path=data['file_path'],
+                    first_Signatory_Name=data['first_Signatory_Name'],
+                    first_Signatory_Position=data['first_Signatory_Position'],
+                    first_Signatory_Path=data['first_Signatory_Path'],
+                    second_Signatory_Name=data['second_Signatory_Name'],
+                    second_Signatory_Position=data['second_Signatory_Position'],
+                    second_Signatory_Path=data['second_Signatory_Path'],
+
+                    greeting_female_en=data['greeting_female'],
+                    greeting_male_en=data['greeting_male'],
+                    intro_en=data['intro'],
+                    female_recipient_title_en=data['female_recipient_title'],
+                    male_recipient_title_en=data['male_recipient_title'],
+                    certificate_description_female_en=data['certificate_description_female'],
+                    certificate_description_male_en=data['certificate_description_male'],
+
+                    form_type = data['form_type']
+                ))
+
+        for data in Arabic_and_English_certificate_data:
+                session.add(certificate_table(
+                    created_by=data['created_by'],
+                    certificate_title=data['certificate_title'],
+                    event_type_id=data['event_type_id'],
+                    template_path=data['template_path'],
+                    customization_id=data['customization_id'],
+                    template_id=data['template_id'],
+                    instructor_id=data['instructor_id'],
+                    event_start_date=data['event_start_date'],
+                    event_end_date=data['event_end_date'],
+                    presenter_name=data['presenter_name'],
+                    secret_phrase=data['secret_phrase'],
+                    event_date=data['event_date'],
+
+                    
+                    file_path=data['file_path'],
+                    first_Signatory_Name=data['first_Signatory_Name'],
+                    first_Signatory_Position=data['first_Signatory_Position'],
+                    first_Signatory_Path=data['first_Signatory_Path'],
+                    second_Signatory_Name=data['second_Signatory_Name'],
+                    second_Signatory_Position=data['second_Signatory_Position'],
+                    second_Signatory_Path=data['second_Signatory_Path'],
+
+                    # Arabic
+                    intro=data['intro'],
+                    female_recipient_title=data['female_recipient_title'],
+                    male_recipient_title=data['male_recipient_title'],
+                    certificate_description_female=data['certificate_description_female'],
+                    certificate_description_male=data['certificate_description_male'],
+                    greeting_female=data['greeting_female'],
+                    greeting_male=data['greeting_male'],
+
+                    # English
+                    greeting_female_en=data['greeting_female_en'],
+                    greeting_male_en=data['greeting_male_en'],
+                    intro_en=data['intro_en'],
+                    female_recipient_title_en=data['female_recipient_title_en'],
+                    male_recipient_title_en=data['male_recipient_title_en'],
+                    certificate_description_female_en=data['certificate_description_female_en'],
+                    certificate_description_male_en=data['certificate_description_male_en'],
+
+                    form_type = data['form_type']
+                ))
+
 
         session.commit()
 
