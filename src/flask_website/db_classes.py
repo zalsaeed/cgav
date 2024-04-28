@@ -133,12 +133,12 @@ class Certificate_table(db.Model):
     
 class RegisterForm(FlaskForm):
     Fname = StringField(validators=[
-                           InputRequired()], render_kw={"placeholder": "first name"})
+                           InputRequired()], render_kw={"placeholder": "First name"})
     Lname = StringField(validators=[
-                           InputRequired()], render_kw={"placeholder": "last name"})
+                           InputRequired()], render_kw={"placeholder": "Last name"})
     
     email = StringField(validators=[
-                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "email"})
+                           InputRequired(), Email("This field requires a valid email address")], render_kw={"placeholder": "Example@hotmail.com"})
     
     user_role = StringField(validators=[
                            ], render_kw={"placeholder": "user_role"})
@@ -147,7 +147,7 @@ class RegisterForm(FlaskForm):
                              InputRequired(),EqualTo('confirm_password','miss match'), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
     
     confirm_password = PasswordField(validators=[
-                             InputRequired()], render_kw={"placeholder": "confirm Password"})
+                             InputRequired()], render_kw={"placeholder": "Confirm Password"})
 
     submit = SubmitField('Register')
 
