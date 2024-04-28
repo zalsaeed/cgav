@@ -18,9 +18,9 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{ certificate.certificate_title }}</h5>
-          <p class="card-text">Presenter: {{ certificate.presenter_name }}</p>
-          <p class="card-text">Event date: {{ certificate.event_date.strftime('%m/%d/%Y') }}</p>
-          <p class="card-text">Event Type: {{ certificate.event_type.event_type_name }}</p>
+          <p class="card-text"><strong>Presenter:</strong> {{ certificate.presenter_name }}</p>
+          <p class="card-text"><strong>Event date:</strong> {{ certificate.event_date.strftime('%m/%d/%Y') }}</p>
+          <p class="card-text"><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</p>
           <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button">More Info</a>
         </div>
       </div>
