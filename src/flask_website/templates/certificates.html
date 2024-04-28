@@ -7,10 +7,10 @@
 {% block body %}
 <div class="container mt-5">
   <div class="text-center">
-    <h6 class="font-bold text-4xl" style="color: #2C4E71;">Your Events</h6>
-</div>
+    <h6 class="font-bold text-4xl" style="color: #2C4E71;" data-i18n="Your_Events">Your Events</h6>
+  </div>
 
-  <h2 id="certificates-header" class="mt-5 mb-4 text-center">Latest Event</h2>
+  <h2 id="certificates-header" class="mt-5 mb-4 text-center" data-i18n="Latest_Event">Latest Event</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     <!-- Display the latest 3 certificates -->
     {% for certificate in latest_certificates %}
@@ -33,8 +33,8 @@
   </div>
 
   <div class="text-center mt-3">
-    <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
-    <a href="/add_certificate"><button class="m-2 custom-button">Add Events</button></a>
+    <button id="load-more-certificates" class="m-2 custom-button" data-i18n="Load_More">Load More</button>
+    <a href="/add_certificate"><button class="m-2 custom-button" data-i18n="Add_Events">Add Events</button></a>
   </div>
 </div>
 
@@ -86,10 +86,10 @@
             // If no more certificates to load, update the button and notify the user
             console.log("Number of certificates:", certificates.length);
             if (certificates.length === 0) {
-                console.log("No more certificates to load.");
-                certificatesHeader.textContent = 'All Event';
-                loadMoreCertificatesBtn.textContent = 'No More Events';
-                loadMoreCertificatesBtn.disabled = true;
+              console.log("No more certificates to load.");
+              certificatesHeader.textContent = 'All Event';
+              loadMoreCertificatesBtn.textContent = 'No More Events';
+              loadMoreCertificatesBtn.disabled = true;
             }
           } else {
             console.error('Invalid response format:', certificates);
