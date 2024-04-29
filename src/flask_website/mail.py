@@ -230,22 +230,47 @@ def send_delete_confirmation_email(event_id):
 
     # Detailed message for administrators
     admin_body = f"""
-    Event Deletion Details\n
+    Event Deletion Details
+
     Event Title: {event.certificate_title}
-    Event Date: {event_date_str}
+    Event Date: {event.event_date.strftime('%Y-%m-%d')}
     Event Type: {event.event_type.event_type_name}
     Presented by: {event.presenter_name}
-    Event Description (Male): {event.certificate_description_male}
-    Event Description (Female): {event.certificate_description_female}
+    """
+
+    if event.certificate_description_male:
+        admin_body += f"  Description for Male (AR): {event.certificate_description_male}\n"
+    if event.certificate_description_female:
+        admin_body += f"    Description for Female (AR): {event.certificate_description_female}\n"
+    if event.certificate_description_male_en:
+        admin_body += f"    Description for Male (EN): {event.certificate_description_male_en}\n"
+    if event.certificate_description_female_en:
+        admin_body += f"    Description for Female (EN): {event.certificate_description_female_en}\n"
+
+    if event.greeting_male:
+        admin_body += f"    Greeting for Male (AR): {event.greeting_male}\n"
+    if event.greeting_female:
+        admin_body += f"    Greeting for Female (AR): {event.greeting_female}\n"
+    if event.greeting_male_en:
+        admin_body += f"    Greeting for Male (EN): {event.greeting_male_en}\n"
+    if event.greeting_female_en:
+        admin_body += f"    Greeting for Female (EN): {event.greeting_female_en}\n"
+
+    admin_body += f"""
     Number of Recipients Affected: {num_recipients}
     Certificates Sent: {'Yes' if event.sended else 'No'}
     Certificates Downloaded: {'Yes' if event.downloaded else 'No'}
     Generated Certificates: {'Yes' if event.generated_ else 'No'}
-    First Signatory: {event.First_Signatory_Name}, Position: {event.First_Signatory_Position}
-    Second Signatory: {event.Second_Signatory_Name}, Position: {event.Second_Signatory_Position}
+    Secret Phrase: {event.secret_phrase if event.secret_phrase else 'N/A'}
+    File Path: {event.file_path if event.file_path else 'N/A'}
+    Template Used: {event.template_path if event.template_path else 'N/A'}
+    Intro Message: {event.intro if event.intro else 'N/A'}
+    First Signatory: {event.First_Signatory_Name if event.First_Signatory_Name else 'N/A'}, Position: {event.First_Signatory_Position if event.First_Signatory_Position else 'N/A'}
+    Second Signatory: {event.Second_Signatory_Name if event.Second_Signatory_Name else 'N/A'}, Position: {event.Second_Signatory_Position if event.Second_Signatory_Position else 'N/A'}
 
-    The event and all associated data have been permanently deleted from system. This includes all digital records and files related to the event.
+    The event and all associated data have been permanently deleted from the system. This includes all digital records and files related to the event.
     """
+
 
     # Send detailed email to administrator
     admin_msg = Message(subject, recipients=[admin_email], sender='no-reply@example.com')
