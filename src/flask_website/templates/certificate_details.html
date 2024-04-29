@@ -17,13 +17,49 @@
         <div class="col-md-4 card-text"><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</div>
         <div class="col-md-4 card-text"><strong>Presenter Name:</strong> {{ certificate.presenter_name }}</div>
         <div class="col-md-4 card-text"><strong>Event Date:</strong> {{ certificate.event_date.strftime('%Y-%m-%d') }}</div>
+        <div class="col-md-4 card-text"><strong>Form type:</strong> {{ certificate.form_type }}</div>
       </div>
       
       <p class="card-subtitle">Details</p>
-      
       <div class="row">
         <div class="col-md-4 card-text"><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div>
         <div class="col-md-4 card-text"><strong>File Path:</strong> {{ certificate.file_path }}</div>
+      </div>
+
+      <!-- Intro Section -->
+      <p class="card-subtitle">Introduction</p>
+      <div class="row">
+          <div class="col-md-6 card-text text-right">
+              {% if certificate.intro %}
+                  <strong>(AR):</strong> {{ certificate.intro }}
+              {% endif %}
+          </div>
+          <div class="col-md-6 card-text text-left">
+              {% if certificate.intro_en %}
+                  <strong>(EN):</strong> {{ certificate.intro_en }}
+              {% endif %}
+          </div>
+      </div>
+
+      <!-- Recipient Title Section -->
+      <p class="card-subtitle">Recipient Titles</p>
+      <div class="row">
+          <div class="col-md-6 card-text text-right">
+              {% if certificate.male_recipient_title %}
+                  <strong>Male (AR):</strong> {{ certificate.male_recipient_title }}
+              {% endif %}
+              {% if certificate.female_recipient_title %}
+                  <br><strong>Female (AR):</strong> {{ certificate.female_recipient_title }}
+              {% endif %}
+          </div>
+          <div class="col-md-6 card-text text-left">
+              {% if certificate.male_recipient_title_en %}
+                  <strong>Male (EN):</strong> {{ certificate.male_recipient_title_en }}
+              {% endif %}
+              {% if certificate.female_recipient_title_en %}
+                  <br><strong>Female (EN):</strong> {{ certificate.female_recipient_title_en }}
+              {% endif %}
+          </div>
       </div>
       
       <!-- Description Section -->
@@ -48,7 +84,7 @@
               {% endif %}
           </div>
       </div>
-      
+
       <!-- Greeting Section -->
       <p class="card-subtitle">Greetings</p>
       <div class="row">
