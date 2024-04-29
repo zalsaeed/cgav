@@ -24,13 +24,52 @@
       <div class="row">
         <div class="col-md-4 card-text"><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div>
         <div class="col-md-4 card-text"><strong>File Path:</strong> {{ certificate.file_path }}</div>
-        <div class="col-md-4 card-text"><strong>Description for Female:</strong> {{ certificate.certificate_description_female }}</div>
       </div>
       
+      <!-- Description Section -->
+      <p class="card-subtitle">Description</p>
       <div class="row">
-        <div class="col-md-4 card-text"><strong>Description for Male:</strong> {{ certificate.certificate_description_male }}</div>
-        <div class="col-md-4 card-text"><strong>Greeting for Female:</strong> {{ certificate.female_recipient_title }}</div>
-        <div class="col-md-4 card-text"><strong>Greeting for Male:</strong> {{ certificate.male_recipient_title }}</div>
+          <div class="col-md-6 card-text text-right">
+              {% if certificate.certificate_description_male %}
+                  <strong>Male (AR):</strong> {{ certificate.certificate_description_male }}
+                  <br>
+              {% endif %}
+              {% if certificate.certificate_description_female %}
+                  <strong>Female (AR):</strong> {{ certificate.certificate_description_female }}
+              {% endif %}
+          </div>
+          <div class="col-md-6 card-text text-left">
+              {% if certificate.certificate_description_male_en %}
+                  <strong>Male (EN):</strong> {{ certificate.certificate_description_male_en }}
+                  <br>
+              {% endif %}
+              {% if certificate.certificate_description_female_en %}
+                  <strong>Female (EN):</strong> {{ certificate.certificate_description_female_en }}
+              {% endif %}
+          </div>
+      </div>
+      
+      <!-- Greeting Section -->
+      <p class="card-subtitle">Greetings</p>
+      <div class="row">
+          <div class="col-md-6 card-text text-right">
+              {% if certificate.greeting_male %}
+                  <strong>Male (AR):</strong> {{ certificate.greeting_male }}
+                  <br>
+              {% endif %}
+              {% if certificate.greeting_female %}
+                  <strong>Female (AR):</strong> {{ certificate.greeting_female }}
+              {% endif %}
+          </div>
+          <div class="col-md-6 card-text text-left">
+              {% if certificate.greeting_male_en %}
+                  <strong>Male (EN):</strong> {{ certificate.greeting_male_en }}
+                  <br>
+              {% endif %}
+              {% if certificate.greeting_female_en %}
+                  <strong>Female (EN):</strong> {{ certificate.greeting_female_en }}
+              {% endif %}
+          </div>
       </div>
       
       <p class="card-subtitle">Signatories</p>
@@ -414,6 +453,20 @@
     background-color: #f8f9fa; /* Very light gray background on hover for interaction feedback */
   }
 
+  .text-right {
+    text-align: right;
+  }
+
+  .text-left {
+      text-align: left;
+  }
+
+  /* Ensuring the columns are divided equally */
+  .col-md-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+  }
+  
 </style>
 
 <script>
