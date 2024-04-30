@@ -14,50 +14,51 @@
       <h5 class="card-title">{{ certificate.certificate_title }}</h5>
       <p class="card-subtitle">Event Information</p>
       <div class="row">
-        <div class="col-md-4 card-text"><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</div>
-        <div class="col-md-4 card-text"><strong>Presenter Name:</strong> {{ certificate.presenter_name }}</div>
-        <div class="col-md-4 card-text"><strong>Event Date:</strong> {{ certificate.event_date.strftime('%Y-%m-%d') }}</div>
-        <div class="col-md-4 card-text"><strong>Form type:</strong> {{ certificate.form_type }}</div>
+        <div class="col-md-4 card-text"><br><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</div>
+        <div class="col-md-4 card-text"><br><strong>Presenter Name:</strong> {{ certificate.presenter_name }}</div>
+        <div class="col-md-4 card-text"><br><strong>Event Date:</strong> {{ certificate.event_date.strftime('%Y-%m-%d') }}</div>
+        <div class="col-md-4 card-text"><br><strong>Form type:</strong> {{ certificate.form_type }}</div>
       </div>
       
       <p class="card-subtitle">Details</p>
       <div class="row">
-        <div class="col-md-4 card-text"><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div>
-        <div class="col-md-4 card-text"><strong>File Path:</strong> {{ certificate.file_path }}</div>
+        <br>
+        <div class="col-md-4 card-text"><br><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div><br>
+        <div class="col-md-4 card-text"><br><strong>File Path:</strong> {{ certificate.file_path }}</div><br>
       </div>
 
-      <!-- Intro Section -->
+      <!-- Introduction Section -->
       <p class="card-subtitle">Introduction</p>
       <div class="row">
-          <div class="col-md-6 card-text text-right">
+          <div class="col-md-6 text-right">
               {% if certificate.intro %}
-                  <strong>(AR):</strong> {{ certificate.intro }}
+              <br><strong>(AR):</strong> {{ certificate.intro }}
               {% endif %}
           </div>
-          <div class="col-md-6 card-text text-left">
+          <div class="col-md-6 text-left">
               {% if certificate.intro_en %}
-                  <strong>(EN):</strong> {{ certificate.intro_en }}
+              <br><strong>(EN):</strong> {{ certificate.intro_en }}
               {% endif %}
           </div>
       </div>
-
+      
       <!-- Recipient Title Section -->
       <p class="card-subtitle">Recipient Titles</p>
       <div class="row">
-          <div class="col-md-6 card-text text-right">
+          <div class="col-md-6 text-right">
               {% if certificate.male_recipient_title %}
-                  <strong>Male (AR):</strong> {{ certificate.male_recipient_title }}
-              {% endif %}
+              <br><strong>ذكر:</strong> {{ certificate.male_recipient_title }}
+              {% endif %}<br>
               {% if certificate.female_recipient_title %}
-                  <br><strong>Female (AR):</strong> {{ certificate.female_recipient_title }}
+                  <br><strong>أنثى:</strong> {{ certificate.female_recipient_title }}
               {% endif %}
           </div>
-          <div class="col-md-6 card-text text-left">
+          <div class="col-md-6 text-left">
               {% if certificate.male_recipient_title_en %}
-                  <strong>Male (EN):</strong> {{ certificate.male_recipient_title_en }}
-              {% endif %}
+              <br><strong>Male:</strong> {{ certificate.male_recipient_title_en }}
+              {% endif %}<br>
               {% if certificate.female_recipient_title_en %}
-                  <br><strong>Female (EN):</strong> {{ certificate.female_recipient_title_en }}
+                  <br><strong>Female:</strong> {{ certificate.female_recipient_title_en }}
               {% endif %}
           </div>
       </div>
@@ -65,45 +66,45 @@
       <!-- Description Section -->
       <p class="card-subtitle">Description</p>
       <div class="row">
-          <div class="col-md-6 card-text text-right">
+          <div class="col-md-6 text-right">
               {% if certificate.certificate_description_male %}
-                  <strong>Male (AR):</strong> {{ certificate.certificate_description_male }}
+              <br><strong>ذكر:</strong> {{ certificate.certificate_description_male }}
                   <br>
-              {% endif %}
+              {% endif %}<br>
               {% if certificate.certificate_description_female %}
-                  <strong>Female (AR):</strong> {{ certificate.certificate_description_female }}
+                  <strong>أنثى:</strong> {{ certificate.certificate_description_female }}
               {% endif %}
           </div>
-          <div class="col-md-6 card-text text-left">
+          <div class="col-md-6 text-left">
               {% if certificate.certificate_description_male_en %}
-                  <strong>Male (EN):</strong> {{ certificate.certificate_description_male_en }}
+              <br><strong>Male:</strong> {{ certificate.certificate_description_male_en }}
                   <br>
-              {% endif %}
+              {% endif %}<br>
               {% if certificate.certificate_description_female_en %}
-                  <strong>Female (EN):</strong> {{ certificate.certificate_description_female_en }}
+                  <strong>Female:</strong> {{ certificate.certificate_description_female_en }}
               {% endif %}
           </div>
       </div>
-
+      
       <!-- Greeting Section -->
       <p class="card-subtitle">Greetings</p>
       <div class="row">
-          <div class="col-md-6 card-text text-right">
+          <div class="col-md-6 text-right">
               {% if certificate.greeting_male %}
-                  <strong>Male (AR):</strong> {{ certificate.greeting_male }}
+              <br><strong>ذكر:</strong> {{ certificate.greeting_male }}
                   <br>
-              {% endif %}
+              {% endif %}<br>
               {% if certificate.greeting_female %}
-                  <strong>Female (AR):</strong> {{ certificate.greeting_female }}
+                  <strong>أنثى:</strong> {{ certificate.greeting_female }}
               {% endif %}
           </div>
-          <div class="col-md-6 card-text text-left">
+          <div class="col-md-6 text-left">
               {% if certificate.greeting_male_en %}
-                  <strong>Male (EN):</strong> {{ certificate.greeting_male_en }}
+              <br><strong>Male:</strong> {{ certificate.greeting_male_en }}
                   <br>
-              {% endif %}
+              {% endif %}<br>
               {% if certificate.greeting_female_en %}
-                  <strong>Female (EN):</strong> {{ certificate.greeting_female_en }}
+                  <strong>Female:</strong> {{ certificate.greeting_female_en }}
               {% endif %}
           </div>
       </div>
@@ -111,17 +112,17 @@
       <p class="card-subtitle">Signatories</p>
       
       <div class="row">
-        <div class="col-md-4 card-text"><strong>First Signatory Name:</strong> {{ certificate.First_Signatory_Name }}</div>
-        <div class="col-md-4 card-text"><strong>Position:</strong> {{ certificate.First_Signatory_Position }}</div>
-        <div class="col-md-4 card-text"><strong>Path:</strong> {{ certificate.First_Signatory_Path }}</div>
-      </div>
+        <div class="col-md-4 card-text"><br><strong>First Signatory Name:</strong> {{ certificate.First_Signatory_Name }}</div>
+        <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.First_Signatory_Position }}</div>
+        <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.First_Signatory_Path }}</div>
+      </div><br>
       
       {% if certificate.Second_Signatory_Name %}
       <div class="row">
         <div class="col-md-4 card-text"><strong>Second Signatory Name:</strong> {{ certificate.Second_Signatory_Name }}</div>
         <div class="col-md-4 card-text"><strong>Position:</strong> {{ certificate.Second_Signatory_Position }}</div>
         <div class="col-md-4 card-text"><strong>Path:</strong> {{ certificate.Second_Signatory_Path }}</div>
-      </div>
+      </div><br>
       {% endif %}
       
       <!-- Buttons -->
@@ -491,16 +492,25 @@
 
   .text-right {
     text-align: right;
+    direction: rtl; /* Right-to-left direction for Arabic */
   }
 
   .text-left {
       text-align: left;
+      direction: ltr; /* Left-to-right direction for English */
   }
 
   /* Ensuring the columns are divided equally */
   .col-md-6 {
       flex: 0 0 50%;
       max-width: 50%;
+  }
+
+  @media (max-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
   }
   
 </style>
