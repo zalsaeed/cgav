@@ -24,6 +24,7 @@ def load_more_certificates():
                 'presenter_name': certificate.presenter_name,
                 'certificate_event_id': certificate.certificate_event_id,
                 'event_date': certificate.event_date.strftime('%Y-%m-%d'),
+                'event_type_name': certificate.event_type.event_type_name,
                 'certificate_description_female': certificate.certificate_description_female,
                 'file_path': certificate.file_path if hasattr(certificate, 'file_path') else None
             }
