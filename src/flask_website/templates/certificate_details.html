@@ -8,10 +8,10 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-5">
-  <h1 class="mb-4 text-center">Event Details</h1>
+  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;">Event Details</h1>
   <div class="card detail-card mx-auto col-12 col-md-10 col-lg-12">
     <div class="card-body">
-      <h5 class="card-title">{{ certificate.certificate_title }}</h5>
+      <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}</h5>
       <p class="card-subtitle">Event Information</p>
       <div class="row">
         <div class="col-md-4 card-text"><br><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</div>
@@ -20,110 +20,105 @@
         <div class="col-md-4 card-text"><br><strong>Form type:</strong> {{ certificate.form_type }}</div>
       </div>
       
-      <p class="card-subtitle">Details</p>
-      <div class="row">
-        <br>
-        <div class="col-md-4 card-text"><br><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div><br>
-        <div class="col-md-4 card-text"><br><strong>File Path:</strong> {{ certificate.file_path }}</div><br>
-      </div>
-
-      <!-- Introduction Section -->
-      <p class="card-subtitle">Introduction</p>
-      <div class="row">
-          <div class="col-md-6 text-right">
-              {% if certificate.intro %}
-              <br><strong>(AR):</strong> {{ certificate.intro }}
-              {% endif %}
-          </div>
-          <div class="col-md-6 text-left">
-              {% if certificate.intro_en %}
-              <br><strong>(EN):</strong> {{ certificate.intro_en }}
-              {% endif %}
-          </div>
+      <!-- Details Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('details-section')">Details</p>
+      <div id="details-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-4 card-text"><br><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div>
+          <div class="col-md-4 card-text"><br><strong>File Path:</strong> {{ certificate.file_path }}</div>
+        </div>
       </div>
       
-      <!-- Recipient Title Section -->
-      <p class="card-subtitle">Recipient Titles</p>
-      <div class="row">
+      <!-- Recipient Titles Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('recipient-titles-section')">Recipient Titles</p>
+      <div id="recipient-titles-section" style="display:none;">
+        <div class="row">
           <div class="col-md-6 text-right">
-              {% if certificate.male_recipient_title %}
-              <br><strong>ذكر:</strong> {{ certificate.male_recipient_title }}
-              {% endif %}<br>
-              {% if certificate.female_recipient_title %}
-                  <br><strong>أنثى:</strong> {{ certificate.female_recipient_title }}
-              {% endif %}
+            <br>
+            {% if certificate.male_recipient_title %}
+            <strong>ذكر:</strong> {{ certificate.male_recipient_title }}<br><br>
+            {% endif %}
+            {% if certificate.female_recipient_title %}
+            <strong>أنثى:</strong> {{ certificate.female_recipient_title }}
+            {% endif %}
           </div>
           <div class="col-md-6 text-left">
-              {% if certificate.male_recipient_title_en %}
-              <br><strong>Male:</strong> {{ certificate.male_recipient_title_en }}
-              {% endif %}<br>
-              {% if certificate.female_recipient_title_en %}
-                  <br><strong>Female:</strong> {{ certificate.female_recipient_title_en }}
-              {% endif %}
+            <br>
+            {% if certificate.male_recipient_title_en %}
+            <strong>Male:</strong> {{ certificate.male_recipient_title_en }}<br><br>
+            {% endif %}
+            {% if certificate.female_recipient_title_en %}
+            <strong>Female:</strong> {{ certificate.female_recipient_title_en }}
+            {% endif %}
           </div>
+        </div>
       </div>
       
       <!-- Description Section -->
-      <p class="card-subtitle">Description</p>
-      <div class="row">
+      <p class="card-subtitle" onclick="toggleVisibility('description-section')">Description</p>
+      <div id="description-section" style="display:none;">
+        <div class="row">
           <div class="col-md-6 text-right">
-              {% if certificate.certificate_description_male %}
-              <br><strong>ذكر:</strong> {{ certificate.certificate_description_male }}
-                  <br>
-              {% endif %}<br>
-              {% if certificate.certificate_description_female %}
-                  <strong>أنثى:</strong> {{ certificate.certificate_description_female }}
-              {% endif %}
+            <br>
+            {% if certificate.certificate_description_male %}
+            <strong>ذكر:</strong> {{ certificate.certificate_description_male }}<br><br>
+            {% endif %}
+            {% if certificate.certificate_description_female %}
+            <strong>أنثى:</strong> {{ certificate.certificate_description_female }}
+            {% endif %}
           </div>
           <div class="col-md-6 text-left">
-              {% if certificate.certificate_description_male_en %}
-              <br><strong>Male:</strong> {{ certificate.certificate_description_male_en }}
-                  <br>
-              {% endif %}<br>
-              {% if certificate.certificate_description_female_en %}
-                  <strong>Female:</strong> {{ certificate.certificate_description_female_en }}
-              {% endif %}
+            <br>
+            {% if certificate.certificate_description_male_en %}
+            <strong>Male:</strong> {{ certificate.certificate_description_male_en }}<br><br>
+            {% endif %}
+            {% if certificate.certificate_description_female_en %}
+            <strong>Female:</strong> {{ certificate.certificate_description_female_en }}
+            {% endif %}
           </div>
+        </div>
       </div>
       
       <!-- Greeting Section -->
-      <p class="card-subtitle">Greetings</p>
-      <div class="row">
+      <p class="card-subtitle" onclick="toggleVisibility('greetings-section')">Greetings</p>
+      <div id="greetings-section" style="display:none;">
+        <div class="row">
           <div class="col-md-6 text-right">
-              {% if certificate.greeting_male %}
-              <br><strong>ذكر:</strong> {{ certificate.greeting_male }}
-                  <br>
-              {% endif %}<br>
-              {% if certificate.greeting_female %}
-                  <strong>أنثى:</strong> {{ certificate.greeting_female }}
-              {% endif %}
+            <br>
+            {% if certificate.greeting_male %}
+            <strong>ذكر:</strong> {{ certificate.greeting_male }}<br><br>
+            {% endif %}
+            {% if certificate.greeting_female %}
+            <strong>أنثى:</strong> {{ certificate.greeting_female }}
+            {% endif %}
           </div>
           <div class="col-md-6 text-left">
-              {% if certificate.greeting_male_en %}
-              <br><strong>Male:</strong> {{ certificate.greeting_male_en }}
-                  <br>
-              {% endif %}<br>
-              {% if certificate.greeting_female_en %}
-                  <strong>Female:</strong> {{ certificate.greeting_female_en }}
-              {% endif %}
+            <br>
+            {% if certificate.greeting_male_en %}
+            <strong>Male:</strong> {{ certificate.greeting_male_en }}<br><br>
+            {% endif %}
+            {% if certificate.greeting_female_en %}
+            <strong>Female:</strong> {{ certificate.greeting_female_en }}
+            {% endif %}
           </div>
+        </div>
       </div>
       
-      <p class="card-subtitle">Signatories</p>
-      
-      <div class="row">
-        <div class="col-md-4 card-text"><br><strong>First Signatory Name:</strong> {{ certificate.First_Signatory_Name }}</div>
-        <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.First_Signatory_Position }}</div>
-        <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.First_Signatory_Path }}</div>
-      </div><br>
-      
-      {% if certificate.Second_Signatory_Name %}
-      <div class="row">
-        <div class="col-md-4 card-text"><strong>Second Signatory Name:</strong> {{ certificate.Second_Signatory_Name }}</div>
-        <div class="col-md-4 card-text"><strong>Position:</strong> {{ certificate.Second_Signatory_Position }}</div>
-        <div class="col-md-4 card-text"><strong>Path:</strong> {{ certificate.Second_Signatory_Path }}</div>
-      </div><br>
-      {% endif %}
+      <!-- Signatories Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('signatories-section')">Signatories</p>
+      <div id="signatories-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-4 card-text"><br><strong>First Signatory Name:</strong> {{ certificate.First_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.First_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.First_Signatory_Path }}</div>
+          {% if certificate.Second_Signatory_Name %}
+          <div class="col-md-4 card-text"><br><strong>Second Signatory Name:</strong> {{ certificate.Second_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.Second_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.Second_Signatory_Path }}</div>
+          {% endif %}
+        </div>
+      </div>
+      <br>
       
       <!-- Buttons -->
       <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
@@ -271,6 +266,14 @@
     color: #007bff; /* Bright blue for subtitles */
     font-weight: 500; /* Semi-bold for better visibility */
     margin-top: 1rem; /* Space above each new category */
+    transition: color 0.3s ease-in-out; /* Smooth transition for color change */
+  }
+
+  .card-subtitle:hover {
+  color: #0056b3; /* Change color on hover for better user feedback */
+  cursor: pointer;
+  text-decoration: underline; /* Add underline effect */
+  transform: scale(1.05); /* Scale up slightly on hover */
   }
 
   .row {
@@ -802,6 +805,15 @@
       closeButton.addEventListener('click', closePreviewModal);
     }
   });
+
+  function toggleVisibility(sectionId) {
+  var x = document.getElementById(sectionId);
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  }
 
 
   ////////////////
