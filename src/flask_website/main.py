@@ -179,7 +179,7 @@ def merge_customization_data(customization, default_customization):
 
 def generate_certificate(event_data, output_dir, item_positions):
     # Assuming util, configuration_loader, CSVGen, Certificate, etc. are defined in your script or imported modules
-    event_dir = util.make_file_name_compatible(f"{event_data['event_title']}-{datetime.datetime.now().isoformat()}")
+    event_dir = util.make_file_name_compatible(f"{event_data['certificate_event_id']}-{event_data['event_title']}-{datetime.datetime.now().isoformat()}")
     output_dir = os.path.join(output_dir, event_dir)
     util.make_sure_path_exists(output_dir)
     log.info(f"Saving output to: '{output_dir}'")
@@ -309,7 +309,7 @@ def generate_certificate(event_data, output_dir, item_positions):
         store_certificate_hash(hash, recipient_id, event_data['certificate_event_id'])
 
     # Generate report CSV
-    report_filename = util.make_file_name_compatible(f"{event_data['event_title']}-{event_data['event_date']}")
+    report_filename = util.make_file_name_compatible(f"{event_data['certificate_event_id']}-{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)
 
 
