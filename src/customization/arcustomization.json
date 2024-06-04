@@ -1,0 +1,125 @@
+{
+  "Certificate_Title": {
+    "x": 140,
+    "y": 100,
+    "w": 17,
+    "h": 13,
+    "color": "black",
+    "AltText": ""
+  },
+  "Intro": {
+    "x": 0.75,
+    "y": 0.5,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
+  },
+  "recipient_title": {
+    "x": 0.9,
+    "y": 0.42,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
+  },
+  "recipient_name": {
+    "x": 0.25,
+    "y": 0.42,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": "\u0639\u0628\u062f\u0627\u0644\u0631\u062d\u0645\u0646 \u0639\u0628\u062f\u0627\u0644\u0635\u0645\u062f \u0636\u064a\u0641 \u0627\u0644\u0644\u0647"
+  },
+  "body": {
+    "x": 0.75,
+    "y": 0.36,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
+  },
+  "final_greeting": {
+    "x": 0.75,
+    "y": 0.22,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642 \u0644\u0644\u062c\u0645\u064a\u0639"
+  },
+  "contact_info": {
+    "x": 0.91,
+    "y": 0.10,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "#000000",
+    "AltText": "",
+    "contact": {
+      "Web": {
+        "Websit": "coc.qu.edu.sa",
+        "Websitlinke": "https://coc.qu.edu.sa"
+      },
+      "X": {
+        "X": "@coc_qu_sa",
+        "Xlink": "https://twitter.com/coc_qu_sa"
+      }
+    }
+  },
+  "signature_1": {
+    "x": 0.13,
+    "y": 0.05,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "colorpostion": "black",
+    "AltText": ""
+  },
+  "signature_2": {
+    "x": 0.5,
+    "y": 0.07,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "#000000",
+    "AltText": ""
+  },
+  "Intro_en": {
+      "x": 0.22,
+      "y": 0.5,
+      "w": 0.0,
+      "h": 0.0,
+      "color": "black",
+      "AltText": ""
+      },
+  "recipient_title_en": {
+        "x": 0.10,
+        "y": 0.42,
+        "w": 0.0,
+        "h": 0.0,
+        "color": "black",
+        "AltText": ""
+      },
+      "recipient_name_en": {
+        "x": 0.76,
+        "y": 0.42,
+        "w": 0.0,
+        "h": 0.0,
+        "color": "black",
+        "AltText": ""
+      },
+      "body_en": {
+        "x": 0.23,
+        "y": 0.4,
+        "w": 0.0,
+        "h": 0.0,
+        "color": "black",
+        "AltText": ""
+      },
+      "final_greeting_en": {
+        "x": 0.22,
+        "y": 0.21,
+        "w": 0.0,
+        "h": 0.0,
+        "color": "black",
+        "AltText": ""
+      }
+  }
