@@ -110,6 +110,7 @@ def ar_form():
                 certificate_title=form.certificate_title.data,
                 event_type_id=form.event_type.data,
                 template_path=template_path,
+                template_id =form.template_choice.data,
                 presenter_name=form.presenter_name.data,
                 secret_phrase=form.secret_phrase.data,
                 event_date=form.date.data,
