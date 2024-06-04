@@ -221,7 +221,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
                 "created_by": 1,
                 "certificate_title": "3",
                 "event_type_id": 1,
-                "template_path": "/root/src/certificate-templates/template.png",
+                "template_path": "/root/src/flask_website/certificate-templates/template.png",
               
                 "customization_id": None,
                 "template_id": None,
