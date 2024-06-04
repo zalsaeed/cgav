@@ -7,8 +7,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, FileField,SubmitField, IntegerField, TextAreaField,SelectField, DateField
-from wtforms.validators import InputRequired, DataRequired, Length,ValidationError, EqualTo, Email
+from wtforms import StringField, DecimalField,PasswordField, FileField,SubmitField, IntegerField, TextAreaField,SelectField, DateField
+from wtforms.validators import InputRequired, DataRequired, Length,ValidationError, EqualTo, Email,Optional
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from flask_bcrypt import Bcrypt
 from sqlalchemy.orm import relationship
@@ -268,10 +268,16 @@ class ChangeNameForm(FlaskForm):
 
 class customizationForm(FlaskForm):
     item = StringField()
-    x = IntegerField('*x_postion')
-    y = IntegerField('*y_postion')
-    h = IntegerField('*Height')
-    w = IntegerField('*Width')
+    x = DecimalField('*x_postion',validators=[DataRequired()])
+    y = DecimalField('*y_postion',validators=[DataRequired()])
+    h = DecimalField('*Height',validators=[Optional()])
+    w = DecimalField('*Width',validators=[Optional()])
+    color = StringField('Color',validators=[Optional()])
+    text = StringField('Alternative Text',validators=[Optional()])
+    websit = StringField('Websit Name',validators=[Optional()])
+    X = StringField('X username',validators=[Optional()])
+    websitlinke = StringField('Websit Link',validators=[Optional()])
+    Xlink= StringField('X Linke',validators=[Optional()])
     submit = SubmitField('Save')
 
 # class Certificate(db.Model):

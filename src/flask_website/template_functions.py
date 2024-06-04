@@ -1,4 +1,4 @@
-# Standard Library Imports
+# colorStandard Library Imports
 import json
 import os
 import uuid
@@ -66,36 +66,66 @@ def template(temp_id):
     # if request.method == 'POST':
     if form.validate_on_submit():
         form_item = form.item.data  # Assuming form.item is a Flask-WTF field
-        form_x = form.x.data
-        form_y = form.y.data
-        form_h = form.h.data
-        form_w = form.w.data
-        if form_item in customization_data:
-            customization_data[form_item]['x'] = form_x
-            customization_data[form_item]['y'] = form_y
-            customization_data[form_item]['h'] = form_h
-            customization_data[form_item]['w'] = form_w
+        if form_item == "contact_info":
+            form_x = form.x.data
+            form_y = form.y.data
+            form_h = form.h.data
+            form_w = form.w.data
+            form_color = form.color.data
+            form_text = form.text.data
+            form_websit=form.websit.data
+            form_websitlinke=form.websitlinke.data
+            form_X=form.X.data
+            form_Xlink=form.Xlink.data
+            if form_item in customization_data:
+                customization_data[form_item]['x'] = float(form_x)
+                customization_data[form_item]['y'] = float(form_y)
+                customization_data[form_item]['h'] = float(form_h)
+                customization_data[form_item]['w'] = float(form_w)
+                customization_data[form_item]['color'] = form_color
+                customization_data[form_item]['AltText'] = form_text
+                customization_data[form_item]['contact']['Web']['Websit'] = form_websit
+                customization_data[form_item]['contact']['Web']['Websitlinke'] = form_websitlinke
+                customization_data[form_item]['contact']['X']['X'] = form_X
+                customization_data[form_item]['contact']['X']['Xlink'] = form_Xlink
+        else:
+            form_x = form.x.data
+            form_y = form.y.data
+            form_h = form.h.data
+            form_w = form.w.data
+            form_color = form.color.data
+            form_text = form.text.data
+            if form_item in customization_data:
+                customization_data[form_item]['x'] = float(form_x)
+                customization_data[form_item]['y'] = float(form_y)
+                customization_data[form_item]['h'] = float(form_h)
+                customization_data[form_item]['w'] = float(form_w)
+                customization_data[form_item]['color'] = form_color
+                customization_data[form_item]['AltText'] = form_text
+                
         with open(custom_file, 'w') as file:
             json.dump(customization_data, file, indent=2)
-        
+            
         existing_customization = CertificateCustomizations.query.filter_by(
-            id=current_user.id,
-            template_id=temp.template_id).first()
+                id=current_user.id,
+                template_id=temp.template_id).first()
         if existing_customization:
-            # existing_customization.items_positions = customization_data
-            # Reactivate the existing event type using update statement
-            custom = update(CertificateCustomizations).where(CertificateCustomizations.template_id == temp.template_id and CertificateCustomizations.id == current_user.id).values(items_positions = customization_data)
-            db.session.execute(custom)
-            db.session.commit()
+                # existing_customization.items_positions = customization_data
+                # Reactivate the existing event type using update statement
+                custom = update(CertificateCustomizations).where(CertificateCustomizations.template_id == temp.template_id and CertificateCustomizations.id == current_user.id).values(items_positions = customization_data)
+                db.session.execute(custom)
+                db.session.commit()
         else:
-            new_customization = CertificateCustomizations(customization_id=str(uuid.uuid4()),
-                                                          id = current_user.id,
-                                                          template_id = temp.template_id,
-                                                          items_positions = customization_data )
-            # Add and commit the new record to the database
-            db.session.add(new_customization)
-            db.session.commit()
-    flash(f'Customizations Added Successfully.')
+                new_customization = CertificateCustomizations(customization_id=str(uuid.uuid4()),
+                                                            id = current_user.id,
+                                                            template_id = temp.template_id,
+                                                            items_positions = customization_data )
+                # Add and commit the new record to the database
+                db.session.add(new_customization)
+                db.session.commit()
+        
+    
+             
 
     return render_template('anotherAppearance.html', temp=temp,data=data,arData=arData,form=form)
 

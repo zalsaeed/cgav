@@ -2,9 +2,6 @@
 {% block title %}CGAV-Templates{% endblock %}
 {% block body %}
 <style>
-    /* select:not([size]) {
-    print-color-adjust: exact;
-} */
     @media (min-width: 768px) {
         .md\:w-48 {
             width: auto;
@@ -38,21 +35,11 @@
 
 <body>
 
-    <!-- <div id="customizationadded" style="display: none;">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flex justify-between text-green-200 shadow-inner rounded p-3 bg-green-600">
-            {% for category, message in messages %}
-                <p class="self-center">
-                    {{ message }}
-                    </p>
-                    <strong class="text-xl align-center cursor-pointer alert-del"
-                    >&times;</strong>
-            {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-        </div> -->
+    <div style="display: none;" class="flash-message" id="flashMessage">
+        <p id="fMessage"></p>
+        <button onclick="dismissFlashMessage()">Dismiss</button>
+      </div>
+
     <div class="text-center p-5">
         <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;">Certificate Appearance</h1>
     </div>
@@ -62,37 +49,20 @@
         <div class="Image-container">
             <!-- Image -->
             <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}" alt="Template">
-
-            <!-- PDF Viewer with the same styling as the image -->
-            <div id="pdfViewer" style="display: none;">
-                <div id="loadingIndicator" style="display:inline;position: relative;top: 89%;left: 13%; transform: translate(-50%, -50%);">
-                    <div class="text-center">
-                        <div role="status">
-                            <svg aria-hidden="true" style="height:4rem;width: 4rem;" class="inline w-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                            </svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-                <iframe id="pdfFrame"
-                    class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                    allowfullscreen webkitallowfullscreen></iframe>
-            </div>
+            id="preview-image" src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}" alt="Template">
+            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" id="generated-image" style="display:none;" alt="Generated Image">
         </div>
 
         <div class="flex flex-col items-center p-4 leading-normal">
             <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;">
                 {{temp.template_name}}</h5>
-            <!-- <label onchange="check()" class="mt-4 relative inline-flex items-center mb- cursor-pointer">
+            <label onchange="check()" class="mt-4 relative inline-flex items-center mb- cursor-pointer">
                 <input id="bilingualCheckbox" type="checkbox" value="bilingual" class="sr-only peer">
                 <div
                     class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                 </div>
                 <span class="ms-3 text-xl font-semibold text-blue-900 ">bilingual</span>
-            </label> -->
+            </label>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
                 <button id="dropdownToggleButton" data-dropdown-toggle="dropdownToggle"
                     class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
@@ -157,52 +127,107 @@
             </div>
             <form  style="display:none;" id="customizationform" class="max-w-md mx-auto my-3" onsubmit="submitForm(event,{{temp.template_id}})"  method="POST" enctype="multipart/form-data">
                 {{form.hidden_tag()}}
+                <p id="note" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">All positions in numbers between 0.00 to 1.00.</p>
+
                 <p id="signature" style="color: red;margin-bottom: 5px;font-style:oblique;font-size: small;">Note: if you want to hide the signature set all values to 'Zero'</p>
-                <p id="signaturexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
+                <!-- <p id="signaturexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
                 <p id="contactexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
                 <p id="finalxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (40, 122) to (230, 165) in x and y coordinates.</p>
                 <p id="bodyxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (70, 92) to (210, 132) in x and y coordinates.</p>
                 <p id="namexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (40, 80) to (230, 120) in x and y coordinates.</p>
                 <p id="Titlexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (82, 80) to (272, 120) in x and y coordinates.</p>
-                <p id="introxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (50, 70) to (200, 110) in x and y coordinates.</p>
+                <p id="introxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (50, 70) to (200, 110) in x and y coordinates.</p> -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <div>
                     {{ form.x.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                    {{ form.x(id="xp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="x_postion")}}
+                    {{ form.x(id="xp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",min=0,max=1,step=".01",type="number",id="x_postion")}}
                     {% for error in form.x.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %}
                 </div>
                 <div>
                     {{ form.y.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                    {{ form.y(id="yp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="y_postion")}}
+                    {{ form.y(id="yp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",min=0,max=1,step=".01",type="number",id="y_postion")}}
                     {% for error in form.y.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %}
                 </div>
                 <div>
                     {{ form.h.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                    {{ form.h(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="height")}}
+                    {{ form.h(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",min=0,max=1,step=".01",type="number",id="height")}}
                     {% for error in form.h.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %}
                 </div>
                 <div>
                     {{ form.w.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                    {{ form.w(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-sky-900 dark:focus:ring-blue-500 dark:focus:border-blue-500",type="number",id="width")}}
+                    {{ form.w(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",min=0,max=1,step=".01",type="number",id="width")}}
                     {% for error in form.w.errors %}
                     <span style="color: red;">{{ error }}</span>
                     {% endfor %}
+                </div>
+                <div>
+                    {{ form.color.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.color(class="p-1 h-10 w-full mb-2 block border border-gray-300 rounded-lg bg-gray-50 border border-gray-300 cursor-pointer  focus:ring-blue-500 focus:border-blue-500 bg-white disabled:opacity-50 disabled:pointer-events-none ",type="color",id="color")}}
+                    {% for error in form.color.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div id="alttextfield">
+                    {{ form.text.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                    {{ form.text(rows="1" ,class="block  mb-2 p-2 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500bg-white disabled:opacity-50 disabled:pointer-events-none ",type="textarea",id="text")}}
+                    {% for error in form.text.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+                <div id="alttextfield2" style="display: none;"></div>
+                <div id="webcheck" class="flex items-center me-4" >
+                    <input id="web-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-900">
+                    <label for="web-checkbox" class="ml-2 mt-2 text-m font-medium text-blue-900">Website</label>
+                </div>
+                <div id="Xcheck" class="flex items-center me-4" >
+                    <input id="twitter-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-900">
+                    <label for="twitter-checkbox" class=" ml-2 mt-2 text-m font-medium text-blue-900">Twitter (X)</label>
+                </div>
+                <div id="websitfield" style="display: none;">
+                        {{ form.websit.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                        {{ form.websit(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="websit")}}
+                        {% for error in form.color.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                </div>
+                <div id="websitfield2" style="display: none;">
+                        {{ form.websitlinke.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                        {{ form.websitlinke(class="block w-full  h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="websitlinke")}}
+                        {% for error in form.color.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                </div>
+
+                <div id="xfield" style="display: none;">
+                        {{ form.X.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                        {{ form.X(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="X")}}
+                        {% for error in form.text.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
+                </div>
+                <div id="xfield2" style="display: none;">
+                        {{ form.Xlink.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
+                        {{ form.Xlink(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="Xlink")}}
+                        {% for error in form.text.errors %}
+                        <span style="color: red;">{{ error }}</span>
+                        {% endfor %}
                 </div>
                 <div>
                     {{ form.item(type="hidden",id="keyitem")}}
                 </div>
             </div>
                 {{form.submit()}}
-                <button  onclick="previewCertificate({{temp.template_id}})" class="custom-button">Previwe</button>
-              </form>
+            </form>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-0 mt-2 ml-3">
+            <button  onclick="previewCertificate({{temp.template_id}})" class=" custom-button">Previwe</button>
+            </div>
         </div>
-
     </div>
 </body>
 
@@ -217,13 +242,13 @@
     var keyitem = document.getElementById("keyitem");
     var flash1 = document.getElementById('customizationadded');
     var signature = document.getElementById("signature");
-    var signaturexy = document.getElementById('signaturexy');
-    var contactexy = document.getElementById('contactexy');
-    var finalxy = document.getElementById('finalxy');
-    var bodyxy = document.getElementById('bodyxy');
-    var namexy = document.getElementById('namexy');
-    var Titlexy = document.getElementById('Titlexy');
-    var introxy = document.getElementById('introxy');
+    // var signaturexy = document.getElementById('signaturexy');
+    // var contactexy = document.getElementById('contactexy');
+    // var finalxy = document.getElementById('finalxy');
+    // var bodyxy = document.getElementById('bodyxy');
+    // var namexy = document.getElementById('namexy');
+    // var Titlexy = document.getElementById('Titlexy');
+    // var introxy = document.getElementById('introxy');
     // Check if the checkbox is in the checked state
     function check() {
         if (checkbox.checked) {
@@ -233,52 +258,65 @@
         }
     }
 
+    function dismissFlashMessage() {
 
+    var flashMessage = document.getElementById('flashMessage');
+    flashMessage.style.display = 'none';
+    }
     function checkItems(value, isChecked) {
         if (isChecked) {
             customItem.style.display = "block";
             keyitem.value = value;
             if(keyitem.value == "signature_1" || keyitem.value == "signature_2" ){
                 signature.style.display = "block";
-                signaturexy.style.display = "block";
+                
             }else{
                 signature.style.display = "none";
-                signaturexy.style.display = "none";
+               
             }
             if(keyitem.value == "contact_info" ){
-                contactexy.style.display = "block";
+                document.getElementById('webcheck').style.display = "flex";
+                document.getElementById('Xcheck').style.display = "flex";
+                document.getElementById('alttextfield').style.display = "none";
+                document.getElementById('alttextfield2').style.display = "block";
             }else{
-                contactexy.style.display = "none";
-            }
-            if(keyitem.value == "final_greeting" ){
-                finalxy.style.display = "block";
-            }else{
-                finalxy.style.display = "none";
-            }
-            if(keyitem.value == "body" ){
-                bodyxy.style.display = "block";
-            }else{
-                bodyxy.style.display = "none";
-            }
-            if(keyitem.value == "recipient_name" ){
-                namexy.style.display = "block";
-            }else{
-                namexy.style.display = "none";
-            }
-            if(keyitem.value == "recipient_title" ){
-                Titlexy.style.display = "block";
-            }else{
-                Titlexy.style.display = "none";
-            }
-            if(keyitem.value == "Intro" ){
-                introxy.style.display = "block";
-            }else{
-                introxy.style.display = "none";
+                document.getElementById('webcheck').style.display = "none";
+                document.getElementById('Xcheck').style.display = "none";
+                document.getElementById('alttextfield').style.display = "block";
+                document.getElementById('alttextfield2').style.display = "none";
             }
         } else {
             customItem.style.display = "none";
         }
     }
+
+    // Event listener for website checkbox
+document.getElementById('web-checkbox').addEventListener('change', () => {
+    const websitfield = document.getElementById('websitfield');
+    const websitfield2 = document.getElementById('websitfield2');
+
+    if (document.getElementById('web-checkbox').checked) {
+        websitfield.style.display = "block";
+        websitfield2.style.display = "block";
+    } else {
+        websitfield.style.display = "none";
+        websitfield2.style.display = "none";
+    }
+});
+
+// Event listener for Twitter checkbox
+document.getElementById('twitter-checkbox').addEventListener('change', () => {
+    const xfield = document.getElementById('xfield');
+    const xfield2 = document.getElementById('xfield2');
+
+    if (document.getElementById('twitter-checkbox').checked) {
+        xfield.style.display = "block";
+        xfield2.style.display = "block";
+    } else {
+        xfield.style.display = "none";
+        xfield2.style.display = "none";
+    }
+});
 
     function arCheckItems(value, isChecked){
         if (isChecked) {
@@ -288,84 +326,47 @@
             customItem.style.display = "none";
         }
     }
+    
     function submitForm(event,temp_id) {
                 event.preventDefault(); // Prevent the default form submission behavior
-
-                // Your existing form handling logic here
-                // For example, you can use AJAX to submit the form data asynchronously
-                // You may need to modify this based on your backend setup
-
-                // Example using Fetch API
                 fetch(`/Select_template/${temp_id}`, {
                     method: 'POST',
                     body: new FormData(document.getElementById('customizationform')),
                 })
                 .then(response => {
-                    flash1.style.display="block"
+                    document.getElementById('flashMessage').style.display = "block";
+                    document.getElementById('fMessage').innerHTML= "Customizations added successfully!";
                     })
                 .then(data => {
-
-                    console.log("hi")
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
             }
-   
+
     function previewCertificate(temp_id) {
-        var loadingIndicator = document.getElementById('loadingIndicator');
-        var imageElement = document.querySelector('.Image-container img');
-        var pdfViewer = document.getElementById('pdfViewer');
-        var pdfFrame = document.getElementById('pdfFrame');
-        var pdfContainer = document.getElementById('contain')
+        
 
-        // Hide the image and show the PDF viewer
-        imageElement.style.display = 'none';
+        const url = `/img/${temp_id}?_=${new Date().getTime()}`;
+        const imgFrame = document.getElementById('preview-image');
+        const imgFrame2 = document.getElementById('generated-image');
+        imgFrame.style.display="block"
+        imgFrame2.style.display="none"
+        imgFrame2.src = null;
 
-        // Show the PDF viewer
-        pdfViewer.style.display = 'block';
-        pdfViewer.style.width = '80%';    // Ensure the iframe fills the container
-        pdfViewer.style.height = '258px';  // Adjust the height as necessary
-        pdfViewer.style.marginRight = '15rem'
-        pdfViewer.style.marginBottom = '15rem'
-        // Function to execute '/run_main_script' and then immediately execute '/fetch_latest_pdf'
-        function executeRunMainScriptAndFetchPDF() {
-            fetch(`/run_main_script/${temp_id}`,{ method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log("main.py executed successfully.");
-                        fetchLatestPDF();
-                    } else {
-                        console.error("Error executing main.py:", data.error);
-                    }
-                });
-        }
+        fetch(url, { method: 'POST' })
+        .then(response => response.blob())
+        .then(blob => {
+            const urlCreator = window.URL || window.webkitURL;
+            imgFrame2.src = urlCreator.createObjectURL(blob);
+            imgFrame2.style.display = "block";
+            imgFrame.style.display = "none";
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+        
 
-        // Function to execute '/fetch_latest_pdf'
-        function fetchLatestPDF() {
-            fetch('/fetch_latest_pdf')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.pdfUrl) {
-                        // Set the iframe dimensions to fill its container, adjust as necessary
-                        pdfFrame.style.width = '120%';
-                        pdfFrame.style.height = '356px';
-                        pdfContainer.style.marginBottom = '10rem';
-                        pdfFrame.src = data.pdfUrl + "#toolbar=0";
-                        loadingIndicator.style.display = 'none';
-                    } else {
-                        alert('PDF not found');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while fetching the PDF.');
-                });
-        }
-
-        // Start by executing '/run_main_script' and then immediately execute '/fetch_latest_pdf'
-        executeRunMainScriptAndFetchPDF();
     }
 
 </script>
