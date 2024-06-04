@@ -94,9 +94,13 @@ def load_default_data():
         default_data = yaml.safe_load(file)
     return default_data
 
-def load_default_cutomization():
-    with open('./customization/customization.json', 'r') as file:
-        default_customization = json.load(file)
+def load_default_cutomization(languge):
+    if languge.get('form_type') == 'Arabic_English':
+        with open('./customization/arcustomization.json', 'r') as file:
+            default_customization = json.load(file)
+    else:
+        with open('./customization/customization.json', 'r') as file:
+            default_customization = json.load(file)
     return default_customization
 
 def merge_with_default(data, default_data):
@@ -240,8 +244,8 @@ def generate_certificate(event_data, output_dir, item_positions):
             
         elif event_data['form_type'] == 'Arabic_English':
                 
-            full_name_ar = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
             full_name_en = util.get_gendered_full_name(first_name_en, middle_name_en, last_name_en, recipient_data['gender'],event_data['form_type'])
+            full_name_ar = f"{first_name_ar} {middle_name_ar} {last_name_ar}"
             
             # Store recipient info and get recipient ID
             recipient_id = store_recipient_info(recipient_data,first_name_ar,middle_name_ar,last_name_ar)
@@ -309,14 +313,14 @@ def generate_certificate(event_data, output_dir, item_positions):
         store_certificate_hash(hash, recipient_id, event_data['certificate_event_id'])
 
     # Generate report CSV
-    report_filename = util.make_file_name_compatible(f"{event_data['certificate_event_id']}-{event_data['event_title']}-{event_data['event_date']}")
+    report_filename = util.make_file_name_compatible(f"{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)
 
 
 def main(event_data, item_positions):
     # Load default data and merge with incoming data
     default_event_data = load_default_data()
-    default_customization = load_default_cutomization()
+    default_customization = load_default_cutomization(event_data)
 
     merged_event_data = merge_with_default(event_data, default_event_data)
     merged_customization = merge_customization_data(item_positions, default_customization)

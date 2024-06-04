@@ -3,54 +3,83 @@
     "x": 140,
     "y": 100,
     "w": 17,
-    "h": 13
+    "h": 13,
+    "color": "black",
+    "AltText": ""
   },
   "Intro": {
-    "x": 140,
-    "y": 100,
-    "w": 17,
-    "h": 13
+    "x": 0.5,
+    "y": 0.55,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
   },
   "recipient_title": {
-    "x": 180,
-    "y": 113,
-    "w": 17,
-    "h": 13
+    "x": 0.67,
+    "y": 0.47,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
   },
   "recipient_name": {
-    "x": 135,
-    "y": 113,
-    "w": 17,
-    "h": 13
+    "x": 0.45,
+    "y": 0.47,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": "\u0639\u0628\u062f\u0627\u0644\u0631\u062d\u0645\u0646 \u0639\u0628\u062f\u0627\u0644\u0635\u0645\u062f \u0636\u064a\u0641 \u0627\u0644\u0644\u0647"
   },
   "body": {
-    "x": 145,
-    "y": 127,
-    "w": 17,
-    "h": 13
+    "x": 0.5,
+    "y": 0.4,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": ""
   },
   "final_greeting": {
-    "x": 130,
-    "y": 162,
-    "w": 17,
-    "h": 13
+    "x": 0.5,
+    "y": 0.25,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "AltText": "\u0628\u0627\u0644\u062a\u0648\u0641\u064a\u0642 \u0644\u0644\u062c\u0645\u064a\u0639"
   },
   "contact_info": {
-    "x": 250,
-    "y": 180,
-    "w": 0,
-    "h": 0
+    "x": 0.91,
+    "y": 0.15,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "#000000",
+    "AltText": "",
+    "contact": {
+      "Web": {
+        "Websit": "coc.qu.edu.sa",
+        "Websitlinke": "https://coc.qu.edu.sa"
+      },
+      "X": {
+        "X": "@coc_qu_sa",
+        "Xlink": "https://twitter.com/coc_qu_sa"
+      }
+    }
   },
   "signature_1": {
-    "x": 10,
-    "y": 185,
-    "w": 50,
-    "h": 10
+    "x": 0.13,
+    "y": 0.1,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "black",
+    "colorpostion": "black",
+    "AltText": ""
   },
   "signature_2": {
-    "x": 123.5,
-    "y": 185,
-    "w": 50,
-    "h": 10
+    "x": 0.5,
+    "y": 0.1,
+    "w": 0.0,
+    "h": 0.0,
+    "color": "#000000",
+    "AltText": ""
   }
 }
