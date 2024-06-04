@@ -33,6 +33,7 @@ import preview_certificate_function
 import get_certificate_function
 import template_functions
 import generate_functions
+import preview_functions
 import db_connection
 import users_functions
 import event_types
@@ -73,6 +74,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+@app.route('/img/<temp_id>', methods=['GET',"POST"])
+def img(temp_id):
+    return preview_functions.img(temp_id)
 
 # New route for running tests
 @app.route('/run_tests', methods=['GET'])
@@ -267,7 +271,6 @@ def uploaded_file(filename):
 @login_required
 def template(temp_id):
     return template_functions.template(temp_id)
-
 
 
 @app.route("/Select_template", methods=['GET',"POST"])
