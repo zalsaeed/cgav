@@ -195,60 +195,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 
-    <script>
-        const translations = {
-            en: {
-                Event: "Event",
-                Settings: "Settings",
-                Contact: "Contact",
-                Sign_out: "Sign out",
-                Templates: "Templates",
-                Dismiss: "Dismiss",
-                english: "English",
-                arabic: "Arabic",
-                Your_Events: "Your Events",
-                Latest_Event: "Latest Event",
-                More_Info: "More Info",
-                Load_More: "Load More",
-                Add_Events: "Add Events"
-            },
-            ar: {
-                Event: "الاحداث",
-                Settings: "الاعدادات",
-                Contact: "تواصل معنا",
-                Sign_out: " تسجيل خروج",
-                Templates: "القوالب",
-                Dismiss: "إنهاء",
-                english: "الانجليزية",
-                arabic: "العربية",
-                Your_Events: "الاحداث التي قمت بإنشائها",
-                Latest_Event: "آخر الاحداث",
-                More_Info: "المزيد من المعلومات",
-                Load_More: "تحميل المزيد",
-                Add_Events: "اضافة حدث"
-            },
-        };
-
-        const languageSelector = document.querySelector("select");
-        languageSelector.addEventListener("change", (event) => {
-            setLanguage(event.target.value);
-            localStorage.setItem("lang", event.target.value);
-        });
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const language = localStorage.getItem("lang") || "en"; // اذا لم تكن اللغة متوفرة استخدم الانجليزية
-            setLanguage(language);
-        });
-
-        const setLanguage = (language) => {
-            const elements = document.querySelectorAll("[data-i18n]");
-            elements.forEach((element) => {
-                const translationKey = element.getAttribute("data-i18n");
-                element.textContent = translations[language][translationKey];
-            });
-            document.dir = language === "ar" ? "rtl" : "ltr";
-        };
-    </script>
+    <!-- Include the external JavaScript file -->
+    <script src="static/js/translations.js"></script>
 </body>
 <script>
 

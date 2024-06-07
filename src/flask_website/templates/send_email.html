@@ -4,16 +4,16 @@
 
 {% block body %}
 <div class="container mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
-    <h2 class="text-2xl font-bold mb-4">Send Emails</h2>
+    <h2 class="text-2xl font-bold mb-4" data-i18n="Send_Emails">Send Emails</h2>
     <form action="/send_email?eventId={{ eventId }}" method="post" enctype="multipart/form-data" id="emailForm">
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Select Emails:</label>
+            <label class="block text-sm font-medium text-gray-700" data-i18n="Select_Emails">Select Emails:</label>
 
             <!-- Checkbox for "Select All" -->
             <div class="mt-2">
                 <input type="checkbox" id="select-all"
                     class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="select-all" class="text-sm text-gray-700">Select All</label>
+                <label for="select-all" class="text-sm text-gray-700" data-i18n="Select_All">Select All</label>
             </div>
 
             <!-- Checkboxes for emails -->
@@ -28,7 +28,7 @@
             <!-- Button to open the pop-up -->
             <button type="button"
                 class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                onclick="openPopup()">
+                onclick="openPopup()" data-i18n="Customize_Email">
                 Customize Email
             </button>
         </div>
@@ -37,11 +37,11 @@
         <div id="popup"
             class="hidden fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg">
-                <label class="block text-sm font-medium text-gray-700 mt-4">Subject:</label>
+                <label class="block text-sm font-medium text-gray-700 mt-4" data-i18n="Subject">Subject:</label>
                 <input type="text" name="subject" id="subject" class="mt-2 p-2 border rounded w-full"
                     placeholder="Enter email subject">
 
-                <label class="block text-sm font-medium text-gray-700 mt-4">Content:</label>
+                <label class="block text-sm font-medium text-gray-700 mt-4" data-i18n="Content">Content:</label>
                 <textarea name="custom-content" id="custom-content" class="mt-2 p-2 border rounded w-full" rows="4"
                     placeholder="Enter your custom email content"></textarea>
 
@@ -53,19 +53,19 @@
                     <!-- Save button -->
                     <button type="button"
                         class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                        onclick="updateEmailDetailsAndClosePopup()">Save</button>
+                        onclick="updateEmailDetailsAndClosePopup()" data-i18n="Save">Save</button>
 
                     <!-- Cancel button -->
                     <button type="button"
                         class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring focus:border-gray-300"
-                        onclick="closePopup()">Cancel</button>
+                        onclick="closePopup()" data-i18n="Cancel">Cancel</button>
                 </div>
             </div>
         </div>
 
-
         <button type="submit"
-            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
+            data-i18n="Send_Email">
             Send Email
         </button>
     </form>
@@ -101,7 +101,6 @@
             document.getElementById('popup').classList.add('hidden');
         }
 
-
         // JavaScript to update email details and close pop-up
         function updateEmailDetailsAndClosePopup() {
             var subject = document.getElementById('subject').value;
@@ -135,6 +134,7 @@
                 });
             }
         }
+
         function validateForm() {
             var subject = document.getElementById('subject').value;
             var customContent = document.getElementById('custom-content').value;
@@ -150,6 +150,7 @@
 
             return true;
         }
+
         // Function to handle success pop-up
         function showSuccessPopup() {
             Swal.fire({
@@ -210,9 +211,6 @@
             };
             xhr.send(formData);
         });
-
-
     </script>
-
 </div>
 {% endblock %}

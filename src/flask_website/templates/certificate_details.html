@@ -8,137 +8,149 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-5">
-  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;">Event Details</h1>
+  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;" data-i18n="Event_Details">Event Details</h1>
   <div class="card detail-card mx-auto col-12 col-md-10 col-lg-12">
     <div class="card-body">
-      <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}</h5>
-      <p class="card-subtitle">Event Information</p>
+      <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}
+      </h5>
+      <p class="card-subtitle" data-i18n="Event_Information">Event Information</p>
       <div class="row">
-        <div class="col-md-4 card-text"><br><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</div>
-        <div class="col-md-4 card-text"><br><strong>Presenter Name:</strong> {{ certificate.presenter_name }}</div>
-        <div class="col-md-4 card-text"><br><strong>Event Date:</strong> {{ certificate.event_date.strftime('%Y-%m-%d') }}</div>
-        <div class="col-md-4 card-text"><br><strong>Form type:</strong> {{ certificate.form_type }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Type">Event Type:</strong> {{
+          certificate.event_type.event_type_name }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Presenter_Name">Presenter Name:</strong> {{
+          certificate.presenter_name }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Date">Event Date:</strong> {{
+          certificate.event_date.strftime('%Y-%m-%d') }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Form_Type">Form type:</strong> {{ certificate.form_type
+          }}</div>
       </div>
-      
+
       <!-- Details Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('details-section')">Details</p>
+      <p class="card-subtitle" onclick="toggleVisibility('details-section')" data-i18n="Details">Details</p>
       <div id="details-section" style="display:none;">
         <div class="row">
-          <div class="col-md-4 card-text"><br><strong>Secret Phrase:</strong> {{ certificate.secret_phrase }}</div>
-          <div class="col-md-4 card-text"><br><strong>File Path:</strong> {{ certificate.file_path }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Secret_Phrase">Secret Phrase:</strong> {{
+            certificate.secret_phrase }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="File_Path">File Path:</strong> {{ certificate.file_path
+            }}</div>
         </div>
       </div>
-      
+
       <!-- Recipient Titles Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('recipient-titles-section')">Recipient Titles</p>
+      <p class="card-subtitle" onclick="toggleVisibility('recipient-titles-section')" data-i18n="Recipient_Titles">
+        Recipient Titles</p>
       <div id="recipient-titles-section" style="display:none;">
         <div class="row">
           <div class="col-md-6 text-right">
             <br>
             {% if certificate.male_recipient_title %}
-            <strong>ذكر:</strong> {{ certificate.male_recipient_title }}<br><br>
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.male_recipient_title }}<br><br>
             {% endif %}
             {% if certificate.female_recipient_title %}
-            <strong>أنثى:</strong> {{ certificate.female_recipient_title }}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.female_recipient_title }}
             {% endif %}
           </div>
           <div class="col-md-6 text-left">
             <br>
             {% if certificate.male_recipient_title_en %}
-            <strong>Male:</strong> {{ certificate.male_recipient_title_en }}<br><br>
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.male_recipient_title_en }}<br><br>
             {% endif %}
             {% if certificate.female_recipient_title_en %}
-            <strong>Female:</strong> {{ certificate.female_recipient_title_en }}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.female_recipient_title_en }}
             {% endif %}
           </div>
         </div>
       </div>
-      
+
       <!-- Description Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('description-section')">Description</p>
+      <p class="card-subtitle" onclick="toggleVisibility('description-section')" data-i18n="Description">Description</p>
       <div id="description-section" style="display:none;">
         <div class="row">
           <div class="col-md-6 text-right">
             <br>
             {% if certificate.certificate_description_male %}
-            <strong>ذكر:</strong> {{ certificate.certificate_description_male }}<br><br>
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.certificate_description_male }}<br><br>
             {% endif %}
             {% if certificate.certificate_description_female %}
-            <strong>أنثى:</strong> {{ certificate.certificate_description_female }}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.certificate_description_female }}
             {% endif %}
           </div>
           <div class="col-md-6 text-left">
             <br>
             {% if certificate.certificate_description_male_en %}
-            <strong>Male:</strong> {{ certificate.certificate_description_male_en }}<br><br>
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.certificate_description_male_en }}<br><br>
             {% endif %}
             {% if certificate.certificate_description_female_en %}
-            <strong>Female:</strong> {{ certificate.certificate_description_female_en }}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.certificate_description_female_en }}
             {% endif %}
           </div>
         </div>
       </div>
-      
+
       <!-- Greeting Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('greetings-section')">Greetings</p>
+      <p class="card-subtitle" onclick="toggleVisibility('greetings-section')" data-i18n="Greetings">Greetings</p>
       <div id="greetings-section" style="display:none;">
         <div class="row">
           <div class="col-md-6 text-right">
             <br>
             {% if certificate.greeting_male %}
-            <strong>ذكر:</strong> {{ certificate.greeting_male }}<br><br>
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.greeting_male }}<br><br>
             {% endif %}
             {% if certificate.greeting_female %}
-            <strong>أنثى:</strong> {{ certificate.greeting_female }}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.greeting_female }}
             {% endif %}
           </div>
           <div class="col-md-6 text-left">
             <br>
             {% if certificate.greeting_male_en %}
-            <strong>Male:</strong> {{ certificate.greeting_male_en }}<br><br>
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.greeting_male_en }}<br><br>
             {% endif %}
             {% if certificate.greeting_female_en %}
-            <strong>Female:</strong> {{ certificate.greeting_female_en }}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.greeting_female_en }}
             {% endif %}
           </div>
         </div>
       </div>
-      
+
       <!-- Signatories Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('signatories-section')">Signatories</p>
+      <p class="card-subtitle" onclick="toggleVisibility('signatories-section')" data-i18n="Signatories">Signatories</p>
       <div id="signatories-section" style="display:none;">
         <div class="row">
-          <div class="col-md-4 card-text"><br><strong>First Signatory Name:</strong> {{ certificate.First_Signatory_Name }}</div>
-          <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.First_Signatory_Position }}</div>
-          <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.First_Signatory_Path }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="First_Signatory_Name">First Signatory Name:</strong> {{
+            certificate.First_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
+            certificate.First_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
+            certificate.First_Signatory_Path }}</div>
           {% if certificate.Second_Signatory_Name %}
-          <div class="col-md-4 card-text"><br><strong>Second Signatory Name:</strong> {{ certificate.Second_Signatory_Name }}</div>
-          <div class="col-md-4 card-text"><br><strong>Position:</strong> {{ certificate.Second_Signatory_Position }}</div>
-          <div class="col-md-4 card-text"><br><strong>Path:</strong> {{ certificate.Second_Signatory_Path }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Second_Signatory_Name">Second Signatory Name:</strong>
+            {{ certificate.Second_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
+            certificate.Second_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
+            certificate.Second_Signatory_Path }}</div>
           {% endif %}
         </div>
       </div>
       <br>
-      
+
       <!-- Buttons -->
-      <button id="delete-btn" class="custom-button" onclick="handleDelete()">Delete</button>
-
-      <button id="generate-btn" class="custom-button"
-        onclick="handleGenerate('{{ certificate.certificate_event_id }}')">Generate</button>
-
-      <button id="download-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
-      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %}
-      onclick="handleDownload('{{ certificate.certificate_event_id }}')">Download</button>
-      
-      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
-      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()">Send</button>
-
-      <button  class="custom-button {% if not certificate.generated_ %}disabled {% endif %}"
-      {% if not certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="showPreviewModal('{{ certificate.certificate_event_id }}')">Preview Certificate</button>
-      
+      <button id="delete-btn" class="custom-button" onclick="handleDelete()" data-i18n="Delete">Delete</button>
+      <button id="generate-btn" class="custom-button" onclick="handleGenerate('{{ certificate.certificate_event_id }}')"
+        data-i18n="Generate">Generate</button>
+      <button id="download-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %}
+        onclick="handleDownload('{{ certificate.certificate_event_id }}')" data-i18n="Download">Download</button>
+      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()"
+        data-i18n="Send">Send</button>
+      <button class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %}
+        onclick="showPreviewModal('{{ certificate.certificate_event_id }}')" data-i18n="Preview_Certificate">Preview
+        Certificate</button>
 
       <!-- Notification Text -->
-      <p class="info-text">
+      <p class="info-text" data-i18n="Notification_Text">
         Sending or downloading certificates triggers an email notification to recipients upon event deletion.
       </p>
 
@@ -151,9 +163,9 @@
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
     <iframe id="preview-frame" style="width:100%; height:500px;" frameborder="0"></iframe>
-    <button class="custom-button" onclick="changeCertificate(-1)">Previous</button>
-    <button class="custom-button" onclick="changeCertificate(1)">Next</button>
-    <button id="preview-modal-close" class="custom-button cancel-button">Cancel</button>
+    <button class="custom-button" onclick="changeCertificate(-1)" data-i18n="Previous">Previous</button>
+    <button class="custom-button" onclick="changeCertificate(1)" data-i18n="Next">Next</button>
+    <button id="preview-modal-close" class="custom-button cancel-button" data-i18n="Cancel">Cancel</button>
   </div>
 </div>
 
@@ -161,32 +173,38 @@
 <div id="certificate-list-modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
-    <h1>Select Certificates to Download</h1>
+    <h1 data-i18n="Select_Certificates">Select Certificates to Download</h1>
 
     <!-- 'Select All' checkbox -->
     <div class="select-all-container">
-      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)">
-      <label for="select-all-checkbox">Select All</label>
+      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)" data-i18n="Select_All">
+      <label for="select-all-checkbox" data-i18n="Select_All">Select All</label>
     </div>
 
     <div id="certificate-list"></div>
-    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')">Download</button>
-    <button class="custom-button cancel-button" onclick="closeModal()">Cancel</button>
+    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')"
+      data-i18n="Download">Download</button>
+    <button class="custom-button cancel-button" onclick="closeModal()" data-i18n="Cancel">Cancel</button>
   </div>
 </div>
 
 <!-- Delete Confirmation Popup -->
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
-    <p>Are you sure you want to delete the event titled "{{ certificate.certificate_title }}"?</p>
-    <p style="color: #ff0000; font-weight: bold;">Deleting this event will permanently remove it from the system.</p>
-    <p>This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
+    <p data-i18n="Delete_Confirmation_Text">Are you sure you want to delete the event titled "{{
+      certificate.certificate_title }}"?</p>
+    <p style="color: #ff0000; font-weight: bold;" data-i18n="Delete_Confirmation_Warning">Deleting this event will
+      permanently remove it from the system.</p>
+    <p data-i18n="Delete_Confirmation_Detail">This action will prevent certificate verification through the API. If
+      already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
     <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
-      <label for="event_name">To confirm, please enter the exact name of the event:</label>
+      <label for="event_name" data-i18n="Confirm_Event_Name">To confirm, please enter the exact name of the
+        event:</label>
       <input type="text" id="event_name" name="event_name" required>
       <div class="button-container">
-        <button type="submit" class="custom-button">Confirm</button>
-        <button type="button" onclick="closePopup()" class="custom-button cancel-button">Cancel</button>
+        <button type="submit" class="custom-button" data-i18n="Confirm">Confirm</button>
+        <button type="button" onclick="closePopup()" class="custom-button cancel-button"
+          data-i18n="Cancel">Cancel</button>
       </div>
     </form>
   </div>
@@ -195,39 +213,40 @@
 <!-- Loading Popup -->
 <div id="loading-popup" class="popup">
   <div class="popup-content">
-    <p>Loading...</p>
+    <p data-i18n="Loading">Loading...</p>
   </div>
 </div>
 
 <!-- Success Popup -->
 <div id="success-popup" class="popup">
   <div class="popup-content">
-    <p>Certificate deleted successfully</p>
-    <button onclick="redirectToCertificates()" class="custom-button">OK</button>
+    <p data-i18n="Certificate_Deleted_Success">Certificate deleted successfully</p>
+    <button onclick="redirectToCertificates()" class="custom-button" data-i18n="OK">OK</button>
   </div>
 </div>
 
 <!-- Error Popup -->
 <div id="error-popup" class="popup">
   <div class="popup-content">
-    <p>Error: Please try again later</p>
-    <button onclick="closePopup()" class="custom-button">OK</button>
+    <p data-i18n="Error">Error: Please try again later</p>
+    <button onclick="closePopup()" class="custom-button" data-i18n="OK">OK</button>
   </div>
 </div>
+
 
 <style>
   /* Button Style */
   .custom-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s, box-shadow 0.3s;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s, box-shadow 0.3s;
   }
 
   .custom-button:hover,
   .custom-button:focus {
     background-color: #2c4e71;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     color: #ffffff;
   }
 
@@ -253,48 +272,61 @@
 
   /* Card Styles */
   .detail-card {
-  margin: 0 auto; /* Center the card */
-  max-width: 1200px; /* Or any other max-width or width percentage */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-radius: 10px;
-  border: none;
+    margin: 0 auto;
+    /* Center the card */
+    max-width: 1200px;
+    /* Or any other max-width or width percentage */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: none;
   }
 
   /* Subtitle Styles for categories like Presenter, Date, etc. */
   .card-subtitle {
     font-size: 1.1rem;
-    color: #007bff; /* Bright blue for subtitles */
-    font-weight: 500; /* Semi-bold for better visibility */
-    margin-top: 1rem; /* Space above each new category */
-    transition: color 0.3s ease-in-out; /* Smooth transition for color change */
+    color: #007bff;
+    /* Bright blue for subtitles */
+    font-weight: 500;
+    /* Semi-bold for better visibility */
+    margin-top: 1rem;
+    /* Space above each new category */
+    transition: color 0.3s ease-in-out;
+    /* Smooth transition for color change */
   }
 
   .card-subtitle:hover {
-  color: #0056b3; /* Change color on hover for better user feedback */
-  cursor: pointer;
-  text-decoration: underline; /* Add underline effect */
+    color: #0056b3;
+    /* Change color on hover for better user feedback */
+    cursor: pointer;
+    text-decoration: underline;
+    /* Add underline effect */
   }
 
   .row {
-  display: flex;
-  justify-content: center; /* Center the items horizontally */
-  flex-wrap: wrap; /* Allow items to wrap onto multiple lines as needed */
+    display: flex;
+    justify-content: center;
+    /* Center the items horizontally */
+    flex-wrap: wrap;
+    /* Allow items to wrap onto multiple lines as needed */
   }
 
-  .row > [class^='col-md-'] {
-  padding-right: 15px;
-  padding-left: 15px;
+  .row>[class^='col-md-'] {
+    padding-right: 15px;
+    padding-left: 15px;
   }
 
   .col {
-    flex: 1; /* Each .col should grow equally */
-    max-width: 33.3333%; /* Maximum width for three items per line */
+    flex: 1;
+    /* Each .col should grow equally */
+    max-width: 33.3333%;
+    /* Maximum width for three items per line */
     box-sizing: border-box;
-    padding: 0 10px; /* Add some padding around the items */
+    padding: 0 10px;
+    /* Add some padding around the items */
   }
 
-    /* Additional styles for spacing between columns */
-  .row > [class^='col-md-'] {
+  /* Additional styles for spacing between columns */
+  .row>[class^='col-md-'] {
     padding-right: 15px;
     padding-left: 15px;
   }
@@ -310,44 +342,61 @@
   }
 
   .custom-button.disabled {
-    background-color: #ccc; /* Gray background color */
-    cursor: not-allowed; /* Change cursor to indicate button is not clickable */
+    background-color: #ccc;
+    /* Gray background color */
+    cursor: not-allowed;
+    /* Change cursor to indicate button is not clickable */
   }
 
   /* modal styly*/
   /* Certificate List Modal */
   .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1000; /* Sit on top */
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1000;
+    /* Sit on top */
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
   }
 
   .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* Margin top for alignment */
+    margin: 15% auto;
+    /* Margin top for alignment */
     padding: 20px;
     border: 1px solid #888;
-    width: 50%; /* Width of the modal content */
-    max-width: 500px; /* Maximum width of the modal box */
-    border-radius: 0.375rem; /* Matching border radius */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 50%;
+    /* Width of the modal content */
+    max-width: 500px;
+    /* Maximum width of the modal box */
+    border-radius: 0.375rem;
+    /* Matching border radius */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
   }
 
   .modal-header {
     font-size: 1.5rem;
-    color: #427AA1; /* Theme color */
+    color: #427AA1;
+    /* Theme color */
     text-align: center;
-    margin-bottom: 20px; /* Spacing below the header */
+    margin-bottom: 20px;
+    /* Spacing below the header */
   }
 
   .modal-body {
-    margin-bottom: 20px; /* Spacing below the body */
+    margin-bottom: 20px;
+    /* Spacing below the body */
   }
 
   .close {
@@ -367,7 +416,8 @@
   .select-all-container {
     display: flex;
     align-items: center;
-    margin-bottom: 20px; /* Space between checkbox and certificate list */
+    margin-bottom: 20px;
+    /* Space between checkbox and certificate list */
   }
 
   .select-all-container input[type="checkbox"],
@@ -384,7 +434,8 @@
 
   /* Additional styles for the cancel button */
   .button.cancel-button {
-    background-color: #ff4136; /* Red cancel button */
+    background-color: #ff4136;
+    /* Red cancel button */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -394,127 +445,156 @@
   }
 
   .button.cancel-button:hover {
-    background-color: #e82c20; /* Darker shade on hover */
+    background-color: #e82c20;
+    /* Darker shade on hover */
   }
 
   .cancel-button {
-    background-color: #ff4136; /* Red background for cancel button */
-    margin-left: 10px; /* Space between the buttons */
+    background-color: #ff4136;
+    /* Red background for cancel button */
+    margin-left: 10px;
+    /* Space between the buttons */
   }
-  
+
   .cancel-button:hover {
-    background-color: #e82c20; /* Darker red on hover */
+    background-color: #e82c20;
+    /* Darker red on hover */
   }
 
   .button-container {
-  display: flex;
-  justify-content: center; /* Center align the buttons horizontally */
-  gap: 10px; /* Add space between the buttons */
-  margin-top: 10px; /* Add space above the button container */
+    display: flex;
+    justify-content: center;
+    /* Center align the buttons horizontally */
+    gap: 10px;
+    /* Add space between the buttons */
+    margin-top: 10px;
+    /* Add space above the button container */
   }
 
   /* preview section */
   .navigation button {
-      padding: 10px 20px;
-      margin: 10px;
-      background-color: #427AA1;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #427AA1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
   .navigation button:hover {
-      background-color: #2c4e71;
+    background-color: #2c4e71;
   }
 
   /* Certificate Preview Modal */
   .modal-content {
     background-color: #fefefe;
-    margin: 10% auto; /* Adjust top margin for better positioning */
+    margin: 10% auto;
+    /* Adjust top margin for better positioning */
     padding: 20px;
     border: 1px solid #ccc;
-    width: 60%; /* Adjust width as needed */
-    max-width: 800px; /* Set a max-width */
+    width: 60%;
+    /* Adjust width as needed */
+    max-width: 800px;
+    /* Set a max-width */
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
   }
-  
+
   /* Iframe for PDF display */
   #preview-frame {
-    width: 100%; /* Full width */
-    height: 600px; /* Adjust height as needed */
-    border: none; /* Remove border */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Optional: Add shadow for a "lifted paper" effect */
+    width: 100%;
+    /* Full width */
+    height: 600px;
+    /* Adjust height as needed */
+    border: none;
+    /* Remove border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    /* Optional: Add shadow for a "lifted paper" effect */
   }
-  
+
   /* Navigation Button Styling */
   .modal-content button {
     padding: 10px 20px;
-    margin-top: 10px; /* Spacing above buttons */
+    margin-top: 10px;
+    /* Spacing above buttons */
     font-size: 16px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
   }
-  
+
   /* Adjust the color to fit your theme */
   .modal-content button:hover {
     background-color: #e7e7e7;
   }
-  
+
   /* Container for navigation buttons */
   .button-container {
-    text-align: center; /* Center buttons horizontally */
-    margin-top: 20px; /* Space above the button container */
+    text-align: center;
+    /* Center buttons horizontally */
+    margin-top: 20px;
+    /* Space above the button container */
   }
-  
+
   .button-container button {
-    background-color: #f1f1f1; /* Light grey background */
-    color: #333; /* Dark text for contrast */
-    margin: 0 5px; /* Spacing between buttons */
+    background-color: #f1f1f1;
+    /* Light grey background */
+    color: #333;
+    /* Dark text for contrast */
+    margin: 0 5px;
+    /* Spacing between buttons */
   }
 
   /* Info Text Styles */
   .info-text {
-    background-color: #ffffff; /* Light background for a cleaner look */
-    color: #8f3131; /* Soft blue for text */
+    background-color: #ffffff;
+    /* Light background for a cleaner look */
+    color: #8f3131;
+    /* Soft blue for text */
     padding: 12px 20px;
     margin-top: 20px;
-    border-radius: 8px; /* Rounded edges */
-    font-size: 1rem; /* Slightly larger font for better readability */
-    transition: all 0.3s ease-in-out; /* Smooth transition for interactive effects */
+    border-radius: 8px;
+    /* Rounded edges */
+    font-size: 1rem;
+    /* Slightly larger font for better readability */
+    transition: all 0.3s ease-in-out;
+    /* Smooth transition for interactive effects */
   }
-  
+
   .info-text:hover {
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover for a lifting effect */
-    background-color: #f8f9fa; /* Very light gray background on hover for interaction feedback */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    /* Slightly deeper shadow on hover for a lifting effect */
+    background-color: #f8f9fa;
+    /* Very light gray background on hover for interaction feedback */
   }
 
   .text-right {
     text-align: right;
-    direction: rtl; /* Right-to-left direction for Arabic */
+    direction: rtl;
+    /* Right-to-left direction for Arabic */
   }
 
   .text-left {
-      text-align: left;
-      direction: ltr; /* Left-to-right direction for English */
+    text-align: left;
+    direction: ltr;
+    /* Left-to-right direction for English */
   }
 
   /* Ensuring the columns are divided equally */
   .col-md-6 {
-      flex: 0 0 50%;
-      max-width: 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
   }
 
   @media (max-width: 768px) {
     .col-md-6 {
-        flex: 0 0 100%;
-        max-width: 100%;
+      flex: 0 0 100%;
+      max-width: 100%;
     }
   }
-  
 </style>
 
 <script>
@@ -641,8 +721,8 @@
 
 
   // Download section 
-   // Function to fetch and display available certificates
-   function handleDownload(eventId) {
+  // Function to fetch and display available certificates
+  function handleDownload(eventId) {
     fetch(`/get_certificate_list/${eventId}`, { method: 'GET' })
       .then(response => response.json())
       .then(data => {
@@ -677,7 +757,7 @@
   // Function to download selected certificates
   function downloadSelectedCertificates(eventId) {
     const selectedCertificates = Array.from(document.querySelectorAll('input[name="certificates"]:checked'))
-                                      .map(checkbox => checkbox.value);
+      .map(checkbox => checkbox.value);
 
     if (selectedCertificates.length === 0) {
       Swal.fire({
@@ -692,51 +772,51 @@
 
     fetch(`/download_certificates/${eventId}`, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ selected_certificates: selectedCertificates })
     })
-    .then(response => {
-      if (!response.ok) throw new Error('Failed to download certificates');
-      return response.blob();
-    })
-    .then(blob => {
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
-      // Create a new anchor element for downloading
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `event_${eventId}_certificates.zip`;
-      document.body.appendChild(a);
-      a.click();
-      // Clean up and remove the anchor element
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to download certificates');
+        return response.blob();
+      })
+      .then(blob => {
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(blob);
+        // Create a new anchor element for downloading
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `event_${eventId}_certificates.zip`;
+        document.body.appendChild(a);
+        a.click();
+        // Clean up and remove the anchor element
+        a.remove();
+        window.URL.revokeObjectURL(url);
 
-      Swal.fire({
-        title: 'Success',
-        text: 'Certificates downloaded successfully.',
-        icon: 'success'
-      }).then(() => {
-        closeModal(); // Hide the modal after showing the alert
+        Swal.fire({
+          title: 'Success',
+          text: 'Certificates downloaded successfully.',
+          icon: 'success'
+        }).then(() => {
+          closeModal(); // Hide the modal after showing the alert
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'Failed to download selected certificates. Please try again later.',
+          icon: 'error'
+        }).then(() => {
+          closeModal(); // Hide the modal after showing the alert
+        });
       });
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Failed to download selected certificates. Please try again later.',
-        icon: 'error'
-      }).then(() => {
-        closeModal(); // Hide the modal after showing the alert
-      });
-    });
   }
 
   function toggleSelectAll(source) {
-  const checkboxes = document.querySelectorAll('#certificate-list input[type="checkbox"]');
-  checkboxes.forEach(checkbox => {
-    checkbox.checked = source.checked;
-  });
+    const checkboxes = document.querySelectorAll('#certificate-list input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = source.checked;
+    });
   }
 
   function closeModal() {
@@ -797,7 +877,7 @@
   }
 
   // Document ready function to ensure all modal close buttons work properly
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     // Attach an event listener to the close button within the preview modal
     var closeButton = document.getElementById('preview-modal-close');
     if (closeButton) {
@@ -806,16 +886,274 @@
   });
 
   function toggleVisibility(sectionId) {
-  var x = document.getElementById(sectionId);
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
+    var x = document.getElementById(sectionId);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
   }
 
 
   ////////////////
   // Other buttons (Generate, downloud, send)
+</script>
+
+<!-- Transulation -->
+<script>
+  const translations = {
+    en: {
+      Event: "Event",
+      Settings: "Settings",
+      Contact: "Contact",
+      Sign_out: "Sign out",
+      Templates: "Templates",
+      Dismiss: "Dismiss",
+      english: "English",
+      arabic: "Arabic",
+      Event_Details: "Event Details",
+      Event_Information: "Event Information",
+      Event_Type: "Event Type",
+      Presenter_Name: "Presenter Name",
+      Event_Date: "Event Date",
+      Form_Type: "Form type",
+      Details: "Details",
+      Secret_Phrase: "Secret Phrase",
+      File_Path: "File Path",
+      Recipient_Titles: "Recipient Titles",
+      Male: "Male",
+      Female: "Female",
+      Male_EN: "Male",
+      Female_EN: "Female",
+      Description: "Description",
+      Greetings: "Greetings",
+      Signatories: "Signatories",
+      First_Signatory_Name: "First Signatory Name",
+      Second_Signatory_Name: "Second Signatory Name",
+      Position: "Position",
+      Path: "Path",
+      Delete: "Delete",
+      Generate: "Generate",
+      Download: "Download",
+      Send: "Send",
+      Preview_Certificate: "Preview Certificate",
+      Notification_Text: "Sending or downloading certificates triggers an email notification to recipients upon event deletion.",
+      Previous: "Previous",
+      Next: "Next",
+      Cancel: "Cancel",
+      Select_Certificates: "Select Certificates to Download",
+      Select_All: "Select All",
+      Delete_Confirmation_Text: 'Are you sure you want to delete the event titled "{{ certificate.certificate_title }}"?',
+      Delete_Confirmation_Warning: "Deleting this event will permanently remove it from the system.",
+      Delete_Confirmation_Detail: "This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.",
+      Confirm_Event_Name: "To confirm, please enter the exact name of the event:",
+      Confirm: "Confirm",
+      Loading: "Loading...",
+      Certificate_Deleted_Success: "Certificate deleted successfully",
+      Error: "Error: Please try again later",
+      OK: "OK"
+    },
+    ar: {
+      Event: "الاحداث",
+      Settings: "الاعدادات",
+      Contact: "تواصل معنا",
+      Sign_out: "تسجيل خروج",
+      Templates: "القوالب",
+      Dismiss: "إنهاء",
+      english: "الانجليزية",
+      arabic: "العربية",
+      Event_Details: "تفاصيل الحدث",
+      Event_Information: "معلومات الحدث",
+      Event_Type: "نوع الحدث",
+      Presenter_Name: "اسم مقدم العرض",
+      Event_Date: "تاريخ الحدث",
+      Form_Type: "نوع النموذج",
+      Details: "التفاصيل",
+      Secret_Phrase: "العبارة السرية",
+      File_Path: "مسار الملف",
+      Recipient_Titles: "عناوين المستلمين",
+      Male: "ذكر",
+      Female: "أنثى",
+      Male_EN: "ذكر",
+      Female_EN: "أنثى",
+      Description: "الوصف",
+      Greetings: "التحيات",
+      Signatories: "الموقعون",
+      First_Signatory_Name: "اسم الموقع الأول",
+      Second_Signatory_Name: "اسم الموقع الثاني",
+      Position: "المنصب",
+      Path: "المسار",
+      Delete: "حذف",
+      Generate: "إنشاء الشهادات",
+      Download: "تنزيل",
+      Send: "إرسال",
+      Preview_Certificate: "معاينة الشهادات",
+      Notification_Text: "عند إرسال أو تنزيل الشهادات سوف يتم إرسال إشعار عبر البريد الإلكتروني للمستلمين عند حذف الحدث.",
+      Previous: "السابق",
+      Next: "التالي",
+      Cancel: "إلغاء",
+      Select_Certificates: "اختر الشهادات للتنزيل",
+      Select_All: "اختر الكل",
+      Delete_Confirmation_Text: 'هل أنت متأكد من أنك تريد حذف الحدث بعنوان "{{ certificate.certificate_title }}"؟',
+      Delete_Confirmation_Warning: "سيؤدي حذف هذا الحدث إلى إزالته بشكل دائم من النظام.",
+      Delete_Confirmation_Detail: "سيمنع هذا الإجراء التحقق من الشهادات عبر واجهة برمجة التطبيقات. إذا تم الإرسال أو التنزيل بالفعل، فسيتم إشعار الأطراف المعنية بما في ذلك المستلمين بحذف الحدث.",
+      Confirm_Event_Name: "لتأكيد، يرجى إدخال الاسم الدقيق للحدث:",
+      Confirm: "تأكيد",
+      Loading: "جاري التحميل...",
+      Certificate_Deleted_Success: "تم حذف الشهادة بنجاح",
+      Error: "خطأ: الرجاء المحاولة مرة أخرى لاحقًا",
+      OK: "موافق"
+    }
+  };
+
+  const setLanguage = (language) => {
+    const elements = document.querySelectorAll("[data-i18n]");
+    elements.forEach((element) => {
+      const translationKey = element.getAttribute("data-i18n");
+      element.textContent = translations[language][translationKey];
+    });
+
+    document.dir = language === "ar" ? "rtl" : "ltr";
+
+    // Adjust left padding dynamically
+    const navbarItems = document.querySelectorAll("#navbar-user ul li a");
+    if (language === "ar") {
+      navbarItems.forEach((item) => {
+        item.style.paddingLeft = "1rem";
+      });
+    } else {
+      navbarItems.forEach((item) => {
+        item.style.paddingLeft = ""; // Reset padding
+      });
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const language = localStorage.getItem("lang") || "en"; // اذا لم تكن اللغة متوفرة استخدم الانجليزية
+    setLanguage(language);
+
+    var checkbox = document.getElementById('bilingualCheckbox');
+    var bilingual = document.getElementById("ardropdownToggleButton");
+    var customItem = document.getElementById("customizationform");
+    var keyitem = document.getElementById("keyitem");
+    var signature = document.getElementById("signature");
+
+    // Check if the checkbox is in the checked state
+    window.check = function () {
+      if (checkbox.checked) {
+        bilingual.style.display = "flex";
+      } else {
+        bilingual.style.display = "none";
+      }
+    };
+
+    window.dismissFlashMessage = function () {
+      var flashMessage = document.getElementById('flashMessage');
+      flashMessage.style.display = 'none';
+    };
+
+    window.checkItems = function (value, isChecked) {
+      if (isChecked) {
+        customItem.style.display = "block";
+        keyitem.value = value;
+        if (keyitem.value == "signature_1" || keyitem.value == "signature_2") {
+          signature.style.display = "block";
+        } else {
+          signature.style.display = "none";
+        }
+        if (keyitem.value == "contact_info") {
+          document.getElementById('webcheck').style.display = "flex";
+          document.getElementById('Xcheck').style.display = "flex";
+          document.getElementById('alttextfield').style.display = "none";
+          document.getElementById('alttextfield2').style.display = "block";
+        } else {
+          document.getElementById('webcheck').style.display = "none";
+          document.getElementById('Xcheck').style.display = "none";
+          document.getElementById('alttextfield').style.display = "block";
+          document.getElementById('alttextfield2').style.display = "none";
+        }
+      } else {
+        customItem.style.display = "none";
+      }
+    };
+
+    document.getElementById('web-checkbox').addEventListener('change', () => {
+      const websitfield = document.getElementById('websitfield');
+      const websitfield2 = document.getElementById('websitfield2');
+      if (document.getElementById('web-checkbox').checked) {
+        websitfield.style.display = "block";
+        websitfield2.style.display = "block";
+      } else {
+        websitfield.style.display = "none";
+        websitfield2.style.display = "none";
+      }
+    });
+
+    document.getElementById('twitter-checkbox').addEventListener('change', () => {
+      const xfield = document.getElementById('xfield');
+      const xfield2 = document.getElementById('xfield2');
+      if (document.getElementById('twitter-checkbox').checked) {
+        xfield.style.display = "block";
+        xfield2.style.display = "block";
+      } else {
+        xfield.style.display = "none";
+        xfield2.style.display = "none";
+      }
+    });
+
+    window.arCheckItems = function (value, isChecked) {
+      if (isChecked) {
+        customItem.style.display = "block";
+        keyitem.value = value;
+      } else {
+        customItem.style.display = "none";
+      }
+    };
+
+    window.submitForm = function (event, temp_id) {
+      event.preventDefault(); // Prevent the default form submission behavior
+      fetch(`/Select_template/${temp_id}`, {
+        method: 'POST',
+        body: new FormData(document.getElementById('customizationform')),
+      })
+        .then(response => {
+          document.getElementById('flashMessage').style.display = "block";
+          document.getElementById('fMessage').innerHTML = translations[language].Customizations_added_successfully;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    };
+
+    window.previewCertificate = function (temp_id) {
+      const url = `/img/${temp_id}?_=${new Date().getTime()}`;
+      const imgFrame = document.getElementById('preview-image');
+      const imgFrame2 = document.getElementById('generated-image');
+      imgFrame.style.display = "block";
+      imgFrame2.style.display = "none";
+      imgFrame2.src = null;
+
+      fetch(url, { method: 'POST' })
+        .then(response => response.blob())
+        .then(blob => {
+          const urlCreator = window.URL || window.webkitURL;
+          imgFrame2.src = urlCreator.createObjectURL(blob);
+          imgFrame2.style.display = "block";
+          imgFrame.style.display = "none";
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    };
+  });
+
+  const languageSelector = document.querySelector("select");
+  if (languageSelector) {
+    languageSelector.addEventListener("change", (event) => {
+      setLanguage(event.target.value);
+      localStorage.setItem("lang", event.target.value);
+    });
+  }
+
 </script>
 {% endblock %}

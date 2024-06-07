@@ -3,17 +3,24 @@
 {% block title %}Create Event with File Upload{% endblock %}
 {% block body %}
 <div class="container mt-5 mx-auto">
-  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;">Add Event</h6>
+  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;" data-i18n="Add_Events">Add Event</h6>
 
   <!-- Explanation message -->
-  <p class="text-center text-gray-600 mt-4">Please select the language for the event and the certificate:</p>
+  <p class="text-center text-gray-600 mt-4" data-i18n="Explanation_Message">Please select the language for the event and
+    the certificate:</p>
 
   <!-- Language selection buttons -->
   <div class="text-center mt-6">
     <form action="{{ url_for('add_certificate') }}" method="POST">
-      <button type="submit" name="language" value="arabic" class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Arabic</button>
-      <button type="submit" name="language" value="english" class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">English</button>
-      <button type="submit" name="language" value="arabic_english" class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Arabic & English</button>
+      <button type="submit" name="language" value="arabic"
+        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+        data-i18n="arabic">Arabic</button>
+      <button type="submit" name="language" value="english"
+        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+        data-i18n="english">English</button>
+      <button type="submit" name="language" value="arabic_english"
+        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+        data-i18n="arabic_english">Arabic & English</button>
     </form>
   </div>
 </div>

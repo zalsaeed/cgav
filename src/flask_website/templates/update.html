@@ -1,53 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin page</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap" rel="stylesheet" />
-  <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Flowbite -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-  <!-- font-awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <!-- Link to the external style.css -->
-  <link rel="stylesheet" href="static/css/style.css" />
-</head>
-<body>
-  <div class="text-gray-900 bg-gray-200">
-    <div class="p-4 flex">
-      <h1 class="text-3xl">Update User</h1>
-    </div>
-    <form action="/update/{{ user_to_edit.id }}" method="POST">
-      {{ form.hidden_tag() }}
-      <div class="px-3 py-4 flex justify-center">
-        <table class="w-full text-md bg-white shadow-md rounded mb-4">
-          <tbody>
-            <tr class="border-b">
-              <th class="text-left p-3 px-5">First Name</th>
-              <th class="text-left p-3 px-5">Email</th>
-              <th class="text-left p-3 px-5">Password</th>
-              <th class="text-left p-3 px-5">Role</th>
-              <th></th>
-            </tr>
-            <tr class="border-b hover:bg-orange-100 bg-gray-100">
-              <td class="p-3 px-5">{{form.Fname(class="form-control", value=user_to_edit.Fname)}}</td>
-              <td class="p-3 px-5">{{form.email(class="form-control", value=user_to_edit.email)}}</td>
-              <td class="p-3 px-5">{{form.password(class="form-control", value=user_to_edit.password)}}</td>
-              <td class="p-3 px-5">{{form.user_role(class="form-control", value=user_to_edit.user_role)}}</td>
-              <td class="p-3 px-5 flex justify-end">{{ form.submit(class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-md", value="Save") }}</td>
-              <td class="p-3 px-5 flex justify-end"><a href="{{ url_for('settings') }}" class="bg-[#ccc] hover:bg-[#bbb] text-white py-3 px-5 rounded focus:outline-none focus:shadow-outline text-md">Cancel</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </form>
+{% extends 'base.html' %}
+{% block title %}Settings{% endblock %}
+{% block body %}
+
+<div class="profile-container">
+  <div class="sidebar">
+    <h2>{{ first_name }} {{ last_name }}</h2>
+    {% if current_user.user_role == 1 %}
+    <div id="admin" data-i18n="Admin_Page">Admin page</div>
+    {% endif %}
+    <div id="publicProfileTab" data-i18n="Public_Profile">Public profile</div>
+    <div id="accountTab" data-i18n="Manage_Event_Types">Manage Event Types</div>
   </div>
-</body>
-</html>
+  <div class="content">
+    <div class="public-profile-container">
+      <h2 data-i18n="Public_Profile">Public Profile</h2>
+      <div class="profile-field">
+        <label for="displayName" data-i18n="Name">Name:</label>
+        <span id="displayName">{{ first_name }} {{ last_name }}</span>
+        <a href="{{ url_for('change_name') }}"
+          class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
+          data-i18n="Change_Name">Change Name</a>
+      </div>
+      <div class="profile-field">
+        <label for="displayEmail" data-i18n="Email">Email:</label>
+        <span id="displayEmail">{{ current_user.email }}</span>
+        <a href="{{ url_for('change_email') }}"
+          class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+          data-i18n="Change_Email">Change Email</a>
+      </div>
+      <div class="profile-field">
+        <a href="{{ url_for('change_password') }}"
+          class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+          data-i18n="Change_Password">Change Password</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Function to show a loading indicator
+  function showLoading() {
+    $(".content").html('<div class="loading" data-i18n="Loading">Loading...</div>');
+  }
+
+  // Function to hide the loading indicator
+  function hideLoading() {
+    $(".loading").remove();
+  }
+
+  // Function to show error message
+  function showError(message) {
+    $(".content").html(`<div class="error" data-i18n="Error">${message}</div>`);
+  }
+
+  // Function to translate elements dynamically
+  function translatePage() {
+    $('[data-i18n]').each(function () {
+      var key = $(this).data('i18n');
+      $(this).text(i18n[key]);
+    });
+  }
+
+  // Function to load the public profile information
+  function loadPublicProfile() {
+    showLoading(); // Show loading indicator before the request
+    $.ajax({
+      url: '/get_user_info',
+      type: 'GET',
+      success: function (response) {
+        // Assuming response is a JSON object containing user data
+        const profileContent = `
+        <div class="public-profile-container">
+          <h2 data-i18n="Public_Profile">Public Profile</h2>
+          <div class="profile-field">
+            <label data-i18n="Name">Name:</label>
+            <span>${response.Fname} ${response.Lname}</span>
+            <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Name">Change Name</a>
+          </div>
+          <div class="profile-field">
+            <label data-i18n="Email">Email:</label>
+            <span>${response.email}</span>
+            <a href="{{ url_for('change_email') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Email">Change Email</a>
+          </div>
+          <div class="profile-field">
+            <a href="{{ url_for('change_password') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Password">Change Password</a>
+          </div>
+        </div>
+      `;
+        $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
+        translatePage(); // Translate dynamic content
+      },
+      error: function (error) {
+        // Show user-friendly error message
+        showError('An error occurred while loading the profile.');
+        console.log(error); // Log the error for debugging
+      }
+    }).always(hideLoading); // Hide loading indicator when the request is complete
+  }
+
+  $(document).ready(function () {
+    // Load the public profile section by default
+    loadPublicProfile();
+
+    // Event handlers for navigation tabs
+    $("#publicProfileTab").click(loadPublicProfile);
+    $("#admin").click(function () { $(".content").load("/admin", translatePage); });
+    $("#accountTab").click(function () { $(".content").load("/manage_event_types", translatePage); });
+
+    // Event handlers for edit and save buttons
+    $(document).on('click', '#editModeBtn', function () {
+      $('.view-mode').hide();
+      $('.edit-mode').fadeIn(500); // Fade in the edit mode
+    });
+
+    $(document).on('click', '#saveBtn', function () {
+      // Placeholder function to implement saving profile data
+      saveProfileData();
+      $('.edit-mode').fadeOut(500, function () { // Fade out the edit mode and show the view mode
+        $('.view-mode').fadeIn(500);
+      });
+    });
+  });
+</script>
+{% endblock %}

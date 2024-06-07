@@ -1,5 +1,3 @@
-<!-- certificates.html -->
-
 {% extends 'base.html' %}
 
 {% block title %}Event{% endblock %}
@@ -18,10 +16,13 @@
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{ certificate.certificate_title }}</h5>
-          <p class="card-text"><strong>Presenter:</strong> {{ certificate.presenter_name }}</p>
-          <p class="card-text"><strong>Event date:</strong> {{ certificate.event_date.strftime('%m/%d/%Y') }}</p>
-          <p class="card-text"><strong>Event Type:</strong> {{ certificate.event_type.event_type_name }}</p>
-          <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button">More Info</a>
+          <p class="card-text"><strong data-i18n="Presenter">Presenter:</strong> {{ certificate.presenter_name }}</p>
+          <p class="card-text"><strong data-i18n="Event_Date">Event date:</strong> {{
+            certificate.event_date.strftime('%m/%d/%Y') }}</p>
+          <p class="card-text"><strong data-i18n="Event_Type">Event Type:</strong> {{
+            certificate.event_type.event_type_name }}</p>
+          <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button"
+            data-i18n="More_Info">More Info</a>
         </div>
       </div>
     </div>
@@ -70,13 +71,13 @@
                     <div class="card">
                       <div class="card-body">
                           <h5 class="card-title">${certificate.certificate_title}</h5>
-                          <p class="card-text"><strong>Presenter:</strong> ${certificate.presenter_name}</p>
-                          <p class="card-text"><strong>Event date:</strong> ${new Date(certificate.event_date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
-                          <p class="card-text"><strong>Event Type:</strong> ${certificate.event_type_name}</p>
-                          <a href="/certificate_details/${certificateId}" class="custom-button">More Info</a>
+                          <p class="card-text"><strong data-i18n="Presenter">Presenter:</strong> ${certificate.presenter_name}</p>
+                          <p class="card-text"><strong data-i18n="Event_Date">Event date:</strong> ${new Date(certificate.event_date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+                          <p class="card-text"><strong data-i18n="Event_Type">Event Type:</strong> ${certificate.event_type_name}</p>
+                          <a href="/certificate_details/${certificateId}" class="custom-button" data-i18n="More_Info">More Info</a>
                       </div>
                     </div>
-                `;            
+                `;
                 allCertificatesContainer.appendChild(certificateCard);
 
                 // Add the loaded certificate ID to the set

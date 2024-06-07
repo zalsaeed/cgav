@@ -1,59 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Manage Event Types</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}">
-        <link
-            href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
-            rel="stylesheet">
-        <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Flowbite -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-        <!-- font-awesome -->
-        <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <!-- Link to the external style.css -->
-        <link rel="stylesheet" href="static/css/style.css">
-    </head>
-</head>
-
 <body>
     <div class="center-container">
         <div class="border-shadow-container">
-            <h2 class="text-2xl font-bold mb-4">Manage Event Types</h2>
+            <h2 class="text-2xl font-bold mb-4" data-i18n="Manage_Event_Types">Manage Event Types</h2>
 
             <!-- Add New Type Section -->
             <div class="mb-4">
-                <button id="btnAddNewType" onclick="toggleAddNewTypeForm()" class="button">
-                    Add New Type
-                </button>
+                <button id="btnAddNewType" onclick="toggleAddNewTypeForm()" class="button" data-i18n="Add_New_Type">Add
+                    New Type</button>
                 <div id="addNewTypeForm" class="mt-4 hidden">
-                    <label for="newTypeName">Type Name:</label>
+                    <label for="newTypeName" data-i18n="Type_Name">Type Name:</label>
                     <input type="text" id="newTypeName" name="newTypeName" class="border rounded p-2 mr-2">
                     <div class="button-container">
-                        <button onclick="saveNewType()" class="button">Save</button>
-                        <button onclick="cancelAddNewType()" class="button bg-red-500 hover:bg-red-700 text-white">Cancel</button>
+                        <button onclick="saveNewType()" class="button" data-i18n="Save">Save</button>
+                        <button onclick="cancelAddNewType()" class="button bg-red-500 hover:bg-red-700 text-white"
+                            data-i18n="Cancel">Cancel</button>
                     </div>
                 </div>
             </div>
 
             <!-- Delete Existing Type Section -->
             <div>
-                <button id="btnDeleteExistingType" onclick="toggleDeleteExistingTypeForm()" class="button">
-                    Delete Existing Type
-                </button>
+                <button id="btnDeleteExistingType" onclick="toggleDeleteExistingTypeForm()" class="button"
+                    data-i18n="Delete_Existing_Type">Delete Existing Type</button>
                 <div id="deleteExistingTypeForm" class="mt-4 hidden">
-                    <label for="existingType">Select Type to Delete:</label>
+                    <label for="existingType" data-i18n="Select_Type_To_Delete">Select Type to Delete:</label>
                     <select id="existingType" name="existingType" class="border rounded p-2 mr-2">
                         {% for event_type in event_types %}
                         {% if event_type.is_active %}
@@ -62,15 +32,17 @@
                         {% endfor %}
                     </select>
                     <div class="button-container">
-                        <button onclick="confirmDelete()" class="button">Delete</button>
-                        <button onclick="cancelDelete()" class="button bg-red-500 hover:bg-red-700 text-white">Cancel</button>
+                        <button onclick="confirmDelete()" class="button" data-i18n="Delete">Delete</button>
+                        <button onclick="cancelDelete()" class="button bg-red-500 hover:bg-red-700 text-white"
+                            data-i18n="Cancel">Cancel</button>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 
     <script>
         // Function to capitalize the first letter of a string
@@ -159,6 +131,7 @@
                 text: message,
             });
         }
+
         // Function to send updates to the server
         function sendUpdateToServer(action, typeName) {
             const requestData = { action, typeName };
@@ -206,7 +179,6 @@
             }
         }
 
-
         // Function to hide the add new type form
         function hideAddForm() {
             document.getElementById('addNewTypeForm').classList.add('hidden');
@@ -217,7 +189,4 @@
             document.getElementById('deleteExistingTypeForm').classList.add('hidden');
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 </body>
-
-</html>

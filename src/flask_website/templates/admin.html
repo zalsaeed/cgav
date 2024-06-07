@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style_settings.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
+        rel="stylesheet">
     <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,8 +22,9 @@
     <!-- Link to the external style.css -->
     <link rel="stylesheet" href="static/css/style.css">
 </head>
+
 <body>
-    
+
     <!-- component -->
     <div class="text-gray-900 bg-gray-200">
         <div class="p-4 flex">
@@ -43,8 +47,10 @@
                         <td class="p-3 px-5">{{ list.email }}</td>
                         <td class="p-3 px-5">{{ list.user_role }}</td>
                         <td class="p-3 px-5 flex justify-end">
-                            <a href="{{ url_for('update_user', id=list.id) }}" class="mr-3 text-sm bg-[#427AA1] hover:bg-[#2c4e71] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
-                            <a href="{{ url_for('delete_user', id=list.id) }}" class="mr-3 text-sm bg-[#ccc] hover:bg-[#bbb] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>
+                            <a href="{{ url_for('update_user', id=list.id) }}"
+                                class="mr-3 text-sm bg-[#427AA1] hover:bg-[#2c4e71] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Edit</a>
+                            <a href="{{ url_for('delete_user', id=list.id) }}"
+                                class="mr-3 text-sm bg-[#ccc] hover:bg-[#bbb] text-white py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -53,5 +59,3 @@
         </div>
     </div>
 </body>
-
-
