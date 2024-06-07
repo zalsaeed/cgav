@@ -137,8 +137,6 @@ male_recipient_title_en VARCHAR
     template_id INT,
     instructor_id VARCHAR
 (255),
-    event_start_date DATETIME,
-    event_end_date DATETIME,
     presenter_name VARCHAR
 (255),
     secret_phrase VARCHAR
