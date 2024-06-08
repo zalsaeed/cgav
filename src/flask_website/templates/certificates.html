@@ -48,7 +48,13 @@
     // Set to store loaded certificate IDs
     const loadedCertificateIds = new Set();
 
+    // Variable to track the number of times 'Load More' button is clicked
+    let loadMoreCount = 0;
+
     function loadMoreCertificates() {
+      // Increment the load more count
+      loadMoreCount++;
+
       // Get the number of certificates already loaded
       const alreadyLoadedCount = document.querySelectorAll('.latest-certificate').length;
 
