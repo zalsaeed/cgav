@@ -7,24 +7,40 @@
     <h2 class="text-2xl font-bold mb-4" data-i18n="Send_Emails">Send Emails</h2>
     <form action="/send_email?eventId={{ eventId }}" method="post" enctype="multipart/form-data" id="emailForm">
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700" data-i18n="Select_Emails">Select Emails:</label>
+            <label class="block text-sm font-medium text-black-900" data-i18n="Select_Emails">Select Emails:</label>
 
             <!-- Checkbox for "Select All" -->
-            <div class="mt-2">
+            <div class="mt-2 flex items-center">
                 <input type="checkbox" id="select-all"
                     class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="select-all" class="text-sm text-gray-700" data-i18n="Select_All">Select All</label>
+                <label for="select-all" class="text-sm text-gray-700 pr-2" data-i18n="Select_All">Select All</label>
             </div>
-
             <!-- Checkboxes for emails -->
             {% for recipient in recipients %}
-            <div class="mt-2">
+            <div class="mt-2 flex items-center">
                 <input type="checkbox" name="emails" value="{{ recipient.email }}"
                     data-username="{{ recipient.username }}" id="{{ recipient.username }}"
                     class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="{{ recipient.username }}" class="text-sm text-gray-700">{{ recipient.email }}</label>
+                <label for="{{ recipient.username }}" class="text-sm text-gray-700 ml-2 pr-2">{{ recipient.email
+                    }}</label>
             </div>
             {% endfor %}
+
+            <!-- Language selection radio buttons -->
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select
+                    Language:</label>
+                <div class="mt-2 flex items-center">
+                    <input type="radio" id="language-en" name="language" value="en" class="mr-2">
+                    <label for="language-en" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="English">English</label>
+                </div>
+                <div class="mt-2 flex items-center">
+                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2">
+                    <label for="language-ar" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="Arabic">Arabic</label>
+                </div>
+            </div>
+
+
             <!-- Button to open the pop-up -->
             <button type="button"
                 class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"

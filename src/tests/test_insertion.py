@@ -161,7 +161,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         certificate_data = [
             {
                 "created_by": 1,
-                "certificate_title": "1",
+                "certificate_title": "شهادة شكر",
                 "event_type_id": 1,
                 "template_path": "/root/src/flask_website/certificate-templates/template.png",
                 "intro": "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن",

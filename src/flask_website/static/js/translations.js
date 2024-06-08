@@ -117,7 +117,7 @@ const translations = {
         Certificate_Templates: "Certificate Templates",
         Edit: "Edit",
         Send_Emails: "Send Emails",
-        Select_Emails: "Select Emails",
+        Select_Emails: "Select Emails:",
         Select_All: "Select All",
         Customize_Email: "Customize Email",
         Subject: "Subject",
@@ -134,7 +134,8 @@ const translations = {
         Change_Email: 'Change Email',
         Change_Password: 'Change Password',
         Loading: 'Loading...',
-        Error: 'An error occurred'
+        Error: 'An error occurred',
+        Select_Language: 'Select E-mail Content Language:'
     },
     ar: {
         Event: "الاحداث",
@@ -254,7 +255,7 @@ const translations = {
         Certificate_Templates: "قوالب الشهادات",
         Edit: "تحرير",
         Send_Emails: "إرسال بريد إلكتروني",
-        Select_Emails: "اختر البريد الإلكتروني",
+        Select_Emails: "اختر البريد الإلكتروني:",
         Select_All: "اختر الكل",
         Customize_Email: "تخصيص البريد الإلكتروني",
         Subject: "الموضوع",
@@ -271,9 +272,11 @@ const translations = {
         Change_Email: 'تغيير البريد الإلكتروني',
         Change_Password: 'تغيير كلمة المرور',
         Loading: 'جارٍ التحميل...',
-        Error: 'حدث خطأ'
+        Error: 'حدث خطأ',
+        Select_Language: ' اختر لغة محتوى الايميل:'
     }
 };
+
 const setLanguage = (language) => {
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach((element) => {
@@ -317,15 +320,37 @@ const setLanguage = (language) => {
 
     document.dir = language === "ar" ? "rtl" : "ltr";
 
+    // Access the navbar items
     const navbarItems = document.querySelectorAll("#navbar-user ul li a");
+
+    // Access the checkboxes within #webcheck and #Xcheck
+    const webCheckbox = document.querySelector("#web-checkbox");
+    const twitterCheckbox = document.querySelector("#twitter-checkbox");
+
     if (language === "ar") {
         navbarItems.forEach((item) => {
             item.style.paddingLeft = "1rem";
         });
+        if (webCheckbox) {
+            webCheckbox.style.marginLeft = "0.5rem";
+        } else {
+            console.log("Web checkbox not found");
+        }
+        if (twitterCheckbox) {
+            twitterCheckbox.style.marginLeft = "0.5rem";
+        } else {
+            console.log("Twitter checkbox not found");
+        }
     } else {
         navbarItems.forEach((item) => {
             item.style.paddingLeft = "";
         });
+        if (webCheckbox) {
+            webCheckbox.style.marginLeft = "";
+        }
+        if (twitterCheckbox) {
+            twitterCheckbox.style.marginLeft = "";
+        }
     }
 };
 
