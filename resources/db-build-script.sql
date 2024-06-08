@@ -126,8 +126,7 @@ female_recipient_title_en VARCHAR
 (255),
 male_recipient_title_en VARCHAR
 (255),
-    customization_id VARCHAR
-(255),
+    customization_id INT,
     template_id INT,
     instructor_id VARCHAR
 (255),

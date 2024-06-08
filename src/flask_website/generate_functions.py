@@ -185,7 +185,7 @@ def generate_certificate(certificate_event_id):
                 'Second_Signatory_Path': certificate.Second_Signatory_Path,
                 'form_type': certificate.form_type,
             }
-        if customization:
+        if customization and customization.items_positions != {}:
             if certificate.form_type == 'Arabic_English':
                 items_positions={
                     "Certificate_Title":customization.items_positions["Certificate_Title"],
