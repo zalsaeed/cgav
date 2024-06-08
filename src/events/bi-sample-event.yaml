@@ -1,0 +1,33 @@
+
+
+intro: "تشهد كلية الحاسب بجامعة القصيم ممثلة بوحدة خدمة المجتمع أن"
+
+male_recipient_title: "المتدرب:"
+female_recipient_title: "المتدربة:"
+
+male_certificate_body: "قد حضر البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م"
+female_certificate_body: "قد حضرت البرنامج التدريبي: اسم الدورة والذي أقيم عن بعد بالتعاون مع الجمعية اسم الجمعية بتاريخ ٢٠٢٣/٥/٣٠م"
+
+
+male_final_greeting: "مع تمنياتنا له بالتوفيق والسداد"
+female_final_greeting: "مع تمنياتنا لها بالتوفيق والسداد"
+
+
+intro_en: "Computer of Collage in Qassim University statify that"
+recipient_title_en: "Student:"
+
+
+male_certificate_body_en: "He attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025"
+female_certificate_body_en: "She attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025"
+
+dean_name: "Mohamad Fahad Altimimi"
+dean_position: "Head of Collage"
+path_to_dean_signature: "signatures/sample-sig-1.png"
+
+csu_director_name: "Khaled Hassan AlHassn"
+csu_position: "Dean of  Regestration"
+path_to_csu_signature: "signatures/sample-sig-2.png"
+
+male_final_greeting_en: "Best of luck for him"
+female_final_greeting_en: "Best of luck for her"
+

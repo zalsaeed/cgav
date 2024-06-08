@@ -1,0 +1,30 @@
+event_title: "Sample Event"
+event_date: "30-5-2023"
+event_type: "training"
+certificate_background: "certificate-templates/sample_background.png"
+
+intro: "Computer of Collage in Qassim University statify that"
+
+csv_file: 'data/English-data.csv'
+
+male_recipient_title: "Student:"
+female_recipient_title: "Student:"
+
+male_certificate_body: "He attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025"
+female_certificate_body: "She attended the training program: the name of the course, which conduct online through Zoom with the name of the association on 5/30/2025"
+# possible singers setup!
+#signers: [
+#  ["أ.د. عبدالله بن احمد الاحمد", "عميد كلية الحاسب"],
+#  ["د. فهد بن سالم السالم", "مشرف وحدة خدمة المجتمع"]
+#]
+
+dean_name: "Mohamad Fahad Altimimi"
+dean_position: "Head of Collage"
+path_to_dean_signature: "signatures/sample-sig-1.png"
+
+csu_director_name: "Khaled Hassan AlHassn"
+csu_position: "Dean of  Regestration"
+path_to_csu_signature: "signatures/sample-sig-2.png"
+
+male_final_greeting: "Best of luck for him"
+female_final_greeting: "Best of luck for her"

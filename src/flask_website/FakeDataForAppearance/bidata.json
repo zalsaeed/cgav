@@ -1,0 +1,19 @@
+{
+    "bidata":{
+    "Intro":"مقدمة",
+    "recipient_title":"لقب_المتلقي",
+    "recipient_name": "اسم_المتلقي",
+    "body":"المحتوى",
+    "final_greeting": "التحية الختامية"},
+
+    "data":{
+    "Intro_en":"Intro",
+    "recipient_title_en":"recipient_title",
+    "recipient_name_en": "recipient_name",
+    "body_en":"body",
+    "final_greeting_en": "final_greeting",
+    "contact_info": "contact_info ",
+    "signature_1": "signature_1",
+    "signature_2": "signature_2"
+    }
+}
