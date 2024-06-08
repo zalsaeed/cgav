@@ -64,7 +64,9 @@ const translations = {
         Attendance_Information: "Attendance Information",
         File: "File",
         Upload_Note: "Upload the attendance list as a CSV file. Ensure that the file format is correct to avoid upload errors.",
-        Download_Sample: "Not sure about the correct format? Download a sample CSV file to use as a template.",
+        Download_Sample_Text: "Not sure about the correct format?",
+        Download_Sample_Link_Text: "Download a sample CSV file",
+        Download_Sample_Append_Text: "to use as a template.",
         Arabic_Form: "Arabic form",
         English_Form: "English form",
         Introduction: "Introduction",
@@ -133,7 +135,6 @@ const translations = {
         Change_Password: 'Change Password',
         Loading: 'Loading...',
         Error: 'An error occurred'
-
     },
     ar: {
         Event: "الاحداث",
@@ -200,7 +201,9 @@ const translations = {
         Attendance_Information: "معلومات الحضور",
         File: "الملف",
         Upload_Note: "قم بتحميل قائمة الحضور كملف CSV. تأكد من أن تنسيق الملف صحيح لتجنب أخطاء التحميل.",
-        Download_Sample: "لست متأكدًا من التنسيق الصحيح؟ قم بتنزيل ملف CSV النموذجي لاستخدامه كقالب.",
+        Download_Sample_Text: "لست متأكدًا من التنسيق الصحيح؟",
+        Download_Sample_Link_Text: "قم بتنزيل ملف CSV النموذجي",
+        Download_Sample_Append_Text: "لاستخدامه كقالب.",
         Arabic_Form: "النموذج العربي",
         English_Form: "النموذج الإنجليزي",
         Introduction: "المقدمة",
@@ -210,21 +213,21 @@ const translations = {
         Greeting_Female: "تحية للإناث",
         Certificate_Description_Male: "وصف الشهادة للذكور",
         Certificate_Description_Female: "وصف الشهادة للإناث",
-        Female_Recipient_Title_EN: "عنوان المستلمة (بالانجليزية)",
-        Male_Recipient_Title_EN: "عنوان المستلم (بالانجليزية)",
-        Greeting_Male_EN: "تحية للذكور (بالانجليزية)",
-        Greeting_Female_EN: "تحية للإناث (بالانجليزية)",
-        Certificate_Description_Male_EN: "وصف الشهادة للذكور (بالانجليزية)",
-        Certificate_Description_Female_EN: "وصف الشهادة للإناث (بالانجليزية)",
+        Female_Recipient_Title_EN: "عنوان المستلمة (EN)",
+        Male_Recipient_Title_EN: "عنوان المستلم (EN)",
+        Greeting_Male_EN: "تحية للذكور (EN)",
+        Greeting_Female_EN: "تحية للإناث (EN)",
+        Certificate_Description_Male_EN: "وصف الشهادة للذكور (EN)",
+        Certificate_Description_Female_EN: "وصف الشهادة للإناث (EN)",
         Cancel: "إلغاء",
-        Your_Events: "أحداثك",
-        Latest_Event: "أحدث حدث",
-        Presenter: "مقدم العرض",
+        Your_Events: "الاحداث التي قمت بإنشائها",
+        Latest_Event: "آخر الاحداث",
+        Presenter: "المقدم",
         Event_Date: "تاريخ الحدث",
         Event_Type: "نوع الحدث",
-        More_Info: "مزيد من المعلومات",
+        More_Info: "المزيد من المعلومات",
         Load_More: "تحميل المزيد",
-        Add_Events: "إضافة أحداث",
+        Add_Events: "اضافة حدث",
         Add_New_Template: "إضافة قالب جديد",
         Template_Image: "صورة القالب",
         Manage_Event_Types: "إدارة أنواع الأحداث",
@@ -233,7 +236,7 @@ const translations = {
         Save: "حفظ",
         Cancel: "إلغاء",
         Delete_Existing_Type: "حذف نوع موجود",
-        Select_Type_To_Delete: "اختر نوعًا لحذفه",
+        Select_Type_To_Delete: "حدد نوع للحذف",
         Delete: "حذف",
         buttons: "الأزرار",
         Save_Button: "زر الحفظ",
@@ -241,7 +244,7 @@ const translations = {
         forms: "النماذج",
         First_Name: "الاسم الأول",
         Please_fill_out_this_field: "يرجى ملء هذا الحقل.",
-        Last_Name: "اسم العائلة",
+        Last_Name: "الاسم الأخير",
         Password: "كلمة المرور",
         Password_Hint: "اجعلها طويلة وجنونية كما تريد",
         City: "المدينة",
@@ -249,8 +252,8 @@ const translations = {
         Zip: "الرمز البريدي",
         grid_layout: "تخطيط الشبكة",
         Certificate_Templates: "قوالب الشهادات",
-        Edit: "تعديل",
-        Send_Emails: "إرسال البريد الإلكتروني",
+        Edit: "تحرير",
+        Send_Emails: "إرسال بريد إلكتروني",
         Select_Emails: "اختر البريد الإلكتروني",
         Select_All: "اختر الكل",
         Customize_Email: "تخصيص البريد الإلكتروني",
@@ -267,30 +270,61 @@ const translations = {
         Change_Name: 'تغيير الاسم',
         Change_Email: 'تغيير البريد الإلكتروني',
         Change_Password: 'تغيير كلمة المرور',
-        Loading: 'جاري التحميل...',
+        Loading: 'جارٍ التحميل...',
         Error: 'حدث خطأ'
     }
 };
-
 const setLanguage = (language) => {
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach((element) => {
         const translationKey = element.getAttribute("data-i18n");
-        element.textContent = translations[language][translationKey];
+        if (translations[language][translationKey]) {
+            element.innerHTML = translations[language][translationKey];
+        }
     });
+
+    // Update the Download_Sample section
+    const downloadSampleText = translations[language].Download_Sample_Text;
+    const downloadSampleLinkText = translations[language].Download_Sample_Link_Text;
+    const downloadSampleAppendText = translations[language].Download_Sample_Append_Text;
+
+    const downloadSampleElement = document.querySelector("[data-i18n='Download_Sample']");
+    if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-1")) {
+        downloadSampleElement.innerHTML = `
+            ${downloadSampleText}
+            <a href="/static/sample_csv/sample-data_aren.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
+                ${downloadSampleLinkText}
+            </a>
+            ${downloadSampleAppendText}
+        `;
+    } else if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-2")) {
+        downloadSampleElement.innerHTML = `
+            ${downloadSampleText}
+            <a href="/static/sample_csv/sample-data_en.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
+                ${downloadSampleLinkText}
+            </a>
+            ${downloadSampleAppendText}
+        `;
+    } else if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-3")) {
+        downloadSampleElement.innerHTML = `
+            ${downloadSampleText}
+            <a href="/static/sample_csv/sample-data_ar.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
+                ${downloadSampleLinkText}
+            </a>
+            ${downloadSampleAppendText}
+        `;
+    }
 
     document.dir = language === "ar" ? "rtl" : "ltr";
 
-    // Adjust left padding dynamically
     const navbarItems = document.querySelectorAll("#navbar-user ul li a");
     if (language === "ar") {
         navbarItems.forEach((item) => {
             item.style.paddingLeft = "1rem";
-
         });
     } else {
         navbarItems.forEach((item) => {
-            item.style.paddingLeft = ""; // Reset padding
+            item.style.paddingLeft = "";
         });
     }
 };

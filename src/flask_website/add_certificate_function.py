@@ -72,7 +72,7 @@ def ar_form():
 
             logger.debug("Fieldnames from CSV: %s", csv_reader.fieldnames)
 
-            required_headers = {'arfirst_name', 'armiddle_name', 'arlast_name', 'ar_email', 'ar_phone', 'ar_gender'}
+            required_headers = {'arfirst_name', 'armiddle_name', 'arlast_name', 'email', 'phone', 'gender'}
 
             if not required_headers.issubset(set(csv_reader.fieldnames)):
                 message = 'The CSV file does not have the required headers.'

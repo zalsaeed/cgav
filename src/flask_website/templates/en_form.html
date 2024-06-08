@@ -151,13 +151,10 @@
         upload errors.
       </p>
 
-      <p class="text-gray-600 mt-4" data-i18n="Download_Sample">
-        Not sure about the correct format?
-        <a href="{{ url_for('static', filename='sample_csv/sample-data_en.csv') }}" download
-          class="text-blue-600 hover:text-blue-800 font-bold">
-          Download a sample CSV file
-        </a>
-        to use as a template.
+      <p class="text-gray-600 mt-4 download-link sample-link-2" data-i18n="Download_Sample">
+        Not sure about the correct format? <a data-i18n="Download_Sample_Link_Text"
+          href="{{ url_for('static', filename='sample_csv/sample-data_en.csv') }}" download
+          class="text-blue-600 hover:text-blue-800 font-bold">Download a sample CSV file</a> to use as a template.
       </p>
     </div>
 

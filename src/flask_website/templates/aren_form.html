@@ -159,13 +159,10 @@
         upload errors.
       </p>
 
-      <p class="text-gray-600 mt-4" data-i18n="Download_Sample">
-        Not sure about the correct format?
-        <a href="{{ url_for('static', filename='sample_csv/sample-data_aren.csv') }}" download
-          class="text-blue-600 hover:text-blue-800 font-bold">
-          Download a sample CSV file
-        </a>
-        to use as a template.
+      <p class="text-gray-600 mt-4 download-link sample-link-1" data-i18n="Download_Sample">
+        Not sure about the correct format? <a data-i18n="Download_Sample_Link_Text"
+          href="{{ url_for('static', filename='sample_csv/sample-data_aren.csv') }}" download
+          class="text-blue-600 hover:text-blue-800 font-bold">Download a sample CSV file</a> to use as a template.
       </p>
     </div>
 
@@ -173,7 +170,6 @@
     <div class="form-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
       <h2 class="mt-4 mb-2 text-xl text-blue-600" data-i18n="Arabic_Form">Arabic form:</h2>
       <div class="grid grid-cols-3 gap-6">
-
         <div class="mb-4">
           {{ form.intro.label(class="form-label", **{'data-i18n': 'Introduction'}) }}
           {{ form.intro(class="form-control") }}
@@ -202,8 +198,6 @@
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
-
-
       </div>
 
       <!-- greeting male  -->
@@ -223,7 +217,6 @@
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
-
       </div>
       <!-- greetings female -->
       <div class="grid grid-cols-3 gap-6">
@@ -242,7 +235,6 @@
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
         </div>
-
       </div>
     </div>
 
