@@ -93,19 +93,13 @@ IF NOT EXISTS instructor
 CREATE TABLE
 IF NOT EXISTS CertificateCustomizations
 (
-    customization_id VARCHAR
-(255) NOT NULL,
+    customization_id INT NOT NULL AUTO_INCREMENT,
     template_id INT,
     id INT,
     items_positions JSON,
-    PRIMARY KEY
-(customization_id),
-    FOREIGN KEY
-(template_id) REFERENCES template
-(template_id),
-    FOREIGN KEY
-(id) REFERENCES users
-(id)
+    PRIMARY KEY (customization_id),
+    FOREIGN KEY (template_id) REFERENCES template(template_id),
+    FOREIGN KEY(id) REFERENCES users(id)
 );
 
 CREATE TABLE
