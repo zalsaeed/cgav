@@ -313,7 +313,7 @@ def generate_certificate(event_data, output_dir, item_positions):
         store_certificate_hash(hash, recipient_id, event_data['certificate_event_id'])
 
     # Generate report CSV
-    report_filename = util.make_file_name_compatible(f"{event_data['event_title']}-{event_data['event_date']}")
+    report_filename = util.make_file_name_compatible(f"{event_data['certificate_event_id']}-{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)
 
 
