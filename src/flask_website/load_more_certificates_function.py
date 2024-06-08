@@ -4,14 +4,12 @@ from flask_login import current_user
 
 def load_more_certificates():
     try:
-        # Get the number of certificates to load and the excluded IDs from the query parameters
+        # Get the number of certificates already loaded
         loaded_count = int(request.args.get('loaded_count', 0))
-        exclude_ids = request.args.get('exclude_ids', '').split(',')
 
         # Fetch additional certificates from the database, excluding the ones already loaded
         additional_certificates = CertificateEvent.query \
             .filter(CertificateEvent.created_by == current_user.id) \
-            .filter(CertificateEvent.certificate_event_id.notin_(exclude_ids)) \
             .order_by(CertificateEvent.certificate_event_id.asc()) \
             .offset(loaded_count) \
             .limit(3) \
