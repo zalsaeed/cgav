@@ -184,7 +184,7 @@ class UpdateForm(FlaskForm):
     user_role = StringField(validators=[
                            ], render_kw={"placeholder": "user_role"})
 
-    submit = SubmitField('save')
+    submit = SubmitField('Save', render_kw={"data-i18n": "Save"})
 
 class CertificateForm(FlaskForm):
     
@@ -239,7 +239,7 @@ class EnglishCertificateForm(FlaskForm):
 class NewTemplates(FlaskForm):
     template_name= StringField('*Template Name', validators=[DataRequired(), Length(min=2, max=30)])
     template_image= FileField('*Upload Background', validators=[DataRequired()])
-    submit= SubmitField('Add')
+    submit = SubmitField('Add', render_kw={"data-i18n": "Add"})
 
 
 
@@ -278,7 +278,7 @@ class customizationForm(FlaskForm):
     X = StringField('X username',validators=[Optional()])
     websitlinke = StringField('Websit Link',validators=[Optional()])
     Xlink= StringField('X Linke',validators=[Optional()])
-    submit = SubmitField('Save')
+    submit = SubmitField('Save', render_kw={"data-i18n": "Save"})
 
 # class Certificate(db.Model):
 #     hash = db.Column(db.String(25), primary_key=True)

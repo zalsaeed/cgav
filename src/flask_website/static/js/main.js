@@ -27,8 +27,8 @@ const translations = {
         Certificate_Appearance: "Certificate Appearance",
         Template_Name: "Template Name",
         bilingual: "bilingual",
-        Certificate_items: "Certificate items",
-        Certificate_items_ar: "عناصر الشهادة",
+        Certificate_items: "Certificate items (English)",
+        Certificate_items_ar: "Certificate items (Arabic)",
         All_positions_note: "All positions in numbers between 0.00 to 1.00.",
         Hide_signature_note: "Note: if you want to hide the signature set all values to 'Zero'",
         X_Position: "X Position",
@@ -74,8 +74,8 @@ const translations = {
         Certificate_Appearance: "مظهر الشهادة",
         Template_Name: "اسم القالب",
         bilingual: "ثنائي اللغة",
-        Certificate_items: "عناصر الشهادة",
-        Certificate_items_ar: "عناصر الشهادة",
+        Certificate_items: "عناصر الشهادة (للإنجليزية)",
+        Certificate_items_ar: "عناصر الشهادة (للعربية)",
         All_positions_note: "جميع المواضع في أرقام بين 0.00 إلى 1.00.",
         Hide_signature_note: "ملاحظة: إذا كنت تريد إخفاء التوقيع، قم بتعيين جميع القيم إلى 'صفر'",
         X_Position: "الموضع X",
@@ -94,12 +94,19 @@ const translations = {
         Save: "حفظ",
     }
 };
-
 const setLanguage = (language) => {
+    console.log(`Setting language to: ${language}`);
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach((element) => {
         const translationKey = element.getAttribute("data-i18n");
-        element.textContent = translations[language][translationKey];
+        console.log(`Translating element with key: ${translationKey}`);
+        if (translations[language][translationKey]) {
+            if (element.tagName.toLowerCase() === 'input' && element.type === 'submit') {
+                element.value = translations[language][translationKey];
+            } else {
+                element.textContent = translations[language][translationKey];
+            }
+        }
     });
 
     document.dir = language === "ar" ? "rtl" : "ltr";
@@ -119,6 +126,7 @@ const setLanguage = (language) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const language = localStorage.getItem("lang") || "en"; // اذا لم تكن اللغة متوفرة استخدم الانجليزية
+    console.log(`Language on DOMContentLoaded: ${language}`);
     setLanguage(language);
 
     var checkbox = document.getElementById('bilingualCheckbox');

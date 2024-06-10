@@ -27,8 +27,8 @@ const translations = {
         Certificate_Appearance: "Certificate Appearance",
         Template_Name: "Template Name",
         bilingual: "bilingual",
-        Certificate_items: "Certificate items",
-        Certificate_items_ar: "عناصر الشهادة",
+        Certificate_items: "Certificate items (English)",
+        Certificate_items_ar: "Certificate items (Arabic)",
         All_positions_note: "All positions in numbers between 0.00 to 1.00.",
         Hide_signature_note: "Note: if you want to hide the signature set all values to 'Zero'",
         X_Position: "X Position",
@@ -135,7 +135,17 @@ const translations = {
         Change_Password: 'Change Password',
         Loading: 'Loading...',
         Error: 'An error occurred',
-        Select_Language: 'Select E-mail Content Language:'
+        Select_Language: 'Select E-mail Content Language:',
+        Add: 'Add',
+        Rights_Reserved: '© 2023 <a href="https://github.com/zalsaeed/cgav" class="hover:underline">مُصدّر</a>. All Rights Reserved.',
+        Settings: "Settings",
+        Contact: "Contact",
+        Sign_out: "Sign out",
+        Event: "Event",
+        Templates: "Templates",
+        Dismiss: "Dismiss",
+        Public_profile: "Public profile",
+        Manage_Event_Types: "Manage Event Types",
     },
     ar: {
         Event: "الاحداث",
@@ -165,7 +175,7 @@ const translations = {
         Certificate_Appearance: "مظهر الشهادة",
         Template_Name: "اسم القالب",
         bilingual: "ثنائي اللغة",
-        Certificate_items: "عناصر الشهادة",
+        Certificate_items: " (للإنجليزية)عناصر الشهادة",
         Certificate_items_ar: "عناصر الشهادة",
         All_positions_note: "جميع المواضع في أرقام بين 0.00 إلى 1.00.",
         Hide_signature_note: "ملاحظة: إذا كنت تريد إخفاء التوقيع، قم بتعيين جميع القيم إلى 'صفر'",
@@ -273,50 +283,36 @@ const translations = {
         Change_Password: 'تغيير كلمة المرور',
         Loading: 'جارٍ التحميل...',
         Error: 'حدث خطأ',
-        Select_Language: ' اختر لغة محتوى الايميل:'
+        Select_Language: ' اختر لغة محتوى الايميل:',
+        Add: 'إضافة',
+        Rights_Reserved: '© 2023 <a href="https://github.com/zalsaeed/cgav" class="hover:underline">مُصدّر</a>. جميع الحقوق محفوظة.',
+        Settings: "الإعدادات",
+        Contact: "تواصل",
+        Sign_out: "تسجيل خروج",
+        Event: "الحدث",
+        Templates: "القوالب",
+        Dismiss: "إنهاء",
+        Public_profile: "الملف الشخصي",
+        Manage_Event_Types: "إدارة أنواع الأحداث",
     }
 };
 
 const setLanguage = (language) => {
+    console.log(`Setting language to: ${language}`);
     const elements = document.querySelectorAll("[data-i18n]");
     elements.forEach((element) => {
         const translationKey = element.getAttribute("data-i18n");
         if (translations[language][translationKey]) {
-            element.innerHTML = translations[language][translationKey];
+            if (element.tagName.toLowerCase() === 'input' && element.type === 'submit') {
+                element.value = translations[language][translationKey];
+            } else if (translationKey === 'Rights_Reserved') {
+                const link = element.querySelector('a').outerHTML;
+                element.innerHTML = translations[language][translationKey].replace('<a href="https://github.com/zalsaeed/cgav" class="hover:underline">مُصدّر</a>', link);
+            } else {
+                element.innerHTML = translations[language][translationKey];
+            }
         }
     });
-
-    // Update the Download_Sample section
-    const downloadSampleText = translations[language].Download_Sample_Text;
-    const downloadSampleLinkText = translations[language].Download_Sample_Link_Text;
-    const downloadSampleAppendText = translations[language].Download_Sample_Append_Text;
-
-    const downloadSampleElement = document.querySelector("[data-i18n='Download_Sample']");
-    if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-1")) {
-        downloadSampleElement.innerHTML = `
-            ${downloadSampleText}
-            <a href="/static/sample_csv/sample-data_aren.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
-                ${downloadSampleLinkText}
-            </a>
-            ${downloadSampleAppendText}
-        `;
-    } else if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-2")) {
-        downloadSampleElement.innerHTML = `
-            ${downloadSampleText}
-            <a href="/static/sample_csv/sample-data_en.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
-                ${downloadSampleLinkText}
-            </a>
-            ${downloadSampleAppendText}
-        `;
-    } else if (downloadSampleElement && downloadSampleElement.classList.contains("sample-link-3")) {
-        downloadSampleElement.innerHTML = `
-            ${downloadSampleText}
-            <a href="/static/sample_csv/sample-data_ar.csv" class="text-blue-600 hover:text-blue-800 font-bold" data-i18n="Download_Sample_Link_Text" download>
-                ${downloadSampleLinkText}
-            </a>
-            ${downloadSampleAppendText}
-        `;
-    }
 
     document.dir = language === "ar" ? "rtl" : "ltr";
 
@@ -356,13 +352,14 @@ const setLanguage = (language) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const language = localStorage.getItem("lang") || "en";
+    console.log(`Language on DOMContentLoaded: ${language}`);
     setLanguage(language);
-});
 
-const languageSelector = document.querySelector("select");
-if (languageSelector) {
-    languageSelector.addEventListener("change", (event) => {
-        setLanguage(event.target.value);
-        localStorage.setItem("lang", event.target.value);
-    });
-}
+    const languageSelector = document.getElementById("languageSelector");
+    if (languageSelector) {
+        languageSelector.addEventListener("change", (event) => {
+            setLanguage(event.target.value);
+            localStorage.setItem("lang", event.target.value);
+        });
+    }
+});
