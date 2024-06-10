@@ -89,6 +89,8 @@ def generate_certificate(certificate_event_id):
 
         certificate = CertificateEvent.query.get(certificate_event_id)
         customization = CertificateCustomizations.query.filter_by(template_id=certificate.template_id).first()
+        
+        items_positions={}
         if not certificate:
             return jsonify({'success': False, 'error': 'Certificate not found'}), 404
 
@@ -118,6 +120,8 @@ def generate_certificate(certificate_event_id):
                 'female_recipient_title': certificate.female_recipient_title,
                 'form_type': certificate.form_type,
             }
+
+        
         elif certificate.form_type == 'English':
             event_data = {
                 'certificate_event_id': int(certificate.certificate_event_id),
@@ -181,20 +185,37 @@ def generate_certificate(certificate_event_id):
                 'Second_Signatory_Path': certificate.Second_Signatory_Path,
                 'form_type': certificate.form_type,
             }
-
-        if customization:
-            items_positions={
-                "Certificate_Title":customization.items_positions["Certificate_Title"],
-                "Intro": customization.items_positions["Intro"],
-                "recipient_title":customization.items_positions["recipient_title"],
-                "recipient_name":customization.items_positions["recipient_name"],
-                "body":customization.items_positions["body"] ,
-                "final_greeting":customization.items_positions["final_greeting"] ,
-                "contact_info":customization.items_positions["contact_info"],
-                "signature_1": customization.items_positions["signature_1"],
-                "signature_2": customization.items_positions["signature_2"]}
+        if customization and customization.items_positions != {}:
+            if certificate.form_type == 'Arabic_English':
+                items_positions={
+                    "Certificate_Title":customization.items_positions["Certificate_Title"],
+                    "Intro": customization.items_positions["Intro"],
+                    "recipient_title":customization.items_positions["recipient_title"],
+                    "recipient_name":customization.items_positions["recipient_name"],
+                    "body":customization.items_positions["body"] ,
+                    "final_greeting":customization.items_positions["final_greeting"] ,
+                    "contact_info":customization.items_positions["contact_info"],
+                    "signature_1": customization.items_positions["signature_1"],
+                    "signature_2": customization.items_positions["signature_2"],
+                    "Intro_en": customization.items_positions["Intro_en"],
+                    "recipient_title_en":customization.items_positions["recipient_title_en"],
+                    "recipient_name_en":customization.items_positions["recipient_name_en"],
+                    "body_en":customization.items_positions["body_en"] ,
+                    "final_greeting_en":customization.items_positions["final_greeting_en"] ,
+                    }
+            else:
+                items_positions={
+                    "Certificate_Title":customization.items_positions["Certificate_Title"],
+                    "Intro": customization.items_positions["Intro"],
+                    "recipient_title":customization.items_positions["recipient_title"],
+                    "recipient_name":customization.items_positions["recipient_name"],
+                    "body":customization.items_positions["body"] ,
+                    "final_greeting":customization.items_positions["final_greeting"] ,
+                    "contact_info":customization.items_positions["contact_info"],
+                    "signature_1": customization.items_positions["signature_1"],
+                    "signature_2": customization.items_positions["signature_2"]}
         else:
-            items_positions={}
+                items_positions={}
         
         try:
             certificate_exists = CertificateEvent.query.get(certificate_event_id) is not None
@@ -211,6 +232,7 @@ def generate_certificate(certificate_event_id):
             db.session.rollback()  # Rollback in case of error
         
         logging.info("Retrieved data: %s", event_data)
+        logging.info("Retrieved positions: %s", items_positions)
         # result = subprocess.run(['python', 'main.py', '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)
         script_path = os.path.abspath(os.path.join('', 'flask_website', 'main.py'))
         result = subprocess.run(['python', script_path, '--event_data', json.dumps(event_data), '--items_positions', json.dumps(items_positions)], capture_output=True, text=True)

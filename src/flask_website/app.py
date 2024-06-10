@@ -75,8 +75,14 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 @app.route('/img/<temp_id>', methods=['GET',"POST"])
-def img(temp_id):
-    return preview_functions.img(temp_id)
+@app.route('/img/<temp_id>/<lang>', methods=['GET', 'POST'])
+def img(temp_id, lang=None):
+    if lang =="ar_en":
+        return preview_functions.arimg(temp_id)
+    else:
+        return preview_functions.img(temp_id, lang)
+
+
 
 # New route for running tests
 @app.route('/run_tests', methods=['GET'])
@@ -270,7 +276,22 @@ def uploaded_file(filename):
 @app.route('/Select_template/<temp_id>',methods=['GET',"POST"])
 @login_required
 def template(temp_id):
-    return template_functions.template(temp_id)
+    return template_functions.edit_template(temp_id)
+
+@app.route('/artemplate/<temp_id>',methods=['GET',"POST"])
+@login_required
+def artemplate(temp_id):
+    return template_functions.artemplateEdit(temp_id)
+
+@app.route('/entemplate/<temp_id>',methods=['GET',"POST"])
+@login_required
+def entemplate(temp_id):
+    return template_functions.entemplateEdit(temp_id)
+
+@app.route('/bitemplate/<temp_id>',methods=['GET',"POST"])
+@login_required
+def bitemplate(temp_id):
+    return template_functions.bitemplateEdit(temp_id)
 
 
 @app.route("/Select_template", methods=['GET',"POST"])

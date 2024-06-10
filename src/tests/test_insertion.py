@@ -141,7 +141,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
 
     def test_insert_row_in_CertificateCustomizations_table(self):
         customization_data = {
-            "customization_id": "1",
+            "customization_id": 1,
             "template_id": 1, 
             "id": 1,
             "items_positions": "{}"

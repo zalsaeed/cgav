@@ -533,7 +533,7 @@ class BilingualCertificate:
         
         # certificate_body_en
         body_lines = util.break_string_into_chunks(self.certificate_body_en, 60)
-        y_position = body_y
+        y_position = body_y_en
         for line in body_lines:
             self.ax.text(body_x_en, y_position, get_display(reshape(line)), fontsize=DEFAULT_FONTB[1], color= body_color, ha='center', va='center', transform=self.ax.transAxes,fontproperties=FontProperties(fname=DEFAULT_FONTB[0]))
             y_position -= 0.05
