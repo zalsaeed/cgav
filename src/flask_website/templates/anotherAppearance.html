@@ -264,7 +264,7 @@
                     </div>
                 </div>
                 <!-- {{ form.submit.label(for="SaveButton")}} -->
-                {{form.submit(id="SaveButton", class="btn btn-primary", **{'data-i18n': "Save"}) }}
+                {{ form.submit(class_='btn btn-primary', id='submit') }}
             </form>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-0 mt-2 ml-3">
                 <button onclick="previewCertificate({{temp.template_id}})" class=" custom-button"

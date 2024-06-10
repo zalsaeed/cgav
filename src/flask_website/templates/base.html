@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
     <link rel="stylesheet" type="text/css" href="/static/style_settings.css">
-
     <link
         href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
         rel="stylesheet">
@@ -69,7 +68,6 @@
                     alt="user photo">
             </button>
 
-
             <!-- User Dropdown menu -->
             <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
                 id="user-dropdown">
@@ -118,12 +116,11 @@
                 </ul>
             </div>
             <div class="flex items-center md:order-2">
-
                 <!-- Language Dropdown menu -->
                 <div class="relative inline-block text-left">
-                    <select
+                    <select id="languageSelector"
                         class="block appearance-none w-full bg-white border border-gray-300 hover:border-gray-400 px-4 py-2 pr-8 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-400 dark:bg-gray-700 dark:text-gray-400 dark:border-gray-600 dark:hover:border-gray-500 dark:focus:ring-gray-600">
-                        <option value="ar" data-i18n="arabic"> >
+                        <option value="ar" data-i18n="arabic">
                             <div class="flex items-center">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Flag_of_Saudi_Arabia.svg/2560px-Flag_of_Saudi_Arabia.svg.png"
                                     class="h-3.5 w-3.5 rounded-full mr-2" alt="العربية" />
@@ -149,7 +146,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
                 <ul
                     class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
@@ -178,17 +174,12 @@
     </div>
     {% endfor %}
 
-
     <!-- Footer  -->
-
-
-
-
     <footer class="bg-white rounded-lg shadow dark:bg-gray-900">
         <div class="w-full max-w-screen-xl mx-auto p-4">
             <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-            <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2023 <a
-                    href="https://github.com/zalsaeed/cgav" class="hover:underline">CGAV</a>. All Rights
+            <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400" data-i18n="Rights_Reserved">©
+                2023 <a href="https://github.com/zalsaeed/cgav" class="hover:underline">مُصدّر</a>. All Rights
                 Reserved.</span>
         </div>
     </footer>
@@ -196,12 +187,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 
     <!-- Include the external JavaScript file -->
-    <script src="static/js/translations.js"></script>
+    <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
 </body>
 <script>
-
     function dismissFlashMessage() {
-
         var flashMessage = document.getElementById('flashMessage');
         flashMessage.style.display = 'none';
     }

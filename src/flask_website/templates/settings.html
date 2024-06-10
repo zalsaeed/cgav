@@ -4,45 +4,38 @@
 
 <div class="profile-container">
     <div class="sidebar">
-        <!-- Sidebar content -->
         <h2>{{ first_name }} {{ last_name }}</h2>
         {% if current_user.user_role == 1 %}
-        <div id="admin">Admin page</div>
+        <div id="admin" data-i18n="Settings">Admin page</div>
         {% endif %}
-        <div id="publicProfileTab">Public profile</div>
-        <div id="accountTab">Manage Event Types</div>
+        <div id="publicProfileTab" data-i18n="Public_profile">Public profile</div>
+        <div id="accountTab" data-i18n="Manage_Event_Types">Manage Event Types</div>
     </div>
     <div class="content">
         <div class="public-profile-container">
-
-
-            <h2>Public Profile</h2>
+            <h2 data-i18n="Public_profile">Public Profile</h2>
             <div class="profile-field">
-                <label for="displayName">Name:</label>
+                <label for="displayName" data-i18n="Name">Name:</label>
                 <span id="displayName">{{ first_name }} {{ last_name }}</span>
-                <!-- Button for changing the name -->
                 <a href="{{ url_for('change_name') }}"
-                    class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change
-                    Name</a>
+                    class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
+                    data-i18n="Change_Name">Change Name</a>
             </div>
             <div class="profile-field">
-                <label for="displayEmail">Email:</label>
+                <label for="displayEmail" data-i18n="Email">Email:</label>
                 <span id="displayEmail">{{ current_user.email }}</span>
-                <!-- Button for changing the email -->
                 <a href="{{ url_for('change_email') }}"
-                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Change
-                    Email</a>
+                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                    data-i18n="Change_Email">Change Email</a>
             </div>
-            <!-- Button for changing the password -->
             <div class="profile-field">
                 <a href="{{ url_for('change_password') }}"
-                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline">Change
-                    Password</a>
+                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                    data-i18n="Change_Password">Change Password</a>
             </div>
         </div>
     </div>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -71,24 +64,24 @@
                 // Assuming response is a JSON object containing user data
                 const profileContent = `
                 <div class="public-profile-container">
-                    
-                    <h2>Public Profile</h2>
+                    <h2 data-i18n="Public_profile">Public Profile</h2>
                     <div class="profile-field">
-                        <label>Name:</label>
+                        <label data-i18n="Name">Name:</label>
                         <span>${response.Fname} ${response.Lname}</span>
-                        <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Name</a>
+                        <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Name">Change Name</a>
                     </div>
                     <div class="profile-field">
-                        <label>Email:</label>
+                        <label data-i18n="Email">Email:</label>
                         <span>${response.email}</span>
-                        <a href="{{ url_for('change_email') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Email</a>
+                        <a href="{{ url_for('change_email') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Email">Change Email</a>
                     </div>
                     <div class="profile-field">
-                        <a href="{{ url_for('change_password') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm">Change Password</a>
+                        <a href="{{ url_for('change_password') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Password">Change Password</a>
                     </div>
                 </div>
             `;
                 $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
+                setLanguage(localStorage.getItem("lang") || "en"); // Ensure translations are applied
             },
             error: function (error) {
                 // Show user-friendly error message
@@ -104,8 +97,8 @@
 
         // Event handlers for navigation tabs
         $("#publicProfileTab").click(loadPublicProfile);
-        $("#admin").click(function () { $(".content").load("/admin"); });
-        $("#accountTab").click(function () { $(".content").load("/manage_event_types"); });
+        $("#admin").click(function () { $(".content").load("/admin", function () { setLanguage(localStorage.getItem("lang") || "en"); }); });
+        $("#accountTab").click(function () { $(".content").load("/manage_event_types", function () { setLanguage(localStorage.getItem("lang") || "en"); }); });
 
         // Event handlers for edit and save buttons
         $(document).on('click', '#editModeBtn', function () {
@@ -121,8 +114,5 @@
             });
         });
     });
-
 </script>
-
-
 {% endblock %}
