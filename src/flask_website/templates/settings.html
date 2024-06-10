@@ -8,12 +8,12 @@
         {% if current_user.user_role == 1 %}
         <div id="admin" data-i18n="Settings">Admin page</div>
         {% endif %}
-        <div id="publicProfileTab" data-i18n="Public_profile">Public profile</div>
+        <div id="publicProfileTab" data-i18n="Public_Profile">Public profile</div>
         <div id="accountTab" data-i18n="Manage_Event_Types">Manage Event Types</div>
     </div>
     <div class="content">
         <div class="public-profile-container">
-            <h2 data-i18n="Public_profile">Public Profile</h2>
+            <h2 data-i18n="Public_Profile">Public Profile</h2>
             <div class="profile-field">
                 <label for="displayName" data-i18n="Name">Name:</label>
                 <span id="displayName">{{ first_name }} {{ last_name }}</span>
@@ -64,7 +64,7 @@
                 // Assuming response is a JSON object containing user data
                 const profileContent = `
                 <div class="public-profile-container">
-                    <h2 data-i18n="Public_profile">Public Profile</h2>
+                    <h2 data-i18n="Public_Profile">Public Profile</h2>
                     <div class="profile-field">
                         <label data-i18n="Name">Name:</label>
                         <span>${response.Fname} ${response.Lname}</span>

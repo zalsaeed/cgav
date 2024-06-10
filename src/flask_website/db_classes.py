@@ -204,10 +204,13 @@ class CertificateForm(FlaskForm):
     female_recipient_title = StringField('Female Recipient Title', validators=[DataRequired()], render_kw={"placeholder": "Trainee:(Female)"})  
     signatory_name_1 = StringField('First Signatory Name', validators=[DataRequired()])
     signatory_position_1 = StringField('First Signatory Position', validators=[DataRequired()])
-    signature_image_1 = FileField('First Signature Image', validators=[
+    signature_image_1 = FileField(
+        'First Signature Image', 
+        validators=[
         FileRequired(message='First signature image is required.'),
-        FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')
-    ])
+        FileAllowed(['png', 'jpg', 'jpeg'], 'Only PNG and JPEG images are accepted.')],
+        render_kw={"data-i18n": "Signature_Image_1"}
+    )
     form_type = db.Column(db.String(255))
 
     # Fields for the second signatory

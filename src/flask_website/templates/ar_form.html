@@ -12,8 +12,8 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           {{ form.certificate_title.label(class="form-label block text-gray-700", **{'data-i18n': 'Event_Title'}) }}
-          {{ form.certificate_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter event title")
-          }}
+          {{ form.certificate_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter event title",
+          **{'data-i18n-placeholder': 'Enter_Event_Title'}) }}
           {% for error in form.certificate_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -21,7 +21,8 @@
 
         <div class="mb-4">
           {{ form.secret_phrase.label(class="form-label", **{'data-i18n': 'Secret_Phrase'}) }}
-          {{ form.secret_phrase(class="form-control w-full border p-2 rounded-lg", placeholder="Enter secret phrase") }}
+          {{ form.secret_phrase(class="form-control w-full border p-2 rounded-lg", placeholder="Enter secret phrase",
+          **{'data-i18n-placeholder': 'Enter_Secret_Phrase'}) }}
           {% for error in form.secret_phrase.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -29,8 +30,8 @@
 
         <div class="mb-4">
           {{ form.presenter_name.label(class="form-label block text-gray-700", **{'data-i18n': 'Presenter_Name'}) }}
-          {{ form.presenter_name(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name")
-          }}
+          {{ form.presenter_name(class="form-control w-full border p-2 rounded-lg", placeholder="Enter presenter name",
+          **{'data-i18n-placeholder': 'Enter_Presenter_Name'}) }}
           {% for error in form.presenter_name.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -70,7 +71,7 @@
         <div class="mb-4">
           {{ form.signatory_name_1.label(class="form-label block text-gray-700", **{'data-i18n': 'Signatory_Name_1'}) }}
           {{ form.signatory_name_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first signature
-          name") }}
+          name", **{'data-i18n-placeholder': 'Enter_First_Signatory_Name'}) }}
           {% for error in form.signatory_name_1.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -79,7 +80,7 @@
         <div class="mb-4">
           {{ form.signatory_position_1.label(class="form-label", **{'data-i18n': 'Signatory_Position_1'}) }}
           {{ form.signatory_position_1(class="form-control w-full border p-2 rounded-lg", placeholder="Enter first
-          signatory position") }}
+          signatory position", **{'data-i18n-placeholder': 'Enter_First_Signatory_Position'}) }}
           {% for error in form.signatory_position_1.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -87,7 +88,8 @@
 
         <div class="mb-4">
           {{ form.signature_image_1.label(class="form-label", **{'data-i18n': 'Signature_Image_1'}) }}
-          {{ form.signature_image_1(class="form-control w-full border p-2 rounded-lg") }}
+          {{ form.signature_image_1(class="form-control w-full border p-2 rounded-lg", **{'data-i18n-placeholder':
+          'Choose file'}) }}
           {% for error in form.signature_image_1.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -102,7 +104,7 @@
             {{ form.signatory_name_2.label(class="form-label block text-gray-700", **{'data-i18n': 'Signatory_Name_2'})
             }}
             {{ form.signatory_name_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second
-            signature name") }}
+            signature name", **{'data-i18n-placeholder': 'Enter_Second_Signatory_Name'}) }}
             {% for error in form.signatory_name_2.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
@@ -111,7 +113,7 @@
           <div class="mb-4">
             {{ form.signatory_position_2.label(class="form-label", **{'data-i18n': 'Signatory_Position_2'}) }}
             {{ form.signatory_position_2(class="form-control w-full border p-2 rounded-lg", placeholder="Enter second
-            signatory position") }}
+            signatory position", **{'data-i18n-placeholder': 'Enter_Second_Signatory_Position'}) }}
             {% for error in form.signatory_position_2.errors %}
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
@@ -160,7 +162,8 @@
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           {{ form.intro.label(class="form-label", **{'data-i18n': 'Introduction'}) }}
-          {{ form.intro(class="form-control") }}
+          {{ form.intro(class="form-control", placeholder="Enter Introduction", **{'data-i18n-placeholder':
+          'Enter_Intro'})}}
           {% for error in form.intro.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -170,7 +173,7 @@
           {{ form.female_recipient_title.label(class="form-label block text-gray-700", **{'data-i18n':
           'Female_Recipient_Title'}) }}
           {{ form.female_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter female
-          recipient title") }}
+          recipient title", **{'data-i18n-placeholder': 'Enter_Female_Recipient_Title'}) }}
           {% for error in form.female_recipient_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -180,7 +183,7 @@
           {{ form.male_recipient_title.label(class="form-label block text-gray-700", **{'data-i18n':
           'Male_Recipient_Title'}) }}
           {{ form.male_recipient_title(class="form-control w-full border p-2 rounded-lg", placeholder="Enter male
-          recipient title") }}
+          recipient title", **{'data-i18n-placeholder': 'Enter_Male_Recipient_Title'}) }}
           {% for error in form.male_recipient_title.errors %}
           <span style="color: red;">{{ error }}</span>
           {% endfor %}
@@ -191,7 +194,8 @@
         <div class="mb-4">
           <label for="greetingMale" data-i18n="Greeting_Male">Greeting for Males</label>
           <input type="text" id="greetingMale" name="greeting_male" class="form-control w-full border p-2 rounded-lg"
-            placeholder="Best wishes for his success and prosperity" />
+            placeholder="Best wishes for his success and prosperity"
+            data-i18n-placeholder="Greeting_Male_Placeholder" />
         </div>
 
         <div class="mb-4 col-span-2">
@@ -208,8 +212,8 @@
         <div class="mb-4">
           <label for="greetingFemale" data-i18n="Greeting_Female">Greeting for Females</label>
           <input type="text" id="greetingFemale" name="greeting_female"
-            class="form-control w-full border p-2 rounded-lg"
-            placeholder="Best wishes for her success and prosperity" />
+            class="form-control w-full border p-2 rounded-lg" placeholder="Best wishes for her success and prosperity"
+            data-i18n-placeholder="Greeting_Female_Placeholder" />
         </div>
 
         <div class="mb-4 col-span-2">
