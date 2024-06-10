@@ -34,7 +34,7 @@
   </div>
 
   <div class="text-center mt-3">
-    <button id="load-more-certificates" class="m-2 custom-button" data-i18n="Load_More">Load More</button>
+    <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
     <a href="/add_certificate"><button class="m-2 custom-button" data-i18n="Add_Events">Add Events</button></a>
   </div>
 </div>
@@ -93,6 +93,7 @@
             });
 
             // If no more certificates to load, update the button and notify the user
+            console.log("Number of certificates:", certificates.length);
             if (certificates.length === 0) {
               certificatesHeader.textContent = translations[language]['All_Events'];
               loadMoreCertificatesBtn.textContent = translations[language]['No_More_Events'];

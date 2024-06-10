@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}CGAV-Templates{% endblock %}
+{% block body %}
+<style>
+    @media (min-width: 768px) {
+        .md\:w-48 {
+            width: auto;
+        }
+
+        .md\:max-w-xl {
+            max-width: fit-content;
+        }
+
+        .md\:h-auto {
+            height: 220px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .md\:w-48 {
+            width: auto;
+        }
+
+        .md\:max-w-xl {
+            max-width: fit-content;
+        }
+
+        .md\:h-auto {
+            height: 400px;
+        }
+    }
+</style>
+
+<body>
+
+    <div style="display: none;" class="flash-message" id="flashMessage">
+        <p id="fMessage" data-i18n="Dismiss_Message"></p>
+        <button onclick="dismissFlashMessage()" data-i18n="Dismiss">Dismiss</button>
+    </div>
+
+    <div class="text-center p-5">
+        <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;" data-i18n="Certificate_Appearance">Certificate
+            Appearance</h1>
+    </div>
+    <div style="background-color:transparent;"
+        class="flex m-2 flex-col bg-white rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+        id="contain">
+        <div class="Image-container">
+            <!-- Image -->
+            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                id="preview-image" src="{{ url_for('uploaded_file', filename=temp.template_image.split('/')[-1]) }}"
+                alt="Template" data-i18n="Template_Image">
+            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+                id="generated-image" style="display:none;" alt="Generated Image" data-i18n="Generated_Image">
+        </div>
+
+        <div class="flex flex-col items-center p-4 leading-normal">
+            <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;"
+                data-i18n="Template_Name">
+                {{temp.template_name}}</h5>
+            <!-- Explanation message -->
+            <p class="text-center text-gray-600 mt-4" data-i18n="Explanation_Message">Please select the language for the
+                certificate template:</p>
+
+            <!-- Language selection buttons -->
+            <div class="text-center mt-6">
+                <form action="{{ url_for('template', temp_id=temp.template_id) }}" method="POST">
+                    <button type="submit" name="language" value="arabic"
+                        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                        data-i18n="arabic">Arabic</button>
+                    <button type="submit" name="language" value="english"
+                        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                        data-i18n="english">English</button>
+                    <button type="submit" name="language" value="arabic_english"
+                        class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                        data-i18n="arabic_english">Arabic & English</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

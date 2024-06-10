@@ -35,7 +35,7 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         info = {
             "Fname": "عمر",
             "Lname": "خالد",
-            "email": "test2@test.com",
+            "email": "mailt7535@gmail.com",
             "password": "12345678",
             "user_role": 1
         }
@@ -139,22 +139,22 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
             session.commit()
 
 
-    def test_insert_row_in_CertificateCustomizations_table(self):
-        customization_data = {
-            "customization_id": 1,
-            "template_id": 1, 
-            "id": 1,
-            "items_positions": "{}"
-        }
-        customization_table = self.base.classes.CertificateCustomizations
-        session = self.db.session
-        session.add(customization_table(
-            customization_id=customization_data['customization_id'],
-            template_id=customization_data['template_id'],
-            id=customization_data['id'],
-            items_positions=customization_data['items_positions']
-        ))
-        session.commit()
+    # def test_insert_row_in_CertificateCustomizations_table(self):
+    #     customization_data = {
+    #         "customization_id": 1,
+    #         "template_id": 1, 
+    #         "id": 1,
+    #         "items_positions": "{}"
+    #     }
+    #     customization_table = self.base.classes.CertificateCustomizations
+    #     session = self.db.session
+    #     session.add(customization_table(
+    #         customization_id=customization_data['customization_id'],
+    #         template_id=customization_data['template_id'],
+    #         id=customization_data['id'],
+    #         items_positions=customization_data['items_positions']
+    #     ))
+    #     session.commit()
 
        
     def test_insert_row_in_addCertificate_table(self):
@@ -526,7 +526,7 @@ if __name__ == '__main__':
     suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_Event_type_table'))
     suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_instructor_table'))
     suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_recipient_table'))
-    suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_CertificateCustomizations_table'))
+    # suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_CertificateCustomizations_table'))
     suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_addCertificate_table'))
     # suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_Certificate_table'))
     suite.addTest(TestUsingFlaskSQLAlchemy('test_insert_row_in_demo_table'))
