@@ -559,7 +559,7 @@ class BilingualCertificate:
         # Draw the line
         self.ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=self.ax.transAxes)
         self.ax.text(x,  y-0.04,get_display(reshape(name)), fontsize=FONTB[1], color=color, ha='center', va='center', transform=self.ax.transAxes,fontproperties=FontProperties(fname=FONTB[0]))
-        self.ax.text(x,  y,get_display(reshape(position)) , fontsize=FONTB[1], color=color, ha='center', va='center', transform=self.ax.transAxes,fontproperties=FontProperties(fname=FONTB[0]))
+        self.ax.text(x,  y,get_display(reshape(position)) , fontsize=FONTB[1], color="black", ha='center', va='center', transform=self.ax.transAxes,fontproperties=FontProperties(fname=FONTB[0]))
         # the dean signature line
         # self.pdf.set_font("Amiri", size=10)
         # self.pdf.set_xy(x, y)
