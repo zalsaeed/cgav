@@ -98,7 +98,7 @@
                     in numbers between 0.00 to 1.00.</p>
 
                 <p id="signature" style="color: red;margin-bottom: 5px;font-style:oblique;font-size: small;">Note: if
-                    you want to hide the signature set all values to 'Zero'</p>
+                    you want to hide the signature set all values to '0.01'</p>
                 <!-- <p id="signaturexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
                 <p id="contactexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
                 <p id="finalxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (40, 122) to (230, 165) in x and y coordinates.</p>
@@ -185,9 +185,7 @@
                     </div>
                     <div id="websitfield2" style="display: none;">
                         {{ form.websitlinke.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.websitlinke(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg
-                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white
-                        ",type="text",id="websitlinke")}}
+                        {{ form.websitlinke(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lgbg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",type="text",id="websitlinke")}}
                         {% for error in form.color.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -195,8 +193,7 @@
 
                     <div id="xfield" style="display: none;">
                         {{ form.X.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.X(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg
-                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="X")}}
+                        {{ form.X(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="X")}}
                         {% for error in form.text.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -251,7 +248,7 @@
         if (isChecked) {
             customItem.style.display = "block";
             keyitem.value = value;
-            if (keyitem.value == "signature_1" || keyitem.value == "signature_2") {
+            if ( keyitem.value == "signature_2") {
                 signature.style.display = "block";
 
             } else {

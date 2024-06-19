@@ -99,8 +99,7 @@
                     1.00.</p>
 
                 <p id="signature" style="color: red;margin-bottom: 5px;font-style:oblique;font-size: small;"
-                    data-i18n="Hide_signature_note">Note: if you want to hide the signature set
-                    all values to 'Zero'</p>
+                    data-i18n="Hide_signature_note">Note: if you want to hide the signature set all values to '0.01'</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
                         {{ form.x.label(class='block mb-2 text-sm font-medium text-gray-900
@@ -273,7 +272,7 @@
         if (isChecked) {
             customItem.style.display = "block";
             keyitem.value = value;
-            if (keyitem.value == "signature_1" || keyitem.value == "signature_2") {
+            if (keyitem.value == "signature_2") {
                 signature.style.display = "block";
             } else {
                 signature.style.display = "none";

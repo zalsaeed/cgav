@@ -210,13 +210,14 @@ def generate_certificate(event_data, output_dir, item_positions):
             last_name = recipient_data['last_name']
 
         if event_data['form_type'] == 'Arabic_English':
-            first_name_en = recipient_data['arfirst_name']
-            middle_name_en = recipient_data['armiddle_name']
-            last_name_en = recipient_data['arlast_name']
+            first_name_ar = recipient_data['first_name']
+            middle_name_ar = recipient_data['middle_name']
+            last_name_ar = recipient_data['last_name']
 
-            first_name_ar = recipient_data['first_name'] if 'first_name' in recipient_data else recipient_data['arfirst_name']
-            middle_name_ar = recipient_data['middle_name'] if 'middle_name' in recipient_data else recipient_data['armiddle_name']
-            last_name_ar = recipient_data['last_name'] if 'last_name' in recipient_data else recipient_data['arlast_name']
+            # bug:here ar print english names 
+            first_name_en = recipient_data['arfirst_name'] if 'first_name' in recipient_data else recipient_data['arfirst_name'] 
+            middle_name_en = recipient_data['armiddle_name'] if 'middle_name' in recipient_data else recipient_data['armiddle_name']
+            last_name_en = recipient_data['arlast_name'] if 'last_name' in recipient_data else recipient_data['arlast_name']
         
         if (event_data['form_type'] == 'Arabic' or event_data['form_type'] == 'English'):
             
@@ -244,8 +245,8 @@ def generate_certificate(event_data, output_dir, item_positions):
             
         elif event_data['form_type'] == 'Arabic_English':
                 
-            full_name_ar = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
-            full_name_en = f"{first_name_en} {middle_name_en} {last_name_en}"
+            full_name_en = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
+            full_name_ar = f"{first_name_en} {middle_name_en} {last_name_en}"
             
             # Store recipient info and get recipient ID
             recipient_id = store_recipient_info(recipient_data,first_name_ar,middle_name_ar,last_name_ar)
