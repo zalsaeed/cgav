@@ -59,7 +59,7 @@ class CertificateEvent(db.Model):
     __tablename__ = 'addCertificate'
     certificate_event_id = db.Column(db.Integer, primary_key=True)
     created_by = db.Column(db.Integer)
-    customization_id = db.Column(db.String(255))
+    customization_id = db.Column(db.Integer)
     certificate_title = db.Column(db.String(255))
     event_type_id = db.Column(db.Integer, db.ForeignKey('Event_type.event_type_id'))  # Foreign key relationship
     template_path = db.Column(db.String(255))
@@ -109,7 +109,7 @@ class Template(db.Model):
 
 class CertificateCustomizations(db.Model):
     __tablename__ = 'CertificateCustomizations'
-    customization_id = db.Column(db.String(255), primary_key=True)
+    customization_id = db.Column(db.Integer, primary_key=True, unique=True)
     template_id = db.Column(db.String(255))
     id = db.Column(db.Integer)
     items_positions = db.Column(db.JSON)
