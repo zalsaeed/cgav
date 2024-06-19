@@ -5,234 +5,6 @@
 {% block title %}Event Details{% endblock %}
 
 {% block body %}
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<div class="container mt-5">
-  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;" data-i18n="Event_Details">Event Details</h1>
-  <div class="card detail-card mx-auto col-12 col-md-10 col-lg-12">
-    <div class="card-body">
-      <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}
-      </h5>
-      <p class="card-subtitle" data-i18n="Event_Information">Event Information</p>
-      <div class="row">
-        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Type">Event Type:</strong> {{
-          certificate.event_type.event_type_name }}</div>
-        <div class="col-md-4 card-text"><br><strong data-i18n="Presenter_Name">Presenter Name:</strong> {{
-          certificate.presenter_name }}</div>
-        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Date">Event Date:</strong> {{
-          certificate.event_date.strftime('%Y-%m-%d') }}</div>
-        <div class="col-md-4 card-text"><br><strong data-i18n="Form_Type">Form type:</strong> {{ certificate.form_type
-          }}</div>
-      </div>
-
-      <!-- Details Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('details-section')" data-i18n="Details">Details</p>
-      <div id="details-section" style="display:none;">
-        <div class="row">
-          <div class="col-md-4 card-text"><br><strong data-i18n="Secret_Phrase">Secret Phrase:</strong> {{
-            certificate.secret_phrase }}</div>
-          <div class="col-md-4 card-text"><br><strong data-i18n="File_Path">File Path:</strong> {{ certificate.file_path
-            }}</div>
-        </div>
-      </div>
-
-      <!-- Recipient Titles Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('recipient-titles-section')" data-i18n="Recipient_Titles">
-        Recipient Titles</p>
-      <div id="recipient-titles-section" style="display:none;">
-        <div class="row">
-          <div class="col-md-6 text-right">
-            <br>
-            {% if certificate.male_recipient_title %}
-            <strong data-i18n="Male">ذكر:</strong> {{ certificate.male_recipient_title }}<br><br>
-            {% endif %}
-            {% if certificate.female_recipient_title %}
-            <strong data-i18n="Female">أنثى:</strong> {{ certificate.female_recipient_title }}
-            {% endif %}
-          </div>
-          <div class="col-md-6 text-left">
-            <br>
-            {% if certificate.male_recipient_title_en %}
-            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.male_recipient_title_en }}<br><br>
-            {% endif %}
-            {% if certificate.female_recipient_title_en %}
-            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.female_recipient_title_en }}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Description Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('description-section')" data-i18n="Description">Description</p>
-      <div id="description-section" style="display:none;">
-        <div class="row">
-          <div class="col-md-6 text-right">
-            <br>
-            {% if certificate.certificate_description_male %}
-            <strong data-i18n="Male">ذكر:</strong> {{ certificate.certificate_description_male }}<br><br>
-            {% endif %}
-            {% if certificate.certificate_description_female %}
-            <strong data-i18n="Female">أنثى:</strong> {{ certificate.certificate_description_female }}
-            {% endif %}
-          </div>
-          <div class="col-md-6 text-left">
-            <br>
-            {% if certificate.certificate_description_male_en %}
-            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.certificate_description_male_en }}<br><br>
-            {% endif %}
-            {% if certificate.certificate_description_female_en %}
-            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.certificate_description_female_en }}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Greeting Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('greetings-section')" data-i18n="Greetings">Greetings</p>
-      <div id="greetings-section" style="display:none;">
-        <div class="row">
-          <div class="col-md-6 text-right">
-            <br>
-            {% if certificate.greeting_male %}
-            <strong data-i18n="Male">ذكر:</strong> {{ certificate.greeting_male }}<br><br>
-            {% endif %}
-            {% if certificate.greeting_female %}
-            <strong data-i18n="Female">أنثى:</strong> {{ certificate.greeting_female }}
-            {% endif %}
-          </div>
-          <div class="col-md-6 text-left">
-            <br>
-            {% if certificate.greeting_male_en %}
-            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.greeting_male_en }}<br><br>
-            {% endif %}
-            {% if certificate.greeting_female_en %}
-            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.greeting_female_en }}
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Signatories Section -->
-      <p class="card-subtitle" onclick="toggleVisibility('signatories-section')" data-i18n="Signatories">Signatories</p>
-      <div id="signatories-section" style="display:none;">
-        <div class="row">
-          <div class="col-md-4 card-text"><br><strong data-i18n="First_Signatory_Name">First Signatory Name:</strong> {{
-            certificate.First_Signatory_Name }}</div>
-          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
-            certificate.First_Signatory_Position }}</div>
-          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
-            certificate.First_Signatory_Path }}</div>
-          {% if certificate.Second_Signatory_Name %}
-          <div class="col-md-4 card-text"><br><strong data-i18n="Second_Signatory_Name">Second Signatory Name:</strong>
-            {{ certificate.Second_Signatory_Name }}</div>
-          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
-            certificate.Second_Signatory_Position }}</div>
-          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
-            certificate.Second_Signatory_Path }}</div>
-          {% endif %}
-        </div>
-      </div>
-      <br>
-
-      <!-- Buttons -->
-      <button id="delete-btn" class="custom-button" onclick="handleDelete()" data-i18n="Delete">Delete</button>
-      <button id="generate-btn" class="custom-button" onclick="handleGenerate('{{ certificate.certificate_event_id }}')"
-        data-i18n="Generate">Generate</button>
-      <button id="download-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
-        certificate.generated_ %}title="Generate event certificates first" {% endif %}
-        onclick="handleDownload('{{ certificate.certificate_event_id }}')" data-i18n="Download">Download</button>
-      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
-        certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()"
-        data-i18n="Send">Send</button>
-      <button class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
-        certificate.generated_ %}title="Generate event certificates first" {% endif %}
-        onclick="showPreviewModal('{{ certificate.certificate_event_id }}')" data-i18n="Preview_Certificate">Preview
-        Certificate</button>
-
-      <!-- Notification Text -->
-      <p class="info-text" data-i18n="Notification_Text">
-        Sending or downloading certificates triggers an email notification to recipients upon event deletion.
-      </p>
-
-    </div>
-  </div>
-</div>
-
-<!-- Preview Modal -->
-<div id="preview-modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <iframe id="preview-frame" style="width:100%; height:500px;" frameborder="0"></iframe>
-    <button class="custom-button" onclick="changeCertificate(-1)" data-i18n="Previous">Previous</button>
-    <button class="custom-button" onclick="changeCertificate(1)" data-i18n="Next">Next</button>
-    <button id="preview-modal-close" class="custom-button cancel-button" data-i18n="Cancel">Cancel</button>
-  </div>
-</div>
-
-<!-- Certificate List Modal -->
-<div id="certificate-list-modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h1 data-i18n="Select_Certificates">Select Certificates to Download</h1>
-
-    <!-- 'Select All' checkbox -->
-    <div class="select-all-container">
-      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)" data-i18n="Select_All">
-      <label for="select-all-checkbox" data-i18n="Select_All">Select All</label>
-    </div>
-
-    <div id="certificate-list"></div>
-    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')"
-      data-i18n="Download">Download</button>
-    <button class="custom-button cancel-button" onclick="closeModal()" data-i18n="Cancel">Cancel</button>
-  </div>
-</div>
-
-<!-- Delete Confirmation Popup -->
-<div id="delete-confirmation-popup" class="popup">
-  <div class="popup-content">
-    <p data-i18n="Delete_Confirmation_Text">Are you sure you want to delete the event titled "{{
-      certificate.certificate_title }}"?</p>
-    <p style="color: #ff0000; font-weight: bold;" data-i18n="Delete_Confirmation_Warning">Deleting this event will
-      permanently remove it from the system.</p>
-    <p data-i18n="Delete_Confirmation_Detail">This action will prevent certificate verification through the API. If
-      already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
-    <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
-      <label for="event_name" data-i18n="Confirm_Event_Name">To confirm, please enter the exact name of the
-        event:</label>
-      <input type="text" id="event_name" name="event_name" required>
-      <div class="button-container">
-        <button type="submit" class="custom-button" data-i18n="Confirm">Confirm</button>
-        <button type="button" onclick="closePopup()" class="custom-button cancel-button"
-          data-i18n="Cancel">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Loading Popup -->
-<div id="loading-popup" class="popup">
-  <div class="popup-content">
-    <p data-i18n="Loading">Loading...</p>
-  </div>
-</div>
-
-<!-- Success Popup -->
-<div id="success-popup" class="popup">
-  <div class="popup-content">
-    <p data-i18n="Certificate_Deleted_Success">Certificate deleted successfully</p>
-    <button onclick="redirectToCertificates()" class="custom-button" data-i18n="OK">OK</button>
-  </div>
-</div>
-
-<!-- Error Popup -->
-<div id="error-popup" class="popup">
-  <div class="popup-content">
-    <p data-i18n="Error">Error: Please try again later</p>
-    <button onclick="closePopup()" class="custom-button" data-i18n="OK">OK</button>
-  </div>
-</div>
-
 
 <style>
   /* Button Style */
@@ -597,6 +369,240 @@
   }
 </style>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container mt-5">
+  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;" data-i18n="Event_Details">Event Details</h1>
+  <div class="card detail-card mx-auto col-12 col-md-10 col-lg-12">
+    <div class="card-body">
+      <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}
+      </h5>
+      <p class="card-subtitle" data-i18n="Event_Information">Event Information</p>
+      <div class="row">
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Type">Event Type:</strong> {{
+          certificate.event_type.event_type_name }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Presenter_Name">Presenter Name:</strong> {{
+          certificate.presenter_name }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Date">Event Date:</strong> {{
+          certificate.event_date.strftime('%Y-%m-%d') }}</div>
+        <div class="col-md-4 card-text"><br><strong data-i18n="Form_Type">Form type:</strong> {{ certificate.form_type
+          }}</div>
+      </div>
+
+      <!-- Details Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('details-section')" data-i18n="Details">Details</p>
+      <div id="details-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-4 card-text"><br><strong data-i18n="Secret_Phrase">Secret Phrase:</strong> {{
+            certificate.secret_phrase }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="File_Path">File Path:</strong> {{ certificate.file_path
+            }}</div>
+        </div>
+      </div>
+
+      <!-- Recipient Titles Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('recipient-titles-section')" data-i18n="Recipient_Titles">
+        Recipient Titles</p>
+      <div id="recipient-titles-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <br>
+            {% if certificate.male_recipient_title %}
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.male_recipient_title }}<br><br>
+            {% endif %}
+            {% if certificate.female_recipient_title %}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.female_recipient_title }}
+            {% endif %}
+          </div>
+          <div class="col-md-6 text-left">
+            <br>
+            {% if certificate.male_recipient_title_en %}
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.male_recipient_title_en }}<br><br>
+            {% endif %}
+            {% if certificate.female_recipient_title_en %}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.female_recipient_title_en }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('description-section')" data-i18n="Description">Description</p>
+      <div id="description-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <br>
+            {% if certificate.certificate_description_male %}
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.certificate_description_male }}<br><br>
+            {% endif %}
+            {% if certificate.certificate_description_female %}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.certificate_description_female }}
+            {% endif %}
+          </div>
+          <div class="col-md-6 text-left">
+            <br>
+            {% if certificate.certificate_description_male_en %}
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.certificate_description_male_en }}<br><br>
+            {% endif %}
+            {% if certificate.certificate_description_female_en %}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.certificate_description_female_en }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Greeting Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('greetings-section')" data-i18n="Greetings">Greetings</p>
+      <div id="greetings-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <br>
+            {% if certificate.greeting_male %}
+            <strong data-i18n="Male">ذكر:</strong> {{ certificate.greeting_male }}<br><br>
+            {% endif %}
+            {% if certificate.greeting_female %}
+            <strong data-i18n="Female">أنثى:</strong> {{ certificate.greeting_female }}
+            {% endif %}
+          </div>
+          <div class="col-md-6 text-left">
+            <br>
+            {% if certificate.greeting_male_en %}
+            <strong data-i18n="Male_EN">Male:</strong> {{ certificate.greeting_male_en }}<br><br>
+            {% endif %}
+            {% if certificate.greeting_female_en %}
+            <strong data-i18n="Female_EN">Female:</strong> {{ certificate.greeting_female_en }}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Signatories Section -->
+      <p class="card-subtitle" onclick="toggleVisibility('signatories-section')" data-i18n="Signatories">Signatories</p>
+      <div id="signatories-section" style="display:none;">
+        <div class="row">
+          <div class="col-md-4 card-text"><br><strong data-i18n="First_Signatory_Name">First Signatory Name:</strong> {{
+            certificate.First_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
+            certificate.First_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
+            certificate.First_Signatory_Path }}</div>
+          {% if certificate.Second_Signatory_Name %}
+          <div class="col-md-4 card-text"><br><strong data-i18n="Second_Signatory_Name">Second Signatory Name:</strong>
+            {{ certificate.Second_Signatory_Name }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Position">Position:</strong> {{
+            certificate.Second_Signatory_Position }}</div>
+          <div class="col-md-4 card-text"><br><strong data-i18n="Path">Path:</strong> {{
+            certificate.Second_Signatory_Path }}</div>
+          {% endif %}
+        </div>
+      </div>
+      <br>
+      <!-- Loading Spinner -->
+      <div id="loading-spinner" style="display: none;">
+        <p style="color:#8f3131">Generating certificates, please wait...</p>
+        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="100"
+          height="100">
+        <!-- Add a spinner.gif image to your static folder -->
+      </div>
+      <!-- Buttons -->
+      <button id="delete-btn" class="custom-button" onclick="handleDelete()" data-i18n="Delete">Delete</button>
+      <button id="generate-btn" class="custom-button" onclick="handleGenerate('{{ certificate.certificate_event_id }}')"
+        data-i18n="Generate">Generate</button>
+      <button id="download-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %}
+        onclick="handleDownload('{{ certificate.certificate_event_id }}')" data-i18n="Download">Download</button>
+      <button id="send-btn" class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %} onclick="handleSend()"
+        data-i18n="Send">Send</button>
+      <button class="custom-button {% if not certificate.generated_ %}disabled {% endif %}" {% if not
+        certificate.generated_ %}title="Generate event certificates first" {% endif %}
+        onclick="showPreviewModal('{{ certificate.certificate_event_id }}')" data-i18n="Preview_Certificate">Preview
+        Certificate</button>
+
+      <!-- Notification Text -->
+      <p class="info-text" data-i18n="Notification_Text">
+        Sending or downloading certificates triggers an email notification to recipients upon event deletion.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <iframe id="preview-frame" style="width:100%; height:500px;" frameborder="0"></iframe>
+    <button class="custom-button" onclick="changeCertificate(-1)" data-i18n="Previous">Previous</button>
+    <button class="custom-button" onclick="changeCertificate(1)" data-i18n="Next">Next</button>
+    <button id="preview-modal-close" class="custom-button cancel-button" data-i18n="Cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Certificate List Modal -->
+<div id="certificate-list-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h1 data-i18n="Select_Certificates">Select Certificates to Download</h1>
+
+    <!-- 'Select All' checkbox -->
+    <div class="select-all-container">
+      <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAll(this)" data-i18n="Select_All">
+      <label for="select-all-checkbox" data-i18n="Select_All">Select All</label>
+    </div>
+
+    <div id="certificate-list"></div>
+    <button class="custom-button" onclick="downloadSelectedCertificates('{{ certificate.certificate_event_id }}')"
+      data-i18n="Download">Download</button>
+    <button class="custom-button cancel-button" onclick="closeModal()" data-i18n="Cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Delete Confirmation Popup -->
+<div id="delete-confirmation-popup" class="popup">
+  <div class="popup-content">
+    <p data-i18n="Delete_Confirmation_Text">Are you sure you want to delete the event titled "{{
+      certificate.certificate_title }}"?</p>
+    <p style="color: #ff0000; font-weight: bold;" data-i18n="Delete_Confirmation_Warning">Deleting this event will
+      permanently remove it from the system.</p>
+    <p data-i18n="Delete_Confirmation_Detail">This action will prevent certificate verification through the API. If
+      already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
+    <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
+      <label for="event_name" data-i18n="Confirm_Event_Name">To confirm, please enter the exact name of the
+        event:</label>
+      <input type="text" id="event_name" name="event_name" required>
+      <div class="button-container">
+        <button type="submit" class="custom-button" data-i18n="Confirm">Confirm</button>
+        <button type="button" onclick="closePopup()" class="custom-button cancel-button"
+          data-i18n="Cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Loading Popup -->
+<div id="loading-popup" class="popup">
+  <div class="popup-content">
+    <p data-i18n="Loading">Loading...</p>
+  </div>
+</div>
+
+<!-- Success Popup -->
+<div id="success-popup" class="popup">
+  <div class="popup-content">
+    <p data-i18n="Certificate_Deleted_Success">Certificate deleted successfully</p>
+    <button onclick="redirectToCertificates()" class="custom-button" data-i18n="OK">OK</button>
+  </div>
+</div>
+
+<!-- Error Popup -->
+<div id="error-popup" class="popup">
+  <div class="popup-content">
+    <p data-i18n="Error">Error: Please try again later</p>
+    <button onclick="closePopup()" class="custom-button" data-i18n="OK">OK</button>
+  </div>
+</div>
+
 <script>
   // Delete section
   function handleDelete() {
@@ -680,45 +686,6 @@
 
 
   ///////////////////
-  function handleGenerate(certificateEventId) {
-    fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Certificate generated successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            // Reload the page to reflect changes
-            location.reload();
-          });
-        } else {
-          Swal.fire({
-            title: 'Error!',
-            text: `Error generating certificate: ${data.error}`,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: `${error}`,
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      });
-  }
-
 
   // Download section 
   // Function to fetch and display available certificates
@@ -898,7 +865,45 @@
   ////////////////
   // Other buttons (Generate, downloud, send)
 </script>
+<script>
+  function showLoadingPopup() {
+    Swal.fire({
+      html: `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <strong> <p style="color:#427AA1; margin-bottom: 20px;">Generating certificates, please wait...</p> </strong>
+        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="200" height="200">
+      </div>
+    `,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      backdrop: true
+    });
+  }
 
+  function handleGenerate(certificateEventId) {
+    showLoadingPopup();
+
+    // Simulate a network request
+    setTimeout(() => {
+      Swal.close();
+      Swal.fire({
+        title: 'Success!',
+        text: 'Certificates generated successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }, 3000); // Simulate a 3-second delay
+  }
+
+  function toggleVisibility(sectionId) {
+    var x = document.getElementById(sectionId);
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+</script>
 <!-- Transulation -->
 <script>
   const translations = {
