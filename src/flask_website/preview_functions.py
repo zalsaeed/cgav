@@ -78,7 +78,7 @@ def img(temp_id, lang):
             intro_w=certificate_intro_values.get("w",0)
             intro_h=certificate_intro_values.get("h",0)
             intro_alt=certificate_intro_values.get("AltText")
-            intro_color=certificate_intro_values.get("color",0)
+            intro_color=certificate_intro_values.get("color","black")
 
             recipient_title_values = customization.get("recipient_title", {})
             title_x=recipient_title_values.get("x",0)
@@ -225,27 +225,29 @@ def img(temp_id, lang):
     else:
         ax.text(name_x, name_y,get_display(reshape(" راكان عبدالصمد العبدالله")) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
     # ax.text((145, y_position),male_certificate_body_to_draw, fill='black', font=font)
-    if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
-        img = plt.imread(path_to_dean_signature)
+    # if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
+    img = plt.imread(path_to_dean_signature)
             # Calculate the scaling factor
-        zoom = 35 / max(img.shape[:2])
-        imagebox = OffsetImage(img, zoom=zoom)
-        ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
-        ax.add_artist(ab_image)
+    zoom = 35 / max(img.shape[:2])
+    imagebox = OffsetImage(img, zoom=zoom)
+    ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
+    ax.add_artist(ab_image)
         # Define the coordinates for the line as axes fraction
-        x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
-        x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
+    x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
+    x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
 
         # Draw the line
-        ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
-        if (signature_1_alt):
-            ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_alt)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        else:
-            ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+    ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
+    if (signature_1_alt):
+        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_alt)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+    else:
+        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
         
-    if (signature_2_x != 0.0 and signature_2_y != 0.0) and (signature_2_w != 0.0 and signature_2_h != 0.0):
+    if (signature_2_x == 0.01 and signature_2_y == 0.01) and (signature_2_w == 0.01 and signature_2_h == 0.01):
+      print("signature 2 hidden")
+    else:
         img = plt.imread(path_to_csu_head_signature)
                 # Calculate the scaling factor
         zoom = 35 / max(img.shape[:2])
@@ -259,10 +261,10 @@ def img(temp_id, lang):
         # Draw the line
         ax.plot([x11, x22], [y11, y22], color='black', linewidth=0.3, transform=ax.transAxes)
         if (signature_2_alt):
-            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(signature_2_alt)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(signature_2_alt)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
             ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
         else:
-            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(csu_director_name)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(csu_director_name)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
             ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
         
     
@@ -320,13 +322,13 @@ def arimg(temp_id):
             intro_y=certificate_intro_values.get("y",0)
             intro_w=certificate_intro_values.get("w",0)
             intro_h=certificate_intro_values.get("h",0)
-            intro_color=certificate_intro_values.get("color",0)
+            intro_color=certificate_intro_values.get("color","black")
 
             certificate_intro_en_values = customization.get("Intro_en", {})
             intro_x_en=certificate_intro_en_values.get("x",0)
             intro_y_en=certificate_intro_en_values.get("y",0)
             intro_w_en=certificate_intro_en_values.get("w",0)
-            intro_color_en=certificate_intro_en_values.get("color",0)
+            intro_color_en=certificate_intro_en_values.get("color","black")
 
             recipient_title_values = customization.get("recipient_title", {})
             title_x=recipient_title_values.get("x",0)
@@ -339,7 +341,7 @@ def arimg(temp_id):
             title_x_en=recipient_title_values_en.get("x",0)
             title_y_en=recipient_title_values_en.get("y",0)
             title_w_en=recipient_title_values_en.get("w",0)
-            title_color_en=recipient_title_values_en.get("color",0)
+            title_color_en=recipient_title_values_en.get("color","black")
 
             recipient_name_values = customization.get("recipient_name", {})
             name_x=recipient_name_values.get("x",0)
@@ -353,7 +355,7 @@ def arimg(temp_id):
             name_x_en=recipient_name_values_en.get("x",0)
             name_y_en=recipient_name_values_en.get("y",0) 
             name_w_en=recipient_name_values_en.get("w",0)
-            name_color_en=recipient_name_values_en.get("color",0)
+            name_color_en=recipient_name_values_en.get("color","black")
 
             body_values = customization.get("body", {})
             body_x=body_values.get("x",0)
@@ -367,7 +369,7 @@ def arimg(temp_id):
             body_x_en=body_values_en.get("x",0)
             body_y_en=body_values_en.get("y",0)
             body_w_en=body_values_en.get("w",0)
-            body_color_en=body_values_en.get("color",0)
+            body_color_en=body_values_en.get("color","black")
 
 
             final_greeting_values = customization.get("final_greeting", {})
@@ -377,7 +379,7 @@ def arimg(temp_id):
             greeting_x_en=final_greeting_values_en.get("x",0)
             greeting_y=final_greeting_values.get("y",0)
             greeting_y_en=final_greeting_values_en.get("y",0)
-            greeting_color_en=final_greeting_values_en.get("color",0)
+            greeting_color_en=final_greeting_values_en.get("color","black")
             greeting_color=final_greeting_values.get("color","black")
 
 
@@ -520,27 +522,29 @@ def arimg(temp_id):
         ax.text(greeting_x_en, greeting_y_en ,get_display(reshape(final_greeting_values_en.get("AltText"))), fontsize=6, color=greeting_color_en, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
     else:
         ax.text(greeting_x_en, greeting_y_en,get_display(reshape(greeting_txt_en)), fontsize=font_size, color=greeting_color_en, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-    if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
-        img = plt.imread(path_to_dean_signature)
+    # if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
+    img = plt.imread(path_to_dean_signature)
             # Calculate the scaling factor
-        zoom = 35 / max(img.shape[:2])
-        imagebox = OffsetImage(img, zoom=zoom)
-        ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
-        ax.add_artist(ab_image)
-        # Define the coordinates for the line as axes fraction
-        x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
-        x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
+    zoom = 35 / max(img.shape[:2])
+    imagebox = OffsetImage(img, zoom=zoom)
+    ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
+    ax.add_artist(ab_image)
+    # Define the coordinates for the line as axes fraction
+    x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
+    x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
 
         # Draw the line
-        ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
-        if (signature_1_values.get("AltText")):
-            ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_values.get("AltText"))), fontsize=font_size, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=font_size, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        else:
-            ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=font_size, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=font_size, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+    ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
+    if (signature_1_values.get("AltText")):
+        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_values.get("AltText"))), fontsize=font_size, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=font_size, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+    else:
+        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=font_size, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=font_size, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
         
-    if (signature_2_x != 0.0 and signature_2_y != 0.0) and (signature_2_w != 0.0 and signature_2_h != 0.0):
+    if (signature_2_x == 0.01 and signature_2_y == 0.01) and (signature_2_w == 0.01 and signature_2_h == 0.01):
+        print("signature 2 hidden")
+    else:
         img = plt.imread(path_to_csu_head_signature)
                 # Calculate the scaling factor
         zoom = 35 / max(img.shape[:2])
