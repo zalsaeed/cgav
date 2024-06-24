@@ -230,6 +230,10 @@
     var keyitem = document.getElementById("keyitem");
     var flash1 = document.getElementById('customizationadded');
     var signature = document.getElementById("signature");
+    const websitfield = document.getElementById('websitfield');
+    const websitfield2 = document.getElementById('websitfield2');
+    const xfield = document.getElementById('xfield');
+    const xfield2 = document.getElementById('xfield2');
     // var signaturexy = document.getElementById('signaturexy');
     // var contactexy = document.getElementById('contactexy');
     // var finalxy = document.getElementById('finalxy');
@@ -260,11 +264,31 @@
                 document.getElementById('Xcheck').style.display = "flex";
                 document.getElementById('alttextfield').style.display = "none";
                 document.getElementById('alttextfield2').style.display = "block";
+                if (document.getElementById('web-checkbox').checked) {
+                    websitfield.style.display = "block";
+                    websitfield2.style.display = "block";
+                } else {
+                    websitfield.style.display = "none";
+                    websitfield2.style.display = "none";
+                }
+
+                if (document.getElementById('twitter-checkbox').checked) {
+                    xfield.style.display = "block";
+                    xfield2.style.display = "block";
+                } else {
+                    xfield.style.display = "none";
+                    xfield2.style.display = "none";
+                }
+
             } else {
                 document.getElementById('webcheck').style.display = "none";
                 document.getElementById('Xcheck').style.display = "none";
                 document.getElementById('alttextfield').style.display = "block";
                 document.getElementById('alttextfield2').style.display = "none";
+                websitfield.style.display = "none";
+                websitfield2.style.display = "none";
+                xfield.style.display = "none";
+                xfield2.style.display = "none";
             }
         } else {
             customItem.style.display = "none";
@@ -273,8 +297,7 @@
 
     // Event listener for website checkbox
     document.getElementById('web-checkbox').addEventListener('change', () => {
-        const websitfield = document.getElementById('websitfield');
-        const websitfield2 = document.getElementById('websitfield2');
+
 
         if (document.getElementById('web-checkbox').checked) {
             websitfield.style.display = "block";
@@ -287,8 +310,7 @@
 
     // Event listener for Twitter checkbox
     document.getElementById('twitter-checkbox').addEventListener('change', () => {
-        const xfield = document.getElementById('xfield');
-        const xfield2 = document.getElementById('xfield2');
+        
 
         if (document.getElementById('twitter-checkbox').checked) {
             xfield.style.display = "block";
