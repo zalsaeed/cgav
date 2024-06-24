@@ -686,6 +686,48 @@
 
 
   ///////////////////
+  function handleGenerate(certificateEventId) {
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            title: 'Success!',
+            text: 'Certificates generated successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then(() => {
+            location.reload();
+          });
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: `Error generating certificates: ${data.error}`,
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: `${error}`,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      })
+      .finally(() => {
+        document.getElementById('loading-spinner').style.display = 'none';
+      });
+  }
 
   // Download section 
   // Function to fetch and display available certificates
@@ -865,45 +907,7 @@
   ////////////////
   // Other buttons (Generate, downloud, send)
 </script>
-<script>
-  function showLoadingPopup() {
-    Swal.fire({
-      html: `
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-        <strong> <p style="color:#427AA1; margin-bottom: 20px;">Generating certificates, please wait...</p> </strong>
-        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="200" height="200">
-      </div>
-    `,
-      showConfirmButton: false,
-      allowOutsideClick: false,
-      backdrop: true
-    });
-  }
 
-  function handleGenerate(certificateEventId) {
-    showLoadingPopup();
-
-    // Simulate a network request
-    setTimeout(() => {
-      Swal.close();
-      Swal.fire({
-        title: 'Success!',
-        text: 'Certificates generated successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    }, 3000); // Simulate a 3-second delay
-  }
-
-  function toggleVisibility(sectionId) {
-    var x = document.getElementById(sectionId);
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  }
-</script>
 <!-- Transulation -->
 <script>
   const translations = {
