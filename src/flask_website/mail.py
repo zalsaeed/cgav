@@ -29,11 +29,11 @@ logger = logging.getLogger(__name__)
 @app.route('/send_email', methods=['GET', 'POST'])
 def send_email():
     event_id = None  # Initialize event_id outside the conditional blocks
-    # logger.debug("Event ID from request: %s", event_id)
     if request.method == 'GET':
         # Retrieve the event ID from the query parameter
         event_id = request.args.get('eventId')
         logger.debug("Event ID from GET request: %s", event_id)
+        
         # Define the path to the output directory
         output_directory = os.path.abspath("/root/src/flask_website/static/output")
 
@@ -44,9 +44,6 @@ def send_email():
                 event_folder = os.path.join(output_directory, folder_name)
                 break
 
-        # if event_folder is None:
-        #     return "Event folder not found", 404
-        
         # Query the database to retrieve recipient emails based on the event ID
         recipients = recipient.query.join(Certificate_table, recipient.recipient_id == Certificate_table.recipient_id)\
                                      .filter(Certificate_table.certificate_event_id == event_id)\
@@ -66,6 +63,11 @@ def send_email():
         event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
         certificate_title = event.certificate_title if event else 'the event'
         
+        # Initialize event details based on selected language
+        if language == 'ar':
+            event_details = f"\n\nعنوان الحدث: {certificate_title}\nتاريخ الحدث: {event.event_date.strftime('%Y-%m-%d')}\n"
+        else:  # Default to English if language is not specified or invalid
+            event_details = f"\n\nEvent Title: {certificate_title}\nEvent Date: {event.event_date.strftime('%Y-%m-%d')}\n"
 
         for email in selected_emails:
             # Define the path to the output directory
@@ -93,25 +95,39 @@ def send_email():
                 recipient_details = recipient.query.filter_by(email=email).first()
 
                 # Construct the message
-                msg = Message(f'{certificate_title}', recipients=[email], sender='no-reply@example.com')
+                msg = Message(subject=subject if subject else f'{certificate_title}', recipients=[email], sender='no-reply@example.com')
 
-                # Use custom or default values
-                if subject and custom_content:
-                    msg.subject = subject
-                    msg.body = custom_content
+                # Add additional recipient details to the event details
+                recipient_name = f"{recipient_details.first_name} {recipient_details.last_name}" if recipient_details else "N/A"
+                
+                # Add recipient name to event details based on language
+                if language == 'ar':
+                    event_details += f"اسم المتلقي: {recipient_name}\n"
+                else:
+                    event_details += f"Recipient Name: {recipient_name}\n"
+
+                # Add presenter name based on language
+                if language == 'ar':
+                    event_details += f"اسم المقدم: {event.presenter_name}\n"
+                else:
+                    event_details += f"Presenter Name: {event.presenter_name}\n"
+
+                # Use custom or default values for the body
+                if custom_content:
+                    msg.body = custom_content + event_details
                 else:
                     if language == 'ar':
                         if recipient_details and recipient_details.gender == 'male':
-                            msg.body = f'عزيزي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك .'
+                            msg.body = f'عزيزي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك .' + event_details
                         elif recipient_details and recipient_details.gender == 'female':
-                            msg.body = f'عزيزتي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك  .'
+                            msg.body = f'عزيزتي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك  .' + event_details
                         else:
-                            msg.body = f'عزيزي/تي المتدرب/ـة\n\nفي المرفق شهادة حضورك  .'
+                            msg.body = f'عزيزي/تي المتدرب/ـة\n\nفي المرفق شهادة حضورك  .' + event_details
                     else:
                         if recipient_details:
-                            msg.body = f"Dear {recipient_details.first_name} {recipient_details.last_name},\n\nPlease find attached your certificate for."
+                            msg.body = f"Dear {recipient_details.first_name} {recipient_details.last_name},\n\nPlease find attached your certificate for." + event_details
                         else:
-                            msg.body = f"Dear User,\n\nPlease find attached your certificate."
+                            msg.body = f"Dear User,\n\nPlease find attached your certificate." + event_details
 
                 # Attach the certificate to the email
                 with app.open_resource(certificate_filename) as certificate:
