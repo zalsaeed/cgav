@@ -113,20 +113,21 @@
     <script>
         // Function to update the default email preview based on selected language
         function updateDefaultEmailPreview() {
-            var defaultTitle = "Event Title"; // Replace with actual default title
             var selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+            var defaultTitle = selectedLanguage === 'en' ? "Event Title" : "عنوان الحدث"; // Replace with actual default titles
             var defaultBody = selectedLanguage === 'en' ? "Dear User [recipient name],<br>Please find attached your certificate."
                                                         : "عزيزي/تي المتدرب/ـة<br>في المرفق شهادة حضورك  ."; // Use ternary operator to select body based on language
             var defaultDetails = selectedLanguage === 'en' ? "Event Title: <br> Event Date: <br> Recipient Name: <br> Presenter Name:"
                                                             : "عنوان الحدث: <br> تاريخ الحدث: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
-
+        
             document.getElementById('default-email-title').textContent = defaultTitle;
             document.getElementById('default-email-body').innerHTML = defaultBody;
             document.getElementById('default-email-details').innerHTML = defaultDetails;
         }
-
+        
         // Call updateDefaultEmailPreview() initially on page load
         updateDefaultEmailPreview();
+
 
 
         document.getElementById('select-all').addEventListener('change', function () {
