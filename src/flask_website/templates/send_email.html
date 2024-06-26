@@ -28,18 +28,27 @@
 
             <!-- Language selection radio buttons -->
             <div class="mt-4">
-                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select
-                    Language:</label>
+                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select Language:</label>
                 <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-en" name="language" value="en" class="mr-2">
+                    <input type="radio" id="language-en" name="language" value="en" class="mr-2" onclick="updateDefaultEmailPreview()">
                     <label for="language-en" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="English">English</label>
                 </div>
                 <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2">
+                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2" onclick="updateDefaultEmailPreview()">
                     <label for="language-ar" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="Arabic">Arabic</label>
                 </div>
             </div>
-
+            <!-- Default Email Preview Section -->
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2" data-i18n="Preview_Default_Email">Preview Default Email:</h3>
+                <div id="default-email-preview" class="p-4 border rounded">
+                    <h4 id="default-email-title" class="text-xl font-medium mb-2"></h4>
+                    <br>
+                    <p id="default-email-body"></p>
+                    <br>
+                    <p id="default-email-details"></p>
+                </div>
+            </div>
 
             <!-- Button to open the pop-up -->
             <button type="button"
@@ -102,6 +111,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
+        // Function to update the default email preview based on selected language
+        function updateDefaultEmailPreview() {
+            var defaultTitle = "Event Title"; // Replace with actual default title
+            var selectedLanguage = document.querySelector('input[name="language"]:checked').value;
+            var defaultBody = selectedLanguage === 'en' ? "Dear User [recipient name],<br>Please find attached your certificate."
+                                                        : "عزيزي/تي المتدرب/ـة<br>في المرفق شهادة حضورك  ."; // Use ternary operator to select body based on language
+            var defaultDetails = selectedLanguage === 'en' ? "Event Title: <br> Event Date: <br> Recipient Name: <br> Presenter Name:"
+                                                            : "عنوان الحدث: <br> تاريخ الحدث: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
+
+            document.getElementById('default-email-title').textContent = defaultTitle;
+            document.getElementById('default-email-body').innerHTML = defaultBody;
+            document.getElementById('default-email-details').innerHTML = defaultDetails;
+        }
+
+        // Call updateDefaultEmailPreview() initially on page load
+        updateDefaultEmailPreview();
+
+
         document.getElementById('select-all').addEventListener('change', function () {
             var checkboxes = document.querySelectorAll('input[name="emails"]');
             checkboxes.forEach(function (checkbox) {
