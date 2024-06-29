@@ -24,3 +24,5 @@ WTForms==3.0.1
 pymysql==1.1.0 # needed for testing sql connection
 cryptography==41.0.5 # needed for authenticating the db connection
 python-dotenv # load the environment variables from the .env file using the dotenv module
+qrcode==7.3.1 # generate QR codes
+Pillow==8.4.0
