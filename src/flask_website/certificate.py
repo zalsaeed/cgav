@@ -355,7 +355,7 @@ class Certificate:
 
             self.greeting(self.greeting_txt, greeting_x, greeting_y, greeting_color)
 
-            self.add_qr_code(self.certificate_hash, x=0.90, y=0.20)  # Adjust x, y to place the QR code as needed
+            self.add_qr_code(self.certificate_hash, x=0.90, y=0.20)  # Adjust x, y to place the QR code as need
             # contact_info_dict = {
             #     1: ["img/globe.png", "coc.qu.edu.sa", "https://coc.qu.edu.sa"],
             #     2: ["img/x-logo.png", "@coc_qu_sa", "https://twitter.com/coc_qu_sa"],

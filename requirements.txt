@@ -1,4 +1,4 @@
-#--------initial commit----------
+#--------initial commit--------
 FPDF==1.7.2
 numpy==1.25.1
 pandas==2.0.3
