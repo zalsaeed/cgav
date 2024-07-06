@@ -12,19 +12,21 @@
             <!-- Checkbox for "Select All" -->
             <div class="mt-2 flex items-center">
                 <input type="checkbox" id="select-all"
-                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                       class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
                 <label for="select-all" class="text-sm text-gray-700 pr-2" data-i18n="Select_All">Select All</label>
             </div>
-            <!-- Checkboxes for emails -->
-            {% for recipient in recipients %}
-            <div class="mt-2 flex items-center">
-                <input type="checkbox" name="emails" value="{{ recipient.email }}"
-                    data-username="{{ recipient.username }}" id="{{ recipient.username }}"
-                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="{{ recipient.username }}" class="text-sm text-gray-700 ml-2 pr-2">{{ recipient.email
-                    }}</label>
+
+            <!-- Scrollable box for emails -->
+            <div class="email-checkbox-container mt-2">
+                {% for recipient in recipients %}
+                <div class="mt-2 flex items-center">
+                    <input type="checkbox" name="emails" value="{{ recipient.email }}"
+                           data-username="{{ recipient.username }}" id="{{ recipient.username }}"
+                           class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="{{ recipient.username }}" class="text-sm text-gray-700 ml-2 pr-2 checkbox-label">{{ recipient.email }}</label>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
 
             <!-- Language selection radio buttons -->
             <div class="mt-4">
@@ -117,6 +119,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
+        
+        // Function to handle "Select All" checkbox functionality
+        function setupSelectAllCheckbox() {
+            const selectAllCheckbox = document.getElementById('select-all');
+        
+            // Check if the select all checkbox exists
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function () {
+                    const checkboxes = document.querySelectorAll('input[name="emails"]');
+                    checkboxes.forEach(function (checkbox) {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                });
+            }
+        }
+
+        // Ensure DOM content is loaded before setting up the checkbox functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            setupSelectAllCheckbox(); // Call setup function when DOM is ready
+        });
+
         // Function to update the default email preview based on selected language
         function updateDefaultEmailPreview() {
             var selectedLanguage = document.querySelector('input[name="language"]:checked').value;
@@ -133,15 +156,6 @@
         
         // Call updateDefaultEmailPreview() initially on page load
         updateDefaultEmailPreview();
-
-
-
-        document.getElementById('select-all').addEventListener('change', function () {
-            var checkboxes = document.querySelectorAll('input[name="emails"]');
-            checkboxes.forEach(function (checkbox) {
-                checkbox.checked = document.getElementById('select-all').checked;
-            });
-        });
 
         function openPopup() {
             document.getElementById('popup').classList.remove('hidden');
@@ -262,5 +276,19 @@
             xhr.send(formData);
         });
     </script>
+
+    <style>
+        .email-checkbox-container {
+            max-height: 10em; /* Adjust max-height to limit visible checkboxes */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #e2e8f0; /* Example border for clarity */
+            padding: 0.5em; /* Padding for container */
+            border-radius: 0.25em; /* Rounded corners for container */
+        }
+    
+        .checkbox-label {
+            display: block; /* Ensures label occupies full width */
+        }
+    </style>
 </div>
 {% endblock %}
