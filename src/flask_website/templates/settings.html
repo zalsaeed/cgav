@@ -1,118 +1,28 @@
 {% extends 'base.html' %}
 {% block title %}Settings{% endblock %}
 {% block body %}
-
-<div class="profile-container">
-    <div class="sidebar">
-        <h2>{{ first_name }} {{ last_name }}</h2>
-        {% if current_user.user_role == 1 %}
-        <div id="admin" data-i18n="Settings">Admin page</div>
-        {% endif %}
-        <div id="publicProfileTab" data-i18n="Public_Profile">Public profile</div>
-        <div id="accountTab" data-i18n="Manage_Event_Types">Manage Event Types</div>
-    </div>
-    <div class="content">
-        <div class="public-profile-container">
-            <h2 data-i18n="Public_Profile">Public Profile</h2>
-            <div class="profile-field">
-                <label for="displayName" data-i18n="Name">Name:</label>
-                <span id="displayName">{{ first_name }} {{ last_name }}</span>
-                <a href="{{ url_for('change_name') }}"
-                    class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
-                    data-i18n="Change_Name">Change Name</a>
-            </div>
-            <div class="profile-field">
-                <label for="displayEmail" data-i18n="Email">Email:</label>
-                <span id="displayEmail">{{ current_user.email }}</span>
-                <a href="{{ url_for('change_email') }}"
-                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
-                    data-i18n="Change_Email">Change Email</a>
-            </div>
-            <div class="profile-field">
-                <a href="{{ url_for('change_password') }}"
-                    class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
-                    data-i18n="Change_Password">Change Password</a>
-            </div>
+<div class="content">
+    <div class="public-profile-container">
+        <h2 data-i18n="Public_Profile">Public Profile</h2>
+        <div class="profile-field">
+            <label for="displayName" data-i18n="Name">Name:</label>
+            <span id="displayName">{{ first_name }} {{ last_name }}</span>
+            <a href="{{ url_for('change_name') }}"
+                class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
+                data-i18n="Change_Name">Change Name</a>
+        </div>
+        <div class="profile-field">
+            <label for="displayEmail" data-i18n="Email">Email:</label>
+            <span id="displayEmail">{{ current_user.email }}</span>
+            <a href="{{ url_for('change_email') }}"
+                class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                data-i18n="Change_Email">Change Email</a>
+        </div>
+        <div class="profile-field">
+            <a href="{{ url_for('change_password') }}"
+                class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
+                data-i18n="Change_Password">Change Password</a>
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // Function to show a loading indicator
-    function showLoading() {
-        $(".content").html('<div class="loading">Loading...</div>');
-    }
-
-    // Function to hide the loading indicator
-    function hideLoading() {
-        $(".loading").remove();
-    }
-
-    // Function to show error message
-    function showError(message) {
-        $(".content").html(`<div class="error">${message}</div>`);
-    }
-
-    // Function to load the public profile information
-    function loadPublicProfile() {
-        showLoading(); // Show loading indicator before the request
-        $.ajax({
-            url: '/get_user_info',
-            type: 'GET',
-            success: function (response) {
-                // Assuming response is a JSON object containing user data
-                const profileContent = `
-                <div class="public-profile-container">
-                    <h2 data-i18n="Public_Profile">Public Profile</h2>
-                    <div class="profile-field">
-                        <label data-i18n="Name">Name:</label>
-                        <span>${response.Fname} ${response.Lname}</span>
-                        <a href="{{ url_for('change_name') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Name">Change Name</a>
-                    </div>
-                    <div class="profile-field">
-                        <label data-i18n="Email">Email:</label>
-                        <span>${response.email}</span>
-                        <a href="{{ url_for('change_email') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Email">Change Email</a>
-                    </div>
-                    <div class="profile-field">
-                        <a href="{{ url_for('change_password') }}" class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm" data-i18n="Change_Password">Change Password</a>
-                    </div>
-                </div>
-            `;
-                $(".content").hide().html(profileContent).fadeIn(500); // Fade in the content
-                setLanguage(localStorage.getItem("lang") || "en"); // Ensure translations are applied
-            },
-            error: function (error) {
-                // Show user-friendly error message
-                showError('An error occurred while loading the profile.');
-                console.log(error); // Log the error for debugging
-            }
-        }).always(hideLoading); // Hide loading indicator when the request is complete
-    }
-
-    $(document).ready(function () {
-        // Load the public profile section by default
-        loadPublicProfile();
-
-        // Event handlers for navigation tabs
-        $("#publicProfileTab").click(loadPublicProfile);
-        $("#admin").click(function () { $(".content").load("/admin", function () { setLanguage(localStorage.getItem("lang") || "en"); }); });
-        $("#accountTab").click(function () { $(".content").load("/manage_event_types", function () { setLanguage(localStorage.getItem("lang") || "en"); }); });
-
-        // Event handlers for edit and save buttons
-        $(document).on('click', '#editModeBtn', function () {
-            $('.view-mode').hide();
-            $('.edit-mode').fadeIn(500); // Fade in the edit mode
-        });
-
-        $(document).on('click', '#saveBtn', function () {
-            // Placeholder function to implement saving profile data
-            saveProfileData();
-            $('.edit-mode').fadeOut(500, function () { // Fade out the edit mode and show the view mode
-                $('.view-mode').fadeIn(500);
-            });
-        });
-    });
-</script>
 {% endblock %}

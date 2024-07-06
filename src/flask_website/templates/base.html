@@ -9,8 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" type="text/css" href="/static/styles_certificate.css">
     <link rel="stylesheet" type="text/css" href="/static/style_settings.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600&family=Noto+Sans+Arabic&display=swap"
         rel="stylesheet">
     <!-- Include Tailwind CSS (replace with your own path if using npm/yarn) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
@@ -57,7 +56,7 @@
 
 <body>
     <!-- Navbar  -->
-    <nav class="bg-white border-gray-200 dark:bg-gray-900 shadow-md ">
+    <nav class="bg-white border-gray-200 dark:bg-gray-900 shadow-md">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <button type="button"
                 class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -76,15 +75,38 @@
                         {{current_user.Fname}}
                         {{current_user.Lname}}<!-- to get the current logged in user first and last name -->
                     </span>
-                    <span class="block text-sm  text-gray-500 truncate dark:text-gray-400">{{current_user.email}}</span>
+                    <span class="block text-sm text-gray-500 truncate dark:text-gray-400">{{current_user.email}}</span>
                 </div>
                 <ul class="py-2" aria-labelledby="user-menu-button">
+<li aria-labelledby="dropdownNavbarLink">
+    <button id="settingsDropdownButton" data-dropdown-toggle="settingsDropdown"
+            data-dropdown-placement="right-start" type="button"
+            class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+        Settings
+        <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+    </button>
+    <div id="settingsDropdown"
+         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+            aria-labelledby="settingsDropdownButton">
+            <li>
+                <a href="{{ url_for('settings') }}"
+                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Public Profile</a>
+            </li>
+            <li>
+                <a href="{{ url_for('manage_event_types') }}"
+                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Manage Event Types</a>
+            </li>
+        </ul>
+    </div>
+</li>
 
-                    <li>
-                        <a href="{{ url_for('settings') }}"
-                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                            data-i18n="Settings">Settings</a>
-                    </li>
+
+
 
                     <li aria-labelledby="dropdownNavbarLink">
                         <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown"
@@ -110,8 +132,7 @@
                     <li>
                         <a href="{{url_for('logout')}}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                            data-i18n="Sign_out">Sign
-                            out</a>
+                            data-i18n="Sign_out">Sign out</a>
                     </li>
                 </ul>
             </div>
@@ -163,10 +184,9 @@
             </div>
         </div>
     </nav>
-    {%block body%}
-
-    {%endblock%}
-    <!-- Notificatin -->
+    {% block body %}
+    {% endblock %}
+    <!-- Notification -->
     {% for msg in get_flashed_messages() %}
     <div class="flash-message" id="flashMessage">
         <p>{{ msg }}</p>
@@ -190,6 +210,29 @@
     <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
 </body>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize dropdowns
+        const dropdownToggles = document.querySelectorAll('[data-dropdown-toggle]');
+        dropdownToggles.forEach(toggle => {
+            toggle.addEventListener('click', function (event) {
+                const dropdownId = toggle.getAttribute('data-dropdown-toggle');
+                const dropdown = document.getElementById(dropdownId);
+                dropdown.classList.toggle('hidden');
+            });
+        });
+
+        // Close the dropdown when clicking outside
+        window.addEventListener('click', function (e) {
+            dropdownToggles.forEach(toggle => {
+                const dropdownId = toggle.getAttribute('data-dropdown-toggle');
+                const dropdown = document.getElementById(dropdownId);
+                if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        });
+    });
+
     function dismissFlashMessage() {
         var flashMessage = document.getElementById('flashMessage');
         flashMessage.style.display = 'none';
