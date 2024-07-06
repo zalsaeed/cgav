@@ -49,6 +49,12 @@
                     <p id="default-email-details"></p>
                 </div>
             </div>
+            
+            <div class="inline-checkbox">
+                <label for="include_event_info">Event Information:
+                <input type="checkbox" id="include_event_info" name="include_event_info" value="yes" class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                </label>
+            </div>
 
             <!-- Button to open the pop-up -->
             <button type="button"
@@ -117,8 +123,8 @@
             var defaultTitle = selectedLanguage === 'en' ? "Event Title" : "عنوان الحدث"; // Replace with actual default titles
             var defaultBody = selectedLanguage === 'en' ? "Dear User [recipient name],<br>Please find attached your certificate."
                                                         : "عزيزي/تي المتدرب/ـة<br>في المرفق شهادة حضورك  ."; // Use ternary operator to select body based on language
-            var defaultDetails = selectedLanguage === 'en' ? "Event Title: <br> Event Date: <br> Recipient Name: <br> Presenter Name:"
-                                                            : "عنوان الحدث: <br> تاريخ الحدث: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
+            var defaultDetails = selectedLanguage === 'en' ? "Event Information: <br> Event Title: <br> Event Date: <br> Recipient Name: <br> Presenter Name:"
+                                                            : "تفاصيل الحدث: <br> عنوان الحدث: <br> تاريخ الحدث: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
         
             document.getElementById('default-email-title').textContent = defaultTitle;
             document.getElementById('default-email-body').innerHTML = defaultBody;

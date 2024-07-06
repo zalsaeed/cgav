@@ -58,6 +58,7 @@ def send_email():
         subject = request.form.get('subject')
         custom_content = request.form.get('custom-content')
         language = request.form.get('language')
+        include_event_info = request.form.get('include_event_info')  # Retrieve checkbox value
 
         # Query the event title using the event_id
         event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
@@ -112,23 +113,30 @@ def send_email():
                 else:
                     event_details += f"Presenter Name: {event.presenter_name}\n"
 
-                # Use custom or default values for the body
+                # Construct email body based on custom or default values and checkbox selection
                 if custom_content:
-                    msg.body = custom_content + event_details
+                    msg.body = custom_content
                 else:
                     if language == 'ar':
                         if recipient_details and recipient_details.gender == 'male':
-                            msg.body = f'عزيزي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك .' + event_details
+                            msg.body = f'عزيزي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك .'
                         elif recipient_details and recipient_details.gender == 'female':
-                            msg.body = f'عزيزتي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك  .' + event_details
+                            msg.body = f'عزيزتي {recipient_details.first_name} {recipient_details.last_name},\n\nفي المرفق شهادة حضورك .'
                         else:
-                            msg.body = f'عزيزي/تي المتدرب/ـة\n\nفي المرفق شهادة حضورك  .' + event_details
+                            msg.body = f'عزيزي/تي المتدرب/ـة\n\nفي المرفق شهادة حضورك .'
                     else:
                         if recipient_details:
-                            msg.body = f"Dear {recipient_details.first_name} {recipient_details.last_name},\n\nPlease find attached your certificate for." + event_details
+                            msg.body = f"Dear {recipient_details.first_name} {recipient_details.last_name},\n\nPlease find attached your certificate for."
                         else:
-                            msg.body = f"Dear User,\n\nPlease find attached your certificate." + event_details
+                            msg.body = f"Dear User,\n\nPlease find attached your certificate."
 
+                    # Check if checkbox for event information is selected
+                    if include_event_info == 'yes':
+                        if language == 'ar':
+                            msg.body += "\n\nمعلومات الحدث:" + event_details
+                        else:
+                            msg.body += "\n\nEvent Information:" + event_details
+                            
                 # Attach the certificate to the email
                 with app.open_resource(certificate_filename) as certificate:
                     msg.attach(email + '_certificate.pdf', 'application/pdf', certificate.read())
