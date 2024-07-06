@@ -32,6 +32,16 @@ class users(db.Model, UserMixin):
     password = db.Column(db.String(80), nullable=False)
     user_role = db.Column(db.Integer, nullable=True)
 
+
+class api_config(db.Model):
+    __tablename__ = 'api_config'
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    api_url = db.Column(db.String(255), nullable=False)
+
+
 def generate_recipient_id():
     return str(uuid.uuid4())
 

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage API URL{% endblock %}
+
+{% block body %}
+<div class="max-w-screen-lg mx-auto p-4">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4" data-i18n="Manage_API_URL">Manage API URL</h2>
+
+        <!-- Description Section -->
+        <div class="mb-4">
+            <p class="text-gray-700 mb-4">
+                This section allows you to manage the API URL for the system. The API URL is essential as it directs the application to the correct endpoint for fetching and sending data. Additionally, this URL is needed to generate a hash code so that recipients can be directed to the API and verify their certificates. Please ensure you enter the correct URL to ensure the system functions properly.            </p>
+        </div>
+
+        <!-- API URL Section -->
+        <div class="mb-4">
+            <label for="apiUrl" class="block text-gray-700 text-sm font-bold mb-2" data-i18n="API_URL">API URL:</label>
+            <input type="text" id="apiUrl" name="apiUrl" value="{{ api_url }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2" placeholder="https://your-api-url.com">
+            <div class="flex space-x-2">
+                <button onclick="saveApiUrl()" class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded" data-i18n="Save">Save</button>
+                <button onclick="cancelApiUrl()" class="bg-[#E53E3E] hover:bg-[#C53030] text-white font-bold py-2 px-4 rounded" data-i18n="Cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+
+<script>
+    // Function to save the API URL
+    function saveApiUrl() {
+        var apiUrlInput = document.getElementById('apiUrl');
+        var apiUrl = apiUrlInput.value.trim();
+
+        if (apiUrl !== "") {
+            sendApiUrlToServer(apiUrl);
+        } else {
+            showErrorMessage('API URL cannot be empty!');
+        }
+    }
+
+    // Function to cancel and clear the API URL input
+    function cancelApiUrl() {
+        var apiUrlInput = document.getElementById('apiUrl');
+        apiUrlInput.value = '';
+    }
+
+    // Function to show an error message
+    function showErrorMessage(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message,
+        });
+    }
+
+    // Function to send the API URL to the server
+    function sendApiUrlToServer(apiUrl) {
+        const requestData = { apiUrl: apiUrl };
+        console.log('Request Data:', requestData);
+
+        fetch('/save_api_url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+            .then(response => response.json())
+            .then(data => handleServerResponse(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    // Function to handle the server response
+    function handleServerResponse(data) {
+        if ('message' in data) {
+            document.getElementById('apiUrl').value = data.apiUrl;
+            showSuccessMessage(data.message);
+        } else {
+            showErrorMessage(data.error);
+        }
+    }
+
+    // Function to show a success message
+    function showSuccessMessage(message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+        });
+    }
+</script>
+{% endblock %}

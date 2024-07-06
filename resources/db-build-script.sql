@@ -21,6 +21,16 @@ IF NOT EXISTS users
 (id)
 );
 
+CREATE TABLE IF NOT EXISTS api_config (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,  -- Assuming each user can have their own API URL
+    api_url VARCHAR(255),
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+
 CREATE TABLE
 IF NOT EXISTS template
 (
