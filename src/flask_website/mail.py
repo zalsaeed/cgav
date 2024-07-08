@@ -32,7 +32,7 @@ def send_email():
     if request.method == 'GET':
         # Retrieve the event ID from the query parameter
         event_id = request.args.get('eventId')
-        logger.debug("Event ID from GET request: %s", event_id)
+        logger.debug("Activity ID from GET request: %s", event_id)
         
         # Define the path to the output directory
         output_directory = os.path.abspath("/root/src/flask_website/static/output")
@@ -66,9 +66,9 @@ def send_email():
         
         # Initialize event details based on selected language
         if language == 'ar':
-            event_details = f"\n\nعنوان الحدث: {certificate_title}\nتاريخ الحدث: {event.event_date.strftime('%Y-%m-%d')}\n"
+            event_details = f"\n\nعنوان النشاط: {certificate_title}\nتاريخ النشاط: {event.event_date.strftime('%Y-%m-%d')}\n"
         else:  # Default to English if language is not specified or invalid
-            event_details = f"\n\nEvent Title: {certificate_title}\nEvent Date: {event.event_date.strftime('%Y-%m-%d')}\n"
+            event_details = f"\n\nActivity Title: {certificate_title}\nActivity Date: {event.event_date.strftime('%Y-%m-%d')}\n"
 
         for email in selected_emails:
             # Define the path to the output directory
@@ -76,14 +76,14 @@ def send_email():
 
             # Search for the folder corresponding to the event ID
             event_folder = None
-            logger.debug("Event ID from POST request: %s", event_id)
+            logger.debug("Activity ID from POST request: %s", event_id)
             for folder_name in os.listdir(output_directory):
                 if folder_name.startswith(f"{event_id}-"):
                     event_folder = os.path.join(output_directory, folder_name)
                     break
 
             if event_folder is None:
-                return "Event folder not found", 404
+                return "Activity folder not found", 404
 
             # Search for the PDF file corresponding to the email
             pdf_files = [f for f in os.listdir(event_folder) if f.startswith(f"{email}-") and f.endswith(".pdf")]
@@ -133,9 +133,9 @@ def send_email():
                     # Check if checkbox for event information is selected
                     if include_event_info == 'yes':
                         if language == 'ar':
-                            msg.body += "\n\nمعلومات الحدث:" + event_details
+                            msg.body += "\n\nمعلومات النشاط: " + event_details
                         else:
-                            msg.body += "\n\nEvent Information:" + event_details
+                            msg.body += "\n\nActivity Information:" + event_details
                             
                 # Attach the certificate to the email
                 with app.open_resource(certificate_filename) as certificate:
@@ -165,7 +165,7 @@ def send_delete_confirmation_email(event_id):
     # Fetch the event
     event = db.session.query(CertificateEvent).get(event_id)
     if not event:
-        return "Event not found", 404
+        return "Activity not found", 404
 
     # Fetch the administrator's email from the user who created the event
     admin = db.session.query(users).get(event.created_by)
@@ -180,17 +180,17 @@ def send_delete_confirmation_email(event_id):
 
     # Event details for email
     event_date_str = event.event_date.strftime('%Y-%m-%d')
-    subject = f'Event Deletion Notification: {event.certificate_title}'
+    subject = f'Activity Deletion Notification: {event.certificate_title}'
 
     # Detailed message for administrators
     admin_body = f"""
-    Event Deletion Details
+    Activity Deletion Details
     
-    Event Title: {event.certificate_title}
-    Event Date: {event.event_date.strftime('%Y-%m-%d')}
-    Event Type: {event.event_type.event_type_name}
+    Activity Title: {event.certificate_title}
+    Activity Date: {event.event_date.strftime('%Y-%m-%d')}
+    Activity Type: {event.event_type.event_type_name}
     Presented by: {event.presenter_name}
-    Event Description:
+    Activity Description:
     """
 
     if event.certificate_description_male:
@@ -238,7 +238,7 @@ def send_delete_confirmation_email(event_id):
     First Signatory: {event.First_Signatory_Name if event.First_Signatory_Name else 'N/A'}, Position: {event.First_Signatory_Position if event.First_Signatory_Position else 'N/A'}
     Second Signatory: {event.Second_Signatory_Name if event.Second_Signatory_Name else 'N/A'}, Position: {event.Second_Signatory_Position if event.Second_Signatory_Position else 'N/A'}
     
-    The event and all associated data have been permanently deleted from the system. This includes all digital records and files related to the event.
+    The activity and all associated data have been permanently deleted from the system. This includes all digital records and files related to the activity.
     """
 
 
@@ -253,7 +253,7 @@ def send_delete_confirmation_email(event_id):
 
     # Notify each recipient with a personalized message
     for r in recipients:
-        recipient_body = f"Dear {r.first_name} {r.last_name},\n\nWe regret to inform you that the event titled '{event.certificate_title}', scheduled for {event_date_str}, has been permanently deleted from our system. As a result, your certificate for this event will no longer be verifiable via our System."
+        recipient_body = f"Dear {r.first_name} {r.last_name},\n\nWe regret to inform you that the activity titled '{event.certificate_title}', scheduled for {event_date_str}, has been permanently deleted from our system. As a result, your certificate for this activity will no longer be verifiable via our System."
         recipient_msg = Message(subject, recipients=[r.email], sender='no-reply@example.com')
         recipient_msg.body = recipient_body
         try:

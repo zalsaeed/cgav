@@ -5,10 +5,10 @@
 {% block body %}
 <div class="container mt-5">
   <div class="text-center">
-    <h6 class="font-bold text-4xl" style="color: #2C4E71;" data-i18n="Your_Events">Your Events</h6>
+    <h6 class="font-bold text-4xl" style="color: #2C4E71;" data-i18n="Your_Events">Your Activities</h6>
   </div>
 
-  <h2 id="certificates-header" class="mt-5 mb-4 text-center" data-i18n="Latest_Event">Latest Event</h2>
+  <h2 id="certificates-header" class="mt-5 mb-4 text-center" data-i18n="Latest_Event">Latest Activities</h2>
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
     <!-- Display the latest 3 certificates -->
     {% for certificate in latest_certificates %}
@@ -17,9 +17,9 @@
         <div class="card-body">
           <h5 class="card-title">{{ certificate.certificate_title }}</h5>
           <p class="card-text"><strong data-i18n="Presenter">Presenter:</strong> {{ certificate.presenter_name }}</p>
-          <p class="card-text"><strong data-i18n="Event_Date">Event date:</strong> {{
+          <p class="card-text"><strong data-i18n="Event_Date">Activity date:</strong> {{
             certificate.event_date.strftime('%m/%d/%Y') }}</p>
-          <p class="card-text"><strong data-i18n="Event_Type">Event Type:</strong> {{
+          <p class="card-text"><strong data-i18n="Event_Type">Activity Type:</strong> {{
             certificate.event_type.event_type_name }}</p>
           <a href="/certificate_details/{{ certificate.certificate_event_id }}" class="custom-button"
             data-i18n="More_Info">More Info</a>
@@ -35,7 +35,7 @@
 
   <div class="text-center mt-3">
     <button id="load-more-certificates" class="m-2 custom-button">Load More</button>
-    <a href="/add_certificate"><button class="m-2 custom-button" data-i18n="Add_Events">Add Events</button></a>
+    <a href="/add_certificate"><button class="m-2 custom-button" data-i18n="Add_Events">Add Activities</button></a>
   </div>
 </div>
 

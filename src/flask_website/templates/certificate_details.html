@@ -2,7 +2,7 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Event Details{% endblock %}
+{% block title %}Activity Details{% endblock %}
 
 {% block body %}
 
@@ -368,9 +368,10 @@
     }
   }
 
-    /* Close (X) button */
+  /* Close (X) button */
   .modal-content .close {
-    color: #f8f9fa; /* Set the color to match #f8f9fa */
+    color: #f8f9fa;
+    /* Set the color to match #f8f9fa */
     font-size: 28px;
     font-weight: bold;
     position: absolute;
@@ -378,27 +379,29 @@
     top: 10px;
     cursor: pointer;
   }
-  
+
   .modal-content .close:hover {
-    color: #e7e7e7; /* Adjust hover color if needed */
+    color: #e7e7e7;
+    /* Adjust hover color if needed */
   }
 </style>
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container mt-5">
-  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;" data-i18n="Event_Details">Event Details</h1>
+  <h1 class="mb-4 text-center font-bold text-4xl" style="color: #2C4E71;" data-i18n="Event_Details">Activity Details
+  </h1>
   <div class="card detail-card mx-auto col-12 col-md-10 col-lg-12">
     <div class="card-body">
       <h5 class="card-title text-center font-bold text-4xl" style="color: #2C4E71;">{{ certificate.certificate_title }}
       </h5>
-      <p class="card-subtitle" data-i18n="Event_Information">Event Information</p>
+      <p class="card-subtitle" data-i18n="Event_Information">Activity Information</p>
       <div class="row">
-        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Type">Event Type:</strong> {{
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Type">Activity Type:</strong> {{
           certificate.event_type.event_type_name }}</div>
         <div class="col-md-4 card-text"><br><strong data-i18n="Presenter_Name">Presenter Name:</strong> {{
           certificate.presenter_name }}</div>
-        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Date">Event Date:</strong> {{
+        <div class="col-md-4 card-text"><br><strong data-i18n="Event_Date">Activity Date:</strong> {{
           certificate.event_date.strftime('%Y-%m-%d') }}</div>
         <div class="col-md-4 card-text"><br><strong data-i18n="Form_Type">Form type:</strong> {{ certificate.form_type
           }}</div>
@@ -536,7 +539,7 @@
 
       <!-- Notification Text -->
       <p class="info-text" data-i18n="Notification_Text">
-        Sending or downloading certificates triggers an email notification to recipients upon event deletion.
+        Sending or downloading certificates triggers an email notification to recipients upon activity deletion.
       </p>
 
     </div>
@@ -576,12 +579,12 @@
 <!-- Delete Confirmation Popup -->
 <div id="delete-confirmation-popup" class="popup">
   <div class="popup-content">
-    <p data-i18n="Delete_Confirmation_Text">Are you sure you want to delete the event titled "{{
+    <p data-i18n="Delete_Confirmation_Text">Are you sure you want to delete the activity titled "{{
       certificate.certificate_title }}"?</p>
-    <p style="color: #ff0000; font-weight: bold;" data-i18n="Delete_Confirmation_Warning">Deleting this event will
+    <p style="color: #ff0000; font-weight: bold;" data-i18n="Delete_Confirmation_Warning">Deleting this activity will
       permanently remove it from the system.</p>
     <p data-i18n="Delete_Confirmation_Detail">This action will prevent certificate verification through the API. If
-      already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.</p>
+      already sent or downloaded, stakeholders including recipients will be notified about the activity's deletion.</p>
     <form onsubmit="return handleDeleteConfirmation()" style="text-align: center;">
       <label for="event_name" data-i18n="Confirm_Event_Name">To confirm, please enter the exact name of the
         event:</label>
@@ -927,7 +930,7 @@
 <script>
   const translations = {
     en: {
-      Event: "Event",
+      Event: "Activities",
       Settings: "Settings",
       Contact: "Contact",
       Sign_out: "Sign out",
@@ -935,11 +938,11 @@
       Dismiss: "Dismiss",
       english: "English",
       arabic: "Arabic",
-      Event_Details: "Event Details",
-      Event_Information: "Event Information",
-      Event_Type: "Event Type",
+      Event_Details: "Activity Details",
+      Event_Information: "Activity Information",
+      Event_Type: "Activity Type",
       Presenter_Name: "Presenter Name",
-      Event_Date: "Event Date",
+      Event_Date: "Activity Date",
       Form_Type: "Form type",
       Details: "Details",
       Secret_Phrase: "Secret Phrase",
@@ -961,16 +964,16 @@
       Download: "Download",
       Send: "Send",
       Preview_Certificate: "Preview Certificate",
-      Notification_Text: "Sending or downloading certificates triggers an email notification to recipients upon event deletion.",
+      Notification_Text: "Sending or downloading certificates triggers an email notification to recipients upon activity deletion.",
       Previous: "Previous",
       Next: "Next",
       Cancel: "Cancel",
       Select_Certificates: "Select Certificates to Download",
       Select_All: "Select All",
-      Delete_Confirmation_Text: 'Are you sure you want to delete the event titled "{{ certificate.certificate_title }}"?',
-      Delete_Confirmation_Warning: "Deleting this event will permanently remove it from the system.",
-      Delete_Confirmation_Detail: "This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the event's deletion.",
-      Confirm_Event_Name: "To confirm, please enter the exact name of the event:",
+      Delete_Confirmation_Text: 'Are you sure you want to delete the activity titled "{{ certificate.certificate_title }}"?',
+      Delete_Confirmation_Warning: "Deleting this activity will permanently remove it from the system.",
+      Delete_Confirmation_Detail: "This action will prevent certificate verification through the API. If already sent or downloaded, stakeholders including recipients will be notified about the activity's deletion.",
+      Confirm_Event_Name: "To confirm, please enter the exact name of the activity:",
       Confirm: "Confirm",
       Loading: "Loading...",
       Certificate_Deleted_Success: "Certificate deleted successfully",
@@ -978,7 +981,7 @@
       OK: "OK"
     },
     ar: {
-      Event: "الاحداث",
+      Event: "الأنشطة",
       Settings: "الاعدادات",
       Contact: "تواصل معنا",
       Sign_out: "تسجيل خروج",
@@ -986,11 +989,11 @@
       Dismiss: "إنهاء",
       english: "الانجليزية",
       arabic: "العربية",
-      Event_Details: "تفاصيل الحدث",
-      Event_Information: "معلومات الحدث",
-      Event_Type: "نوع الحدث",
+      Event_Details: "تفاصيل النشاط",
+      Event_Information: "معلومات النشاط",
+      Event_Type: "نوع النشاط",
       Presenter_Name: "اسم مقدم العرض",
-      Event_Date: "تاريخ الحدث",
+      Event_Date: "تاريخ النشاط",
       Form_Type: "نوع النموذج",
       Details: "التفاصيل",
       Secret_Phrase: "العبارة السرية",
@@ -1012,16 +1015,16 @@
       Download: "تنزيل",
       Send: "إرسال",
       Preview_Certificate: "معاينة الشهادات",
-      Notification_Text: "عند إرسال أو تنزيل الشهادات سوف يتم إرسال إشعار عبر البريد الإلكتروني للمستلمين عند حذف الحدث.",
+      Notification_Text: "عند إرسال أو تنزيل الشهادات سوف يتم إرسال إشعار عبر البريد الإلكتروني للمستلمين عند حذف النشاط.",
       Previous: "السابق",
       Next: "التالي",
       Cancel: "إلغاء",
       Select_Certificates: "اختر الشهادات للتنزيل",
       Select_All: "اختر الكل",
-      Delete_Confirmation_Text: 'هل أنت متأكد من أنك تريد حذف الحدث بعنوان "{{ certificate.certificate_title }}"؟',
-      Delete_Confirmation_Warning: "سيؤدي حذف هذا الحدث إلى إزالته بشكل دائم من النظام.",
-      Delete_Confirmation_Detail: "سيمنع هذا الإجراء التحقق من الشهادات عبر واجهة برمجة التطبيقات. إذا تم الإرسال أو التنزيل بالفعل، فسيتم إشعار الأطراف المعنية بما في ذلك المستلمين بحذف الحدث.",
-      Confirm_Event_Name: "لتأكيد، يرجى إدخال الاسم الدقيق للحدث:",
+      Delete_Confirmation_Text: 'هل أنت متأكد من أنك تريد حذف النشاط بعنوان "{{ certificate.certificate_title }}"؟',
+      Delete_Confirmation_Warning: "سيؤدي حذف هذا النشاط إلى إزالته بشكل دائم من النظام.",
+      Delete_Confirmation_Detail: "سيمنع هذا الإجراء التحقق من الشهادات عبر API. إذا تم الإرسال أو التنزيل بالفعل، فسيتم إشعار الأطراف المعنية بما في ذلك المستلمين بحذف النشاط.",
+      Confirm_Event_Name: "لتأكيد، يرجى إدخال الاسم الدقيق للنشاط:",
       Confirm: "تأكيد",
       Loading: "جاري التحميل...",
       Certificate_Deleted_Success: "تم حذف الشهادة بنجاح",

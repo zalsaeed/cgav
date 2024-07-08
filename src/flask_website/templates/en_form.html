@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Create Event with File Upload{% endblock %}
+{% block title %}Create Activity with File Upload{% endblock %}
 {% block body %}
 <div class="container mt-5 mx-auto">
-  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;" data-i18n="Add_Event">Add Event</h6>
+  <h6 class="font-bold text-4xl text-center" style="color: #2C4E71;" data-i18n="Add_Event">Add Activity</h6>
   <form id="upload-and-certificate-form" action="{{ url_for('en_form') }}" method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
 
     <div class="form-section bg-gray-100 p-6 mt-6 rounded-lg shadow-md">
-      <h2 class="mt-4 mb-2 text-xl text-blue-600" data-i18n="Event_Information">Event Information:</h2>
+      <h2 class="mt-4 mb-2 text-xl text-blue-600" data-i18n="Event_Information">Activity Information:</h2>
       <div class="grid grid-cols-3 gap-6">
         <div class="mb-4">
           {{ form.certificate_title.label(class="form-label block text-gray-700", **{'data-i18n': 'Event_Title'}) }}

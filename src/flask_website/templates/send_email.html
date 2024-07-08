@@ -12,8 +12,9 @@
             <!-- Checkbox for "Select All" -->
             <div class="mt-2 flex items-center">
                 <input type="checkbox" id="select-all"
-                       class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="select-all" class="text-sm text-gray-700 pr-2" data-i18n="Select_All">Select All</label>
+                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="select-all" class="text-sm text-gray-700 pr-2 mt-2" data-i18n="Select_All">Select
+                    All</label>
             </div>
 
             <!-- Scrollable box for emails -->
@@ -21,23 +22,29 @@
                 {% for recipient in recipients %}
                 <div class="mt-2 flex items-center">
                     <input type="checkbox" name="emails" value="{{ recipient.email }}"
-                           data-username="{{ recipient.username }}" id="{{ recipient.username }}"
-                           class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="{{ recipient.username }}" class="text-sm text-gray-700 ml-2 pr-2 checkbox-label">{{ recipient.email }}</label>
+                        data-username="{{ recipient.username }}" id="{{ recipient.username }}"
+                        class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="{{ recipient.username }}" class="text-sm text-gray-700 mt-2 ml-2 pr-2 checkbox-label">{{
+                        recipient.email }}</label>
                 </div>
                 {% endfor %}
             </div>
 
             <!-- Language selection radio buttons -->
             <div class="mt-4">
-                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select Language:</label>
+                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select
+                    Language:</label>
                 <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-en" name="language" value="en" class="mr-2" onclick="updateDefaultEmailPreview()">
-                    <label for="language-en" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="English">English</label>
+                    <input type="radio" id="language-en" name="language" value="en" class="mr-2"
+                        onclick="updateDefaultEmailPreview()">
+                    <label for="language-en" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
+                        data-i18n="English">English</label>
                 </div>
                 <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2" onclick="updateDefaultEmailPreview()">
-                    <label for="language-ar" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="Arabic">Arabic</label>
+                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2"
+                        onclick="updateDefaultEmailPreview()">
+                    <label for="language-ar" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
+                        data-i18n="Arabic">Arabic</label>
                 </div>
             </div>
             <!-- Default Email Preview Section -->
@@ -51,12 +58,22 @@
                     <p id="default-email-details"></p>
                 </div>
             </div>
-            
-            <div class="inline-checkbox">
-                <label for="include_event_info">Event Information:
-                <input type="checkbox" id="include_event_info" name="include_event_info" value="yes" class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+
+
+            <div class="mt-2 flex items-center">
+
+                <input type="checkbox" id="include_event_info" name="include_event_info" value="yes"
+                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                <label for="include_event_info" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
+                    data-i18n="Include_Event_Information"> Include Event Information:
                 </label>
             </div>
+            <!-- 
+            <div class="mt-2 flex items-center">
+                <input type="checkbox" id="language-en" name="language" value="en" class="mr-2"
+                    onclick="updateDefaultEmailPreview()">
+                <label for="language-en" class="text-sm text-gray-700 ml-2 pr-2" data-i18n="English">English</label>
+            </div> -->
 
             <!-- Button to open the pop-up -->
             <button type="button"
@@ -119,11 +136,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        
+
         // Function to handle "Select All" checkbox functionality
         function setupSelectAllCheckbox() {
             const selectAllCheckbox = document.getElementById('select-all');
-        
+
             // Check if the select all checkbox exists
             if (selectAllCheckbox) {
                 selectAllCheckbox.addEventListener('change', function () {
@@ -143,17 +160,17 @@
         // Function to update the default email preview based on selected language
         function updateDefaultEmailPreview() {
             var selectedLanguage = document.querySelector('input[name="language"]:checked').value;
-            var defaultTitle = selectedLanguage === 'en' ? "Event Title" : "عنوان الحدث"; // Replace with actual default titles
+            var defaultTitle = selectedLanguage === 'en' ? "Activity Title" : "عنوان النشاط"; // Replace with actual default titles
             var defaultBody = selectedLanguage === 'en' ? "Dear User [recipient name],<br>Please find attached your certificate."
-                                                        : "عزيزي/تي المتدرب/ـة<br>في المرفق شهادة حضورك  ."; // Use ternary operator to select body based on language
-            var defaultDetails = selectedLanguage === 'en' ? "Event Information: <br> Event Title: <br> Event Date: <br> Recipient Name: <br> Presenter Name:"
-                                                            : "تفاصيل الحدث: <br> عنوان الحدث: <br> تاريخ الحدث: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
-        
+                : "عزيزي/تي المتدرب/ـة<br>في المرفق شهادة حضورك  ."; // Use ternary operator to select body based on language
+            var defaultDetails = selectedLanguage === 'en' ? "Activity Information: <br> Activity Title: <br> Activity Date: <br> Recipient Name: <br> Presenter Name:"
+                : "تفاصيل النشاط: <br> عنوان النشاط: <br> تاريخ النشاط: <br> اسم المتلقي: <br> اسم المقدم:"; // Use ternary operator to select details based on language
+
             document.getElementById('default-email-title').textContent = defaultTitle;
             document.getElementById('default-email-body').innerHTML = defaultBody;
             document.getElementById('default-email-details').innerHTML = defaultDetails;
         }
-        
+
         // Call updateDefaultEmailPreview() initially on page load
         updateDefaultEmailPreview();
 
@@ -279,15 +296,21 @@
 
     <style>
         .email-checkbox-container {
-            max-height: 10em; /* Adjust max-height to limit visible checkboxes */
-            overflow-y: auto; /* Enable vertical scrolling */
-            border: 1px solid #e2e8f0; /* Example border for clarity */
-            padding: 0.5em; /* Padding for container */
-            border-radius: 0.25em; /* Rounded corners for container */
+            max-height: 10em;
+            /* Adjust max-height to limit visible checkboxes */
+            overflow-y: auto;
+            /* Enable vertical scrolling */
+            border: 1px solid #e2e8f0;
+            /* Example border for clarity */
+            padding: 0.5em;
+            /* Padding for container */
+            border-radius: 0.25em;
+            /* Rounded corners for container */
         }
-    
+
         .checkbox-label {
-            display: block; /* Ensures label occupies full width */
+            display: block;
+            /* Ensures label occupies full width */
         }
     </style>
 </div>

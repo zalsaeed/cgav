@@ -1,31 +1,43 @@
 {% extends 'base.html' %}
 
-{% block title %}Manage Event Types{% endblock %}
+{% block title %}Manage Activity Types{% endblock %}
 
 {% block body %}
 <div class="max-w-screen-lg mx-auto p-4">
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4" data-i18n="Manage_Event_Types">Manage Event Types</h2>
+        <h2 class="text-2xl font-bold mb-4" data-i18n="Manage_Event_Types">Manage Activity Types</h2>
 
         <!-- Add New Type Section -->
         <div class="mb-4">
-            <button id="btnAddNewType" onclick="toggleAddNewTypeForm()" class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded" data-i18n="Add_New_Type">Add New Type</button>
+            <button id="btnAddNewType" onclick="toggleAddNewTypeForm()"
+                class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded"
+                data-i18n="Add_New_Type">Add New Type</button>
             <div id="addNewTypeForm" class="mt-4 hidden">
-                <label for="newTypeName" class="block text-gray-700 text-sm font-bold mb-2" data-i18n="Type_Name">Type Name:</label>
-                <input type="text" id="newTypeName" name="newTypeName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                <label for="newTypeName" class="block text-gray-700 text-sm font-bold mb-2" data-i18n="Type_Name">Type
+                    Name:</label>
+                <input type="text" id="newTypeName" name="newTypeName"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
                 <div class="flex space-x-2">
-                    <button onclick="saveNewType()" class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded" data-i18n="Save">Save</button>
-                    <button onclick="cancelAddNewType()" class="bg-[#E53E3E] hover:bg-[#C53030] text-white font-bold py-2 px-4 rounded" data-i18n="Cancel">Cancel</button>
+                    <button onclick="saveNewType()"
+                        class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded"
+                        data-i18n="Save">Save</button>
+                    <button onclick="cancelAddNewType()"
+                        class="bg-[#E53E3E] hover:bg-[#C53030] text-white font-bold py-2 px-4 rounded"
+                        data-i18n="Cancel">Cancel</button>
                 </div>
             </div>
         </div>
 
         <!-- Delete Existing Type Section -->
         <div>
-            <button id="btnDeleteExistingType" onclick="toggleDeleteExistingTypeForm()" class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded" data-i18n="Delete_Existing_Type">Delete Existing Type</button>
+            <button id="btnDeleteExistingType" onclick="toggleDeleteExistingTypeForm()"
+                class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded"
+                data-i18n="Delete_Existing_Type">Delete Existing Type</button>
             <div id="deleteExistingTypeForm" class="mt-4 hidden">
-                <label for="existingType" class="block text-gray-700 text-sm font-bold mb-2" data-i18n="Select_Type_To_Delete">Select Type to Delete:</label>
-                <select id="existingType" name="existingType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+                <label for="existingType" class="block text-gray-700 text-sm font-bold mb-2"
+                    data-i18n="Select_Type_To_Delete">Select Type to Delete:</label>
+                <select id="existingType" name="existingType"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
                     {% for event_type in event_types %}
                     {% if event_type.is_active %}
                     <option value="{{ event_type.event_type_name }}">{{ event_type.event_type_name }}</option>
@@ -33,8 +45,12 @@
                     {% endfor %}
                 </select>
                 <div class="flex space-x-2">
-                    <button onclick="confirmDelete()" class="bg-[#E53E3E] hover:bg-[#C53030] text-white font-bold py-2 px-4 rounded" data-i18n="Delete">Delete</button>
-                    <button onclick="cancelDelete()" class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded" data-i18n="Cancel">Cancel</button>
+                    <button onclick="confirmDelete()"
+                        class="bg-[#E53E3E] hover:bg-[#C53030] text-white font-bold py-2 px-4 rounded"
+                        data-i18n="Delete">Delete</button>
+                    <button onclick="cancelDelete()"
+                        class="bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded"
+                        data-i18n="Cancel">Cancel</button>
                 </div>
             </div>
         </div>

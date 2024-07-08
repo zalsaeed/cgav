@@ -27,7 +27,7 @@
 <script>
     const translations = {
         en: {
-            Event: "Event",
+            Event: "Activities",
             Settings: "Settings",
             Contact: "Contact",
             Sign_out: "Sign out",
@@ -41,7 +41,7 @@
             Cancel: "Cancel"
         },
         ar: {
-            Event: "الاحداث",
+            Event: "الأنشطة",
             Settings: "الاعدادات",
             Contact: "تواصل معنا",
             Sign_out: "تسجيل خروج",
@@ -80,7 +80,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", () => {
-        const language = localStorage.getItem("lang") || "en"; // اذا لم تكن اللغة متوفرة استخدم الانجليزية
+        const language = localStorage.getItem("lang") || "en";
         setLanguage(language);
 
         var checkbox = document.getElementById('bilingualCheckbox');
