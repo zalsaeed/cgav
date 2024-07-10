@@ -265,10 +265,16 @@
     var keyitem = document.getElementById("keyitem");
     var flash1 = document.getElementById('customizationadded');
     var signature = document.getElementById("signature");
+
     const websitfield = document.getElementById('websitfield');
     const websitfield2 = document.getElementById('websitfield2');
     const xfield = document.getElementById('xfield');
     const xfield2 = document.getElementById('xfield2');
+
+    let previousWebsiteValue = '';
+    let previousWebsiteLinkValue = '';
+    let previousTwitterValue = '';
+    let previousTwitterLinkValue = '';
 
     function dismissFlashMessage() {
 
@@ -314,7 +320,7 @@
                 websitfield2.style.display = "none";
                 xfield.style.display = "none";
                 xfield2.style.display = "none";
-            
+
             }
         } else {
             customItem.style.display = "none";
@@ -323,25 +329,51 @@
 
     // Event listener for website checkbox
     document.getElementById('web-checkbox').addEventListener('change', () => {
-        
+        const websitfield = document.getElementById('websitfield');
+        const websitfield2 = document.getElementById('websitfield2');
+        const websiteInput = document.getElementById('websit');
+        const websiteLinkInput = document.getElementById('websitlinke');
+
         if (document.getElementById('web-checkbox').checked) {
             websitfield.style.display = "block";
             websitfield2.style.display = "block";
+            // Restore the previous values
+            websiteInput.value = previousWebsiteValue;
+            websiteLinkInput.value = previousWebsiteLinkValue;
         } else {
             websitfield.style.display = "none";
             websitfield2.style.display = "none";
+            // Save the current values
+            previousWebsiteValue = websiteInput.value;
+            previousWebsiteLinkValue = websiteLinkInput.value;
+            // Clear the fields
+            websiteInput.value = '';
+            websiteLinkInput.value = '';
         }
     });
 
     // Event listener for Twitter checkbox
     document.getElementById('twitter-checkbox').addEventListener('change', () => {
-        
+        const xfield = document.getElementById('xfield');
+        const xfield2 = document.getElementById('xfield2');
+        const twitterInput = document.getElementById('X');
+        const twitterLinkInput = document.getElementById('Xlink');
+
         if (document.getElementById('twitter-checkbox').checked) {
             xfield.style.display = "block";
             xfield2.style.display = "block";
+            // Restore the previous values
+            twitterInput.value = previousTwitterValue;
+            twitterLinkInput.value = previousTwitterLinkValue;
         } else {
             xfield.style.display = "none";
             xfield2.style.display = "none";
+            // Save the current values
+            previousTwitterValue = twitterInput.value;
+            previousTwitterLinkValue = twitterLinkInput.value;
+            // Clear the fields
+            twitterInput.value = '';
+            twitterLinkInput.value = '';
         }
     });
 
