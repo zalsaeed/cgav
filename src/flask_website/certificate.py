@@ -363,23 +363,23 @@ class Certificate:
             #     }
             if (x_value and xlink_value) and not (Websit_value and Websitlinke_value):
                 contact_info_dict = {
-                    1: ["img/x-logo.png", x_value, xlink_value],
-                    2: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/x_icon.png", x_value, xlink_value],
+                    2: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and not (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe.png", Websit_value, Websitlinke_value],
-                    2: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
+                    2: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe.png", Websit_value, Websitlinke_value],
-                    2: ["img/x-logo.png", x_value, xlink_value],
-                    3: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
+                    2: ["img/x_icon.png", x_value, xlink_value],
+                    3: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             else:
                 contact_info_dict = {
-                    1: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
 
             self.contact_info(contact_info_dict, contact_info_x, contact_info_y, contact_info_color)
@@ -804,23 +804,23 @@ class BilingualCertificate:
 
             if (x_value and xlink_value) and not (Websit_value and Websitlinke_value):
                 contact_info_dict = {
-                    1: ["img/x-logo.png", x_value, xlink_value],
-                    2: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/x_icon.png", x_value, xlink_value],
+                    2: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and not (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe.png", Websit_value, Websitlinke_value],
-                    2: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
+                    2: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe.png", Websit_value, Websitlinke_value],
-                    2: ["img/x-logo.png", x_value, xlink_value],
-                    3: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
+                    2: ["img/x_icon.png", x_value, xlink_value],
+                    3: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             else:
                 contact_info_dict = {
-                    1: ["img/checkmark.png", self.certificate_hash, None]
+                    1: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
 
             self.contact_info(contact_info_dict, contact_info_x, contact_info_y, contact_info_color)

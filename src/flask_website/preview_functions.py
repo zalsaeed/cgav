@@ -14,6 +14,7 @@ from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
 from PIL import Image 
+from svgwrite import rgb
 
 # Local App/Library Specific Imports
 import db_connection
@@ -21,6 +22,8 @@ import db_classes
 from db_classes import  Template
 import util
 import configuration_loader
+import svgwrite
+import cairosvg
 
 
 app = db_connection.app
@@ -29,6 +32,43 @@ bcrypt = db_connection.bcrypt
 
 
 
+from PIL import Image, ImageChops
+
+def trim(im):
+    bg = Image.new(im.mode, im.size, im.getpixel((0, 0)))
+    diff = ImageChops.difference(im, bg)
+    diff = ImageChops.add(diff, diff, 2.0, -100)
+    bbox = diff.getbbox()
+    if bbox:
+        return im.crop(bbox)
+    return im
+
+def modify_svg_color(svg_path, output_png_path, color):
+    # Load the SVG content
+    with open(svg_path, 'r') as file:
+        svg_content = file.read()
+    
+    # Replace the color in the SVG content
+    svg_content = svg_content.replace('black', color)
+    
+    # Save the modified SVG content to a temporary SVG file
+    temp_svg_path = output_png_path.replace('.png', '_temp.svg')
+    with open(temp_svg_path, 'w') as file:
+        file.write(svg_content)
+    
+    # Convert the modified SVG to PNG
+    temp_png_path = output_png_path.replace('.png', '_temp.png')
+    cairosvg.svg2png(url=temp_svg_path, write_to=temp_png_path)
+    
+    # Open the temporary PNG file
+    with Image.open(temp_png_path) as img:
+        # Trim the image to remove extra space
+        trimmed_img = trim(img)
+        trimmed_img.save(output_png_path)
+
+    # Remove the temporary files
+    os.remove(temp_svg_path)
+    os.remove(temp_png_path)
 
 
 def load_default_data():
@@ -46,106 +86,347 @@ def load_default_bidata():
         default_data = yaml.safe_load(file)
     return default_data
 
+# def img(temp_id, lang):
+#     if db_classes.CertificateCustomizations.query.filter_by(template_id=temp_id).first():
+#         customization = db_classes.CertificateCustomizations.query.filter_by(template_id=temp_id).first().items_positions
+#     else: 
+#         with open('./customization/customization.json', 'r') as file:
+#             customization = json.load(file)
+#     if lang=="en":
+#         default_data = load_default_endata()
+#     else:
+#         default_data = load_default_data() #load sampl recepent information form yml file 
+    
+#     recipient_title=f"{default_data.get('male_recipient_title', 'Default male_recipient_titleText')}"
+#     certificate_intro=f"{default_data.get('intro', 'Default Intro Text')}"
+#     certificate_body=f"{default_data.get('male_certificate_body', 'Default male_certificate_body Text')}"
+#     greeting_txt=f"{default_data.get('male_final_greeting', 'Default male_final_greeting Text')}"
+#     dean_name=f"{default_data.get('dean_name', 'Default dean_name Text')}"
+#     dean_position=f"{ default_data.get('dean_position', 'Default dean_position Text')}"
+#     path_to_dean_signature=f"{default_data.get('path_to_dean_signature', 'Default path_to_dean_signature Text')}"
+#     csu_director_name=f"{default_data.get('csu_director_name', 'Default csu_director_name Text')}"
+#     csu_position=f"{ default_data.get('csu_position', 'Default csu_position Text')}"
+#     path_to_csu_head_signature=f"{default_data.get('path_to_csu_signature', 'Default path_to_csu_signature Text')}"
+
+#     template= Template.query.filter_by(template_id=temp_id).first()
+#     if customization:
+#             # Extract values for Certificate_Title
+#             certificate_intro_values = customization.get("Intro", {})
+
+#             intro_x=certificate_intro_values.get("x",0)
+#             intro_y=certificate_intro_values.get("y",0)
+#             intro_w=certificate_intro_values.get("w",0)
+#             intro_h=certificate_intro_values.get("h",0)
+#             intro_alt=certificate_intro_values.get("AltText")
+#             intro_color=certificate_intro_values.get("color","black")
+
+#             recipient_title_values = customization.get("recipient_title", {})
+#             title_x=recipient_title_values.get("x",0)
+#             title_y=recipient_title_values.get("y",0)
+#             title_w=recipient_title_values.get("w",0)
+#             title_h=recipient_title_values.get("h",0)
+#             title_alt=recipient_title_values.get("AltText")
+#             title_color=recipient_title_values.get("color","black")
+
+#             recipient_name_values = customization.get("recipient_name", {})
+#             name_x=recipient_name_values.get("x",0)
+#             name_y=recipient_name_values.get("y",0) 
+#             name_w=recipient_name_values.get("w",0)
+#             name_h=recipient_name_values.get("h",0)
+#             name_alt=recipient_name_values.get("AltText")
+#             name_color=recipient_name_values.get("color","black")
+
+#             body_values = customization.get("body", {})
+#             body_x=body_values.get("x",0)
+#             body_y=body_values.get("y",0)
+#             body_w=body_values.get("w",0)
+#             body_h=body_values.get("h",0)
+#             body_alt=body_values.get("AltText")
+#             body_color=body_values.get("color","black")
+
+#             final_greeting_values = customization.get("final_greeting", {})
+#             greeting_x=final_greeting_values.get("x",0)
+#             greeting_y=final_greeting_values.get("y",0)
+#             greeting_alt=final_greeting_values.get("AltText")
+#             greeting_color=final_greeting_values.get("color","black")
+
+
+#             contact_info_values = customization.get("contact_info", {})
+#             contact_info_x=contact_info_values.get("x",0)
+#             contact_info_y=contact_info_values.get("y",0)
+#             contact_info_color=contact_info_values.get("color","black")
+#             Websit_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websit", "")
+#             Websitlinke_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websitlinke", "")
+#             x_value = contact_info_values.get("contact", {}).get("X", {}).get("X", "")
+#             xlink_value = contact_info_values.get("contact", {}).get("X", {}).get("Xlink", "")
+
+#             signature_1_values =customization.get("signature_1", {})
+#             signature_1_x = signature_1_values.get("x",0)
+#             signature_1_y = signature_1_values.get("y",0)
+#             signature_1_w = signature_1_values.get("w",0)
+#             signature_1_h = signature_1_values.get("h",0)
+#             signature_1_alt=signature_1_values.get("AltText")
+#             signature_1_color = signature_1_values.get("color","black")
+
+#             signature_2_values =customization.get("signature_2", {})
+#             signature_2_x = signature_2_values.get("x",0)
+#             signature_2_y = signature_2_values.get("y",0)
+#             signature_2_w = signature_2_values.get("w",0)
+#             signature_2_h = signature_2_values.get("h",0)
+#             signature_2_alt=signature_2_values.get("AltText")
+#             signature_2_color = signature_2_values.get("color","black")
+#     dpi = 300
+#     # img = mpimg.imread(template.template_image ,format='RGBA')
+#     pil_img = Image.open(template.template_image)# Convert float image to uint8
+
+#     # # Resize the image to fit A4 landscape dimensions
+#     resized_img = pil_img.resize(size=(1122,793))
+#     matplotlib.rcParams['pdf.fonttype'] = 42 
+   
+#     # Create a figure with A4 landscape dimensions
+#     fig_width = 3.74
+#     fig_height = 2.64 
+#     fig, ax = plt.subplots(figsize=(fig_width, fig_height), frameon=False)
+#     # Display the resized image without axes and stretching it to fill the entire figure
+#     ax.imshow(resized_img, aspect='auto')
+
+#     # Turn off axis
+#     ax.axis('off')
+
+#     # Specify the path to your custom Arabic font
+#     font_path = os.path.abspath('fonts/SakkalMajalla/majallab.ttf')
+#     font_path2 = os.path.abspath('fonts/Amiri/Amiri-Regular.ttf')
+#     font_size = 9 # Font size
+
+    # # Modify SVG colors and convert to PNG
+    # for key in svg_paths:
+    #     modify_svg_color(svg_paths[key], png_paths[key], contact_info_color)
+    
+    # if (x_value and x_link_value ) and not (Website_value and Website_link_value):
+    #      contact_info = {
+    #             1: ["img/x_icon.png", x_value, x_link_value],
+    #             2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
+    #             }
+    # elif (Website_value and Website_link_value) and not (x_value and x_link_value ) :
+    #     contact_info = {
+    #                 1: ["img/globe_icon.png",Website_value, Website_link_value],
+    #                 2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
+    #                 }
+    # elif (Website_value and Website_link_value) and (x_value and x_link_value):
+    #     contact_info = {
+    #                 1: ["globe_icon",Website_value, Website_link_value],
+    #                 2: ["x_icon", x_value, x_link_value],
+    #                 3: ["checkmark_icon", "ggGBs2hu9j", None]
+    #                 }
+    # else:
+    #     contact_info = {
+    #                 1: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
+    #                 }
+#     add=0
+#     a=0
+#     # Iterate over contact info
+#     for key, value in contact_info.items():
+#         # Add text annotation with URL as a tooltip
+#         img_path = value[0]
+#         img = plt.imread(img_path)
+#         # Calculate the scaling factor
+#         zoom = 4 / max(img.shape[:2])
+#         imagebox = OffsetImage(img, zoom=zoom)
+#         ab_image = AnnotationBbox(imagebox, xy=(contact_info_x, contact_info_y-add),xybox=(contact_info_x-0.07, contact_info_y-add),boxcoords='axes fraction', frameon=False)
+#         ax.add_artist(ab_image)
+
+#         ax.annotate(value[1], xy=(contact_info_x, contact_info_y-add), xytext=(contact_info_x, contact_info_y-add),
+#                                 textcoords='axes fraction', ha='center', va='center',
+#                                 fontsize=6, color=contact_info_color, fontproperties=FontProperties(fname=font_path),url=value[2])
+#         add = add+0.035
+#         a= a+20
+#     # # Use textwrap to break the text into multiple lines
+#     if (body_alt):
+#         certificate_body = body_values.get("AltText")
+
+#     # Split the wrapped text into individual lines
+#     body_lines = util.break_string_into_chunks(certificate_body, 58)
+#     y_position = body_y
+#     for line in body_lines:
+#         ax.text(body_x, y_position, get_display(reshape(line)), fontsize=font_size, color= body_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#         y_position -= 0.06 # Move to the next line
+    
+#     # Add the text to the figure
+#     if (intro_alt):
+#         ax.text(intro_x, intro_y,get_display(reshape(intro_alt)), fontsize=font_size, color= intro_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#     else:
+#         ax.text(intro_x, intro_y,get_display(reshape(certificate_intro)), fontsize=font_size, color= intro_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+    
+#     if (title_alt):
+#         ax.text(title_x, title_y,get_display(reshape(title_alt)) ,fontsize=font_size, color=title_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#     else:
+#         ax.text(title_x, title_y,get_display(reshape(recipient_title)) ,fontsize=font_size, color=title_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+    
+#     if (name_alt):
+#         ax.text(name_x, name_y,get_display(reshape(name_alt)) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#     elif lang== "en":
+#         ax.text(name_x, name_y,get_display(reshape("Maha Moahammed Alhamad")) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#     else:
+#         ax.text(name_x, name_y,get_display(reshape(" راكان عبدالصمد العبدالله")) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+#     # ax.text((145, y_position),male_certificate_body_to_draw, fill='black', font=font)
+#     # if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
+#     img = plt.imread(path_to_dean_signature)
+#             # Calculate the scaling factor
+#     zoom = 35 / max(img.shape[:2])
+#     imagebox = OffsetImage(img, zoom=zoom)
+#     ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
+#     ax.add_artist(ab_image)
+#         # Define the coordinates for the line as axes fraction
+#     x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
+#     x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
+
+#         # Draw the line
+#     ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
+#     if (signature_1_alt):
+#         ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_alt)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#         ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#     else:
+#         ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#         ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        
+#     if (signature_2_x == 0.01 and signature_2_y == 0.01) and (signature_2_w == 0.01 and signature_2_h == 0.01):
+#       print("signature 2 hidden")
+#     else:
+#         img = plt.imread(path_to_csu_head_signature)
+#                 # Calculate the scaling factor
+#         zoom = 35 / max(img.shape[:2])
+#         imagebox = OffsetImage(img, zoom=zoom)
+#         ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_2_x, signature_2_y+0.07),boxcoords='axes fraction', frameon=False)
+#         ax.add_artist(ab_image)
+#         # Define the coordinates for the line as axes fraction
+#         x11, y11 = signature_2_x-0.1, signature_2_y+0.05 # Starting point
+#         x22, y22 = signature_2_x+0.1,signature_2_y+0.05  # Ending point
+
+#         # Draw the line
+#         ax.plot([x11, x22], [y11, y22], color='black', linewidth=0.3, transform=ax.transAxes)
+#         if (signature_2_alt):
+#             ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(signature_2_alt)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#             ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#         else:
+#             ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(csu_director_name)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#             ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        
+    
+#     if (greeting_alt):
+#         ax.text(greeting_x,  greeting_y,get_display(reshape(greeting_alt)), fontsize=6, color=greeting_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#     else:
+#         ax.text(greeting_x,  greeting_y,get_display(reshape(greeting_txt)), fontsize=6, color=greeting_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+#     # Adjust the position of the axes to fill the entire figure
+#     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+
+#     static_folder = os.path.join(app.root_path, 'static')
+#     # Save the figure without any padding as PNG in the static folder
+#     output_filename = 'generated_image.png'
+#     output_path = os.path.join(static_folder, output_filename)
+#     fig.savefig(output_path, dpi=dpi, pad_inches=0, transparent=True)
+
+#     # Close the figure to release resources
+#     plt.close(fig)
+#     return send_from_directory(os.path.join(app.root_path, 'static'), 'generated_image.png', as_attachment=True)
+    
 def img(temp_id, lang):
     if db_classes.CertificateCustomizations.query.filter_by(template_id=temp_id).first():
         customization = db_classes.CertificateCustomizations.query.filter_by(template_id=temp_id).first().items_positions
-    else: 
+    else:
         with open('./customization/customization.json', 'r') as file:
             customization = json.load(file)
-    if lang=="en":
+    if lang == "en":
         default_data = load_default_endata()
     else:
-        default_data = load_default_data() #load sampl recepent information form yml file 
-    
-    recipient_title=f"{default_data.get('male_recipient_title', 'Default male_recipient_titleText')}"
-    certificate_intro=f"{default_data.get('intro', 'Default Intro Text')}"
-    certificate_body=f"{default_data.get('male_certificate_body', 'Default male_certificate_body Text')}"
-    greeting_txt=f"{default_data.get('male_final_greeting', 'Default male_final_greeting Text')}"
-    dean_name=f"{default_data.get('dean_name', 'Default dean_name Text')}"
-    dean_position=f"{ default_data.get('dean_position', 'Default dean_position Text')}"
-    path_to_dean_signature=f"{default_data.get('path_to_dean_signature', 'Default path_to_dean_signature Text')}"
-    csu_director_name=f"{default_data.get('csu_director_name', 'Default csu_director_name Text')}"
-    csu_position=f"{ default_data.get('csu_position', 'Default csu_position Text')}"
-    path_to_csu_head_signature=f"{default_data.get('path_to_csu_signature', 'Default path_to_csu_signature Text')}"
+        default_data = load_default_data()  # load sample recipient information form yml file
 
-    template= Template.query.filter_by(template_id=temp_id).first()
+    recipient_title = f"{default_data.get('male_recipient_title', 'Default male_recipient_titleText')}"
+    certificate_intro = f"{default_data.get('intro', 'Default Intro Text')}"
+    certificate_body = f"{default_data.get('male_certificate_body', 'Default male_certificate_body Text')}"
+    greeting_txt = f"{default_data.get('male_final_greeting', 'Default male_final_greeting Text')}"
+    dean_name = f"{default_data.get('dean_name', 'Default dean_name Text')}"
+    dean_position = f"{default_data.get('dean_position', 'Default dean_position Text')}"
+    path_to_dean_signature = f"{default_data.get('path_to_dean_signature', 'Default path_to_dean_signature Text')}"
+    csu_director_name = f"{default_data.get('csu_director_name', 'Default csu_director_name Text')}"
+    csu_position = f"{default_data.get('csu_position', 'Default csu_position Text')}"
+    path_to_csu_head_signature = f"{default_data.get('path_to_csu_signature', 'Default path_to_csu_signature Text')}"
+
+    template = Template.query.filter_by(template_id=temp_id).first()
     if customization:
-            # Extract values for Certificate_Title
-            certificate_intro_values = customization.get("Intro", {})
+        # Extract values for Certificate_Title
+        certificate_intro_values = customization.get("Intro", {})
 
-            intro_x=certificate_intro_values.get("x",0)
-            intro_y=certificate_intro_values.get("y",0)
-            intro_w=certificate_intro_values.get("w",0)
-            intro_h=certificate_intro_values.get("h",0)
-            intro_alt=certificate_intro_values.get("AltText")
-            intro_color=certificate_intro_values.get("color","black")
+        intro_x = certificate_intro_values.get("x", 0)
+        intro_y = certificate_intro_values.get("y", 0)
+        intro_w = certificate_intro_values.get("w", 0)
+        intro_h = certificate_intro_values.get("h", 0)
+        intro_alt = certificate_intro_values.get("AltText")
+        intro_color = certificate_intro_values.get("color", "black")
 
-            recipient_title_values = customization.get("recipient_title", {})
-            title_x=recipient_title_values.get("x",0)
-            title_y=recipient_title_values.get("y",0)
-            title_w=recipient_title_values.get("w",0)
-            title_h=recipient_title_values.get("h",0)
-            title_alt=recipient_title_values.get("AltText")
-            title_color=recipient_title_values.get("color","black")
+        recipient_title_values = customization.get("recipient_title", {})
+        title_x = recipient_title_values.get("x", 0)
+        title_y = recipient_title_values.get("y", 0)
+        title_w = recipient_title_values.get("w", 0)
+        title_h = recipient_title_values.get("h", 0)
+        title_alt = recipient_title_values.get("AltText")
+        title_color = recipient_title_values.get("color", "black")
 
-            recipient_name_values = customization.get("recipient_name", {})
-            name_x=recipient_name_values.get("x",0)
-            name_y=recipient_name_values.get("y",0) 
-            name_w=recipient_name_values.get("w",0)
-            name_h=recipient_name_values.get("h",0)
-            name_alt=recipient_name_values.get("AltText")
-            name_color=recipient_name_values.get("color","black")
+        recipient_name_values = customization.get("recipient_name", {})
+        name_x = recipient_name_values.get("x", 0)
+        name_y = recipient_name_values.get("y", 0)
+        name_w = recipient_name_values.get("w", 0)
+        name_h = recipient_name_values.get("h", 0)
+        name_alt = recipient_name_values.get("AltText")
+        name_color = recipient_name_values.get("color", "black")
 
-            body_values = customization.get("body", {})
-            body_x=body_values.get("x",0)
-            body_y=body_values.get("y",0)
-            body_w=body_values.get("w",0)
-            body_h=body_values.get("h",0)
-            body_alt=body_values.get("AltText")
-            body_color=body_values.get("color","black")
+        body_values = customization.get("body", {})
+        body_x = body_values.get("x", 0)
+        body_y = body_values.get("y", 0)
+        body_w = body_values.get("w", 0)
+        body_h = body_values.get("h", 0)
+        body_alt = body_values.get("AltText")
+        body_color = body_values.get("color", "black")
 
-            final_greeting_values = customization.get("final_greeting", {})
-            greeting_x=final_greeting_values.get("x",0)
-            greeting_y=final_greeting_values.get("y",0)
-            greeting_alt=final_greeting_values.get("AltText")
-            greeting_color=final_greeting_values.get("color","black")
+        final_greeting_values = customization.get("final_greeting", {})
+        greeting_x = final_greeting_values.get("x", 0)
+        greeting_y = final_greeting_values.get("y", 0)
+        greeting_alt = final_greeting_values.get("AltText")
+        greeting_color = final_greeting_values.get("color", "black")
 
+        contact_info_values = customization.get("contact_info", {})
+        contact_info_x=contact_info_values.get("x",0)
+        contact_info_y=contact_info_values.get("y",0)
+        contact_info_color=contact_info_values.get("color","black")
+        Websit_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websit", "")
+        Websitlinke_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websitlinke", "")
+        x_value = contact_info_values.get("contact", {}).get("X", {}).get("X", "")
+        xlink_value = contact_info_values.get("contact", {}).get("X", {}).get("Xlink", "")
 
-            contact_info_values = customization.get("contact_info", {})
-            contact_info_x=contact_info_values.get("x",0)
-            contact_info_y=contact_info_values.get("y",0)
-            contact_info_color=contact_info_values.get("color","black")
-            Websit_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websit", "")
-            Websitlinke_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websitlinke", "")
-            x_value = contact_info_values.get("contact", {}).get("X", {}).get("X", "")
-            xlink_value = contact_info_values.get("contact", {}).get("X", {}).get("Xlink", "")
+        signature_1_values = customization.get("signature_1", {})
+        signature_1_x = signature_1_values.get("x", 0)
+        signature_1_y = signature_1_values.get("y", 0)
+        signature_1_w = signature_1_values.get("w", 0)
+        signature_1_h = signature_1_values.get("h", 0)
+        signature_1_alt = signature_1_values.get("AltText")
+        signature_1_color = signature_1_values.get("color", "black")
 
-            signature_1_values =customization.get("signature_1", {})
-            signature_1_x = signature_1_values.get("x",0)
-            signature_1_y = signature_1_values.get("y",0)
-            signature_1_w = signature_1_values.get("w",0)
-            signature_1_h = signature_1_values.get("h",0)
-            signature_1_alt=signature_1_values.get("AltText")
-            signature_1_color = signature_1_values.get("color","black")
-
-            signature_2_values =customization.get("signature_2", {})
-            signature_2_x = signature_2_values.get("x",0)
-            signature_2_y = signature_2_values.get("y",0)
-            signature_2_w = signature_2_values.get("w",0)
-            signature_2_h = signature_2_values.get("h",0)
-            signature_2_alt=signature_2_values.get("AltText")
-            signature_2_color = signature_2_values.get("color","black")
+        signature_2_values = customization.get("signature_2", {})
+        signature_2_x = signature_2_values.get("x", 0)
+        signature_2_y = signature_2_values.get("y", 0)
+        signature_2_w = signature_2_values.get("w", 0)
+        signature_2_h = signature_2_values.get("h", 0)
+        signature_2_alt = signature_2_values.get("AltText")
+        signature_2_color = signature_2_values.get("color", "black")
     dpi = 300
-    # img = mpimg.imread(template.template_image ,format='RGBA')
-    pil_img = Image.open(template.template_image)# Convert float image to uint8
+    pil_img = Image.open(template.template_image)  # Convert float image to uint8
 
-    # # Resize the image to fit A4 landscape dimensions
-    resized_img = pil_img.resize(size=(1122,793))
-    matplotlib.rcParams['pdf.fonttype'] = 42 
-   
+    # Resize the image to fit A4 landscape dimensions
+    resized_img = pil_img.resize(size=(1122, 793))
+    matplotlib.rcParams['pdf.fonttype'] = 42
+
     # Create a figure with A4 landscape dimensions
     fig_width = 3.74
-    fig_height = 2.64 
+    fig_height = 2.64
     fig, ax = plt.subplots(figsize=(fig_width, fig_height), frameon=False)
     # Display the resized image without axes and stretching it to fill the entire figure
     ax.imshow(resized_img, aspect='auto')
@@ -153,33 +434,52 @@ def img(temp_id, lang):
     # Turn off axis
     ax.axis('off')
 
-    # Specify the path to your custom Arabic font
+    # Specify the path to custom Arabic font
     font_path = os.path.abspath('fonts/SakkalMajalla/majallab.ttf')
     font_path2 = os.path.abspath('fonts/Amiri/Amiri-Regular.ttf')
-    font_size = 9 # Font size
+    font_size = 9  # Font size
 
+    # Paths to the original SVG files
+    svg_paths = {
+        "x_icon": "img/x_icon.svg",
+        "checkmark_icon": "img/checkmark_icon.svg",
+        "globe_icon": "img/globe_icon.svg"
+    }
+
+    # Paths to the output PNG files
+    png_paths = {
+        "x_icon": "img/x_icon.png",
+        "checkmark_icon": "img/checkmark_icon.png",
+        "globe_icon": "img/globe_icon.png"
+    }
+
+    # Modify SVG colors and convert to PNG
+    for key in svg_paths:
+        modify_svg_color(svg_paths[key], png_paths[key], contact_info_color)
+    
     if (x_value and xlink_value ) and not (Websit_value and Websitlinke_value):
          contact_info = {
-                1: ["img/x-logo.png", x_value, xlink_value],
-                2: ["img/checkmark.png", "ggGBs2hu9j", None]
+                1: ["img/x_icon.png", x_value, xlink_value],
+                2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                 }
     elif (Websit_value and Websitlinke_value) and not (x_value and xlink_value ) :
         contact_info = {
-                    1: ["img/globe.png",Websit_value, Websitlinke_value],
-                    2: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["img/globe_icon.png",Websit_value, Websitlinke_value],
+                    2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                     }
-    elif (Websit_value and Websitlinke_value) and (x_value and xlink_value ):
+    elif (Websit_value and Websitlinke_value) and (x_value and xlink_value):
         contact_info = {
-                    1: ["img/globe.png",Websit_value, Websitlinke_value],
-                    2: ["img/x-logo.png", x_value, xlink_value],
-                    3: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["img/globe_icon.png",Websit_value, Websitlinke_value],
+                    2: ["img/x_icon.png", x_value, xlink_value],
+                    3: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                     }
     else:
         contact_info = {
-                    1: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                     }
-    add=0
-    a=0
+        
+    add = 0
+    a = 0
     # Iterate over contact info
     for key, value in contact_info.items():
         # Add text annotation with URL as a tooltip
@@ -188,90 +488,109 @@ def img(temp_id, lang):
         # Calculate the scaling factor
         zoom = 4 / max(img.shape[:2])
         imagebox = OffsetImage(img, zoom=zoom)
-        ab_image = AnnotationBbox(imagebox, xy=(contact_info_x, contact_info_y-add),xybox=(contact_info_x-0.07, contact_info_y-add),boxcoords='axes fraction', frameon=False)
+        ab_image = AnnotationBbox(imagebox, xy=(contact_info_x, contact_info_y - add),
+                                  xybox=(contact_info_x - 0.07, contact_info_y - add),
+                                  boxcoords='axes fraction', frameon=False)
         ax.add_artist(ab_image)
 
-        ax.annotate(value[1], xy=(contact_info_x, contact_info_y-add), xytext=(contact_info_x, contact_info_y-add),
-                                textcoords='axes fraction', ha='center', va='center',
-                                fontsize=6, color=contact_info_color, fontproperties=FontProperties(fname=font_path),url=value[2])
-        add = add+0.035
-        a= a+20
-    # # Use textwrap to break the text into multiple lines
-    if (body_alt):
+        ax.annotate(value[1], xy=(contact_info_x, contact_info_y - add), xytext=(contact_info_x, contact_info_y - add),
+                    textcoords='axes fraction', ha='center', va='center',
+                    fontsize=6, color=contact_info_color, fontproperties=FontProperties(fname=font_path), url=value[2])
+        add += 0.035
+        a += 20
+
+    # Use textwrap to break the text into multiple lines
+    if body_alt:
         certificate_body = body_values.get("AltText")
 
     # Split the wrapped text into individual lines
     body_lines = util.break_string_into_chunks(certificate_body, 58)
     y_position = body_y
     for line in body_lines:
-        ax.text(body_x, y_position, get_display(reshape(line)), fontsize=font_size, color= body_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
-        y_position -= 0.06 # Move to the next line
-    
+        ax.text(body_x, y_position, get_display(reshape(line)), fontsize=font_size, color=body_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
+        y_position -= 0.06  # Move to the next line
+
     # Add the text to the figure
-    if (intro_alt):
-        ax.text(intro_x, intro_y,get_display(reshape(intro_alt)), fontsize=font_size, color= intro_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+    if intro_alt:
+        ax.text(intro_x, intro_y, get_display(reshape(intro_alt)), fontsize=font_size, color=intro_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
     else:
-        ax.text(intro_x, intro_y,get_display(reshape(certificate_intro)), fontsize=font_size, color= intro_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
-    
-    if (title_alt):
-        ax.text(title_x, title_y,get_display(reshape(title_alt)) ,fontsize=font_size, color=title_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+        ax.text(intro_x, intro_y, get_display(reshape(certificate_intro)), fontsize=font_size, color=intro_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
+
+    if title_alt:
+        ax.text(title_x, title_y, get_display(reshape(title_alt)), fontsize=font_size, color=title_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
     else:
-        ax.text(title_x, title_y,get_display(reshape(recipient_title)) ,fontsize=font_size, color=title_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
-    
-    if (name_alt):
-        ax.text(name_x, name_y,get_display(reshape(name_alt)) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
-    elif lang== "en":
-        ax.text(name_x, name_y,get_display(reshape("Maha Moahammed Alhamad")) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
+        ax.text(title_x, title_y, get_display(reshape(recipient_title)), fontsize=font_size, color=title_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
+
+    if name_alt:
+        ax.text(name_x, name_y, get_display(reshape(name_alt)), fontsize=font_size, color=name_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
+    elif lang == "en":
+        ax.text(name_x, name_y, get_display(reshape("Maha Moahammed Alhamad")), fontsize=font_size, color=name_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
     else:
-        ax.text(name_x, name_y,get_display(reshape(" راكان عبدالصمد العبدالله")) ,fontsize=font_size, color=name_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path))
-    # ax.text((145, y_position),male_certificate_body_to_draw, fill='black', font=font)
-    # if (signature_1_x != 0.0 and signature_1_y != 0.0) and (signature_1_w != 0.0 and signature_1_h != 0.0):
+        ax.text(name_x, name_y, get_display(reshape(" راكان عبدالصمد العبدالله")), fontsize=font_size, color=name_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path))
+
     img = plt.imread(path_to_dean_signature)
-            # Calculate the scaling factor
+    # Calculate the scaling factor
     zoom = 35 / max(img.shape[:2])
     imagebox = OffsetImage(img, zoom=zoom)
-    ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_1_x, signature_1_y+0.07),boxcoords='axes fraction', frameon=False)
+    ab_image = AnnotationBbox(imagebox, xy=(1, 1), xybox=(signature_1_x, signature_1_y + 0.07), boxcoords='axes fraction', frameon=False)
     ax.add_artist(ab_image)
-        # Define the coordinates for the line as axes fraction
-    x1, y1 = signature_1_x-0.1, signature_1_y+0.05 # Starting point
-    x2, y2 = signature_1_x+0.1, signature_1_y+0.05# Ending point
+    # Define the coordinates for the line as axes fraction
+    x1, y1 = signature_1_x - 0.1, signature_1_y + 0.05  # Starting point
+    x2, y2 = signature_1_x + 0.1, signature_1_y + 0.05  # Ending point
 
-        # Draw the line
+    # Draw the line
     ax.plot([x1, x2], [y1, y2], color='black', linewidth=0.3, transform=ax.transAxes)
-    if (signature_1_alt):
-        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(signature_1_alt)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+    if signature_1_alt:
+        ax.text(signature_1_x, signature_1_y - 0.04, get_display(reshape(signature_1_alt)), fontsize=6, color=signature_1_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x, signature_1_y, get_display(reshape(dean_position)), fontsize=6, color="black", ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
     else:
-        ax.text(signature_1_x,  signature_1_y-0.04,get_display(reshape(dean_name)), fontsize=6, color=signature_1_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        ax.text(signature_1_x,  signature_1_y,get_display(reshape(dean_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        
+        ax.text(signature_1_x, signature_1_y - 0.04, get_display(reshape(dean_name)), fontsize=6, color=signature_1_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+        ax.text(signature_1_x, signature_1_y, get_display(reshape(dean_position)), fontsize=6, color="black", ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+
     if (signature_2_x == 0.01 and signature_2_y == 0.01) and (signature_2_w == 0.01 and signature_2_h == 0.01):
-      print("signature 2 hidden")
+        print("signature 2 hidden")
     else:
         img = plt.imread(path_to_csu_head_signature)
-                # Calculate the scaling factor
+        # Calculate the scaling factor
         zoom = 35 / max(img.shape[:2])
         imagebox = OffsetImage(img, zoom=zoom)
-        ab_image = AnnotationBbox(imagebox, xy=(1,1),xybox=(signature_2_x, signature_2_y+0.07),boxcoords='axes fraction', frameon=False)
+        ab_image = AnnotationBbox(imagebox, xy=(1, 1), xybox=(signature_2_x, signature_2_y + 0.07), boxcoords='axes fraction', frameon=False)
         ax.add_artist(ab_image)
         # Define the coordinates for the line as axes fraction
-        x11, y11 = signature_2_x-0.1, signature_2_y+0.05 # Starting point
-        x22, y22 = signature_2_x+0.1,signature_2_y+0.05  # Ending point
+        x11, y11 = signature_2_x - 0.1, signature_2_y + 0.05  # Starting point
+        x22, y22 = signature_2_x + 0.1, signature_2_y + 0.05  # Ending point
 
         # Draw the line
         ax.plot([x11, x22], [y11, y22], color='black', linewidth=0.3, transform=ax.transAxes)
-        if (signature_2_alt):
-            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(signature_2_alt)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        if signature_2_alt:
+            ax.text(signature_2_x, signature_2_y - 0.04, get_display(reshape(signature_2_alt)), fontsize=6, color=signature_2_color, ha='center', va='center',
+                    transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+            ax.text(signature_2_x, signature_2_y, get_display(reshape(csu_position)), fontsize=6, color="black", ha='center', va='center',
+                    transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
         else:
-            ax.text(signature_2_x,  signature_2_y-0.04,get_display(reshape(csu_director_name)), fontsize=6, color=signature_2_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-            ax.text(signature_2_x,  signature_2_y,get_display(reshape(csu_position)) , fontsize=6, color="black", ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
-        
-    
-    if (greeting_alt):
-        ax.text(greeting_x,  greeting_y,get_display(reshape(greeting_alt)), fontsize=6, color=greeting_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+            ax.text(signature_2_x, signature_2_y - 0.04, get_display(reshape(csu_director_name)), fontsize=6, color=signature_2_color, ha='center', va='center',
+                    transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+            ax.text(signature_2_x, signature_2_y, get_display(reshape(csu_position)), fontsize=6, color="black", ha='center', va='center',
+                    transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
+
+    if greeting_alt:
+        ax.text(greeting_x, greeting_y, get_display(reshape(greeting_alt)), fontsize=6, color=greeting_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
     else:
-        ax.text(greeting_x,  greeting_y,get_display(reshape(greeting_txt)), fontsize=6, color=greeting_color, ha='center', va='center', transform=ax.transAxes,fontproperties=FontProperties(fname=font_path2))
+        ax.text(greeting_x, greeting_y, get_display(reshape(greeting_txt)), fontsize=6, color=greeting_color, ha='center', va='center',
+                transform=ax.transAxes, fontproperties=FontProperties(fname=font_path2))
     # Adjust the position of the axes to fill the entire figure
     fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
 
@@ -283,8 +602,9 @@ def img(temp_id, lang):
 
     # Close the figure to release resources
     plt.close(fig)
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'generated_image.png', as_attachment=True)
-    
+    return send_from_directory(static_folder, 'generated_image.png', as_attachment=True)
+
+
 
 def arimg(temp_id):
     default_data = load_default_bidata()
@@ -391,7 +711,7 @@ def arimg(temp_id):
             Websitlinke_value = contact_info_values.get("contact", {}).get("Web", {}).get("Websitlinke", "")
             x_value = contact_info_values.get("contact", {}).get("X", {}).get("X", "")
             xlink_value = contact_info_values.get("contact", {}).get("X", {}).get("Xlink", "")
-
+            
             signature_1_values =customization.get("signature_1", {})
             signature_1_x = signature_1_values.get("x",0)
             signature_1_y = signature_1_values.get("y",0)
@@ -428,26 +748,45 @@ def arimg(temp_id):
     font_path2 = os.path.abspath('fonts/Amiri/Amiri-Regular.ttf')
     font_size = 5 # Font size
 
+   # Paths to the original SVG files
+    svg_paths = {
+        "x_icon": "img/x_icon.svg",
+        "checkmark_icon": "img/checkmark_icon.svg",
+        "globe_icon": "img/globe_icon.svg"
+    }
+
+    # Paths to the output PNG files
+    png_paths = {
+        "x_icon": "img/x_icon.png",
+        "checkmark_icon": "img/checkmark_icon.png",
+        "globe_icon": "img/globe_icon.png"
+    }
+
+    # Modify SVG colors and convert to PNG
+    for key in svg_paths:
+        modify_svg_color(svg_paths[key], png_paths[key], contact_info_color)
+    
     if (x_value and xlink_value ) and not (Websit_value and Websitlinke_value):
          contact_info = {
-                1: ["img/x-logo.png", x_value, xlink_value],
-                2: ["img/checkmark.png", "ggGBs2hu9j", None]
+                1: ["img/x_icon.png", x_value, xlink_value],
+                2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                 }
     elif (Websit_value and Websitlinke_value) and not (x_value and xlink_value ) :
         contact_info = {
-                    1: ["img/globe.png",Websit_value, Websitlinke_value],
-                    2: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["img/globe_icon.png",Websit_value, Websitlinke_value],
+                    2: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                     }
     elif (Websit_value and Websitlinke_value) and (x_value and xlink_value):
         contact_info = {
-                    1: ["img/globe.png",Websit_value, Websitlinke_value],
-                    2: ["img/x-logo.png", x_value, xlink_value],
-                    3: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["img/globe_icon.png",Websit_value, Websitlinke_value],
+                    2: ["img/x_icon.png", x_value, xlink_value],
+                    3: ["img/checkmark_icon.png", "ggGBs2hu9j", None]
                     }
     else:
         contact_info = {
-                    1: ["img/checkmark.png", "ggGBs2hu9j", None]
+                    1: ["checkmark_icon", "ggGBs2hu9j", None]
                     }
+        
     add=0
     a=0
     # Iterate over contact info
