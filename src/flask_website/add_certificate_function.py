@@ -321,11 +321,12 @@ def aren_form():
                 if not required_headers.issubset(set(csv_reader.fieldnames)):
                     message = 'The CSV file does not have the required headers.'
                 else:
-                    # Reset file pointer to beginning
-                    f.seek(0)
+                    # I removed these lines because it cased csv file to be empty 
+                    # # Reset file pointer to beginning
+                    # f.seek(0)
 
-                    # Save the file again
-                    file.save(file_path)
+                    # # Save the file again
+                    # file.save(file_path)
 
                     # Process signature images
                     signature_image_1 = form.signature_image_1.data
