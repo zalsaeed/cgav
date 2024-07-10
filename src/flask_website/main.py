@@ -245,8 +245,8 @@ def generate_certificate(event_data, output_dir, item_positions):
             
         elif event_data['form_type'] == 'Arabic_English':
                 
-            full_name_en = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
-            full_name_ar = f"{first_name_en} {middle_name_en} {last_name_en}"
+            full_name_ar = util.get_gendered_full_name(first_name_ar, middle_name_ar, last_name_ar, recipient_data['gender'],event_data['form_type'])
+            full_name_en = f"{first_name_en} {middle_name_en} {last_name_en}"
             
             # Store recipient info and get recipient ID
             recipient_id = store_recipient_info(recipient_data,first_name_ar,middle_name_ar,last_name_ar)
@@ -254,7 +254,7 @@ def generate_certificate(event_data, output_dir, item_positions):
 
             certificate = BilingualCertificate(
                                     # Arabic
-                                    recipient_name=full_name_ar,
+                                    recipient_name=full_name_en,
                                     recipient_title=event_data['male_recipient_title'] if recipient_data['gender'] == "male" else event_data['female_recipient_title'],
                                     recipient_email=recipient_data['email'],
                                     certificate_intro=event_data['intro'],
@@ -262,7 +262,7 @@ def generate_certificate(event_data, output_dir, item_positions):
                                     greeting_txt=event_data['greeting_male'] if recipient_data['gender'] == "male" else event_data['greeting_female'],
 
                                     # English
-                                    recipient_name_en=full_name_en,
+                                    recipient_name_en=full_name_ar,
                                     recipient_title_en=event_data['male_recipient_title_en'] if recipient_data['gender'] == "male" else event_data['female_recipient_title_en'],
                                     intro_en=event_data['intro_en'],
                                     certificate_body_en=event_data['certificate_description_male_en'] if recipient_data['gender'] == "male" else event_data['certificate_description_female_en'],
