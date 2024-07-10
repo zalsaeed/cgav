@@ -55,7 +55,20 @@ def read_csv_to_dict(path: str) -> list:
     :param path: a relative path to the CSV file.
     :return: A list of dictionaries each with key as column header and value as row cell.
     """
-    return pd.read_csv(path).to_dict(orient='records')
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"The file {path} does not exist.")
+    
+    if os.stat(path).st_size == 0:
+        raise ValueError(f"The file {path} is empty.")
+    
+    try:
+        df = pd.read_csv(path)
+        if df.empty or df.columns.size == 0:
+            raise ValueError(f"The file {path} has no columns to parse.")
+        return df.to_dict(orient='records')
+    except pd.errors.EmptyDataError as e:
+        raise ValueError(f"Error reading {path}: {e}")
+
 
 
 def make_sure_path_exists(path: str):
