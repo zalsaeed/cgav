@@ -6,49 +6,48 @@
 <div class="container mx-auto my-8 p-4 bg-white shadow-md rounded-lg">
     <h2 class="text-2xl font-bold mb-4" data-i18n="Send_Emails">Send Emails</h2>
     <form action="/send_email?eventId={{ eventId }}" method="post" enctype="multipart/form-data" id="emailForm">
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-black-900" data-i18n="Select_Emails">Select Emails:</label>
-
-            <!-- Checkbox for "Select All" -->
-            <div class="mt-2 flex items-center">
-                <input type="checkbox" id="select-all"
-                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="select-all" class="text-sm text-gray-700 pr-2 mt-2" data-i18n="Select_All">Select
-                    All</label>
-            </div>
-
-            <!-- Scrollable box for emails -->
-            <div class="email-checkbox-container mt-2">
-                {% for recipient in recipients %}
+        <!-- Flex container to hold email select and preview side by side -->
+        <div class="flex flex-wrap">
+            <!-- Email Select Section -->
+            <div class="w-full md:w-1/2 mb-4 md:mb-0">
+                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Emails">Select Emails:</label>
                 <div class="mt-2 flex items-center">
-                    <input type="checkbox" name="emails" value="{{ recipient.email }}"
-                        data-username="{{ recipient.username }}" id="{{ recipient.username }}"
-                        class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                    <label for="{{ recipient.username }}" class="text-sm text-gray-700 mt-2 ml-2 pr-2 checkbox-label">{{
-                        recipient.email }}</label>
+                    <input type="checkbox" id="select-all" class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="select-all" class="text-sm text-gray-700 pr-2 mt-2" data-i18n="Select_All">Select All</label>
                 </div>
-                {% endfor %}
-            </div>
-
-            <!-- Language selection radio buttons -->
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select
-                    Language:</label>
-                <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-en" name="language" value="en" class="mr-2"
-                        onclick="updateDefaultEmailPreview()">
-                    <label for="language-en" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
-                        data-i18n="English">English</label>
+                <div class="email-checkbox-container mt-2">
+                    {% for recipient in recipients %}
+                    <div class="mt-2 flex items-center">
+                        <input type="checkbox" name="emails" value="{{ recipient.email }}" data-username="{{ recipient.username }}" id="{{ recipient.username }}" class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="{{ recipient.username }}" class="text-sm text-gray-700 mt-2 ml-2 pr-2 checkbox-label">{{ recipient.email }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Language selection radio buttons -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-black-900" data-i18n="Select_Language">Select Language:</label>
+                    <div class="mt-2 flex items-center">
+                        <input type="radio" id="language-en" name="language" value="en" class="mr-2" onclick="updateDefaultEmailPreview()">
+                        <label for="language-en" class="text-sm text-gray-700 mt-2 ml-2 pr-2" data-i18n="English">English</label>
+                    </div>
+                    <div class="mt-2 flex items-center">
+                        <input type="radio" id="language-ar" name="language" value="ar" class="mr-2" onclick="updateDefaultEmailPreview()">
+                        <label for="language-ar" class="text-sm text-gray-700 mt-2 ml-2 pr-2" data-i18n="Arabic">Arabic</label>
+                    </div>
                 </div>
                 <div class="mt-2 flex items-center">
-                    <input type="radio" id="language-ar" name="language" value="ar" class="mr-2"
-                        onclick="updateDefaultEmailPreview()">
-                    <label for="language-ar" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
-                        data-i18n="Arabic">Arabic</label>
+                    <input type="checkbox" id="include_event_info" name="include_event_info" value="yes" class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
+                    <label for="include_event_info" class="text-sm text-gray-700 mt-2 ml-2 pr-2" data-i18n="Include_Event_Information"> Include Event Information:</label>
                 </div>
+                <button type="button" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-30"
+                            data-i18n="Send_Email">
+                            Send Email
+                        </button>
+                        <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300" data-i18n="Send_Email">Send Email</button>00" onclick="openPopup()" data-i18n="Customize_Email">Customize Email</button>
             </div>
+
             <!-- Default Email Preview Section -->
-            <div class="mb-4">
+            <div class="w-full md:w-1/2 mb-4 md:mb-0 md:pl-4">
                 <h3 class="text-lg font-semibold mb-2" data-i18n="Preview_Default_Email">Preview Default Email:</h3>
                 <div id="default-email-preview" class="p-4 border rounded">
                     <h4 id="default-email-title" class="text-xl font-medium mb-2"></h4>
@@ -58,60 +57,28 @@
                     <p id="default-email-details"></p>
                 </div>
             </div>
-
-
-            <div class="mt-2 flex items-center">
-
-                <input type="checkbox" id="include_event_info" name="include_event_info" value="yes"
-                    class="mr-2 focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded">
-                <label for="include_event_info" class="text-sm text-gray-700 mt-2 ml-2 pr-2"
-                    data-i18n="Include_Event_Information"> Include Event Information:
-                </label>
-            </div>
-
-            <!-- Button to open the pop-up -->
-            <button type="button"
-                class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                onclick="openPopup()" data-i18n="Customize_Email">
-                Customize Email
-            </button>
         </div>
 
         <!-- Pop-up for custom email details (hidden by default) -->
-        <div id="popup"
-            class="hidden fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
+        <div id="popup" class="hidden fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-75 flex items-center justify-center">
             <div class="bg-white p-6 rounded-lg">
                 <label class="block text-sm font-medium text-gray-700 mt-4" data-i18n="Subject">Subject:</label>
-                <input type="text" name="subject" id="subject" class="mt-2 p-2 border rounded w-full"
-                    placeholder="Enter email subject" data-i18n-placeholder="Enter_Subjectt">
-
+                <input type="text" name="subject" id="subject" class="mt-2 p-2 border rounded w-full" placeholder="Enter email subject" data-i18n-placeholder="Enter_Subjectt">
                 <label class="block text-sm font-medium text-gray-700 mt-4" data-i18n="Content">Content:</label>
-                <textarea name="custom-content" id="custom-content" class="mt-2 p-2 border rounded w-full" rows="4"
-                    placeholder="Enter your custom email content" data-i18n-placeholder="Enter_Content"></textarea>
-
+                <textarea name="custom-content" id="custom-content" class="mt-2 p-2 border rounded w-full" rows="4" placeholder="Enter your custom email content" data-i18n-placeholder="Enter_Content"></textarea>
                 <!-- Hidden fields to store custom email details -->
                 <input type="hidden" name="subject-input" id="subject-input">
                 <input type="hidden" name="custom-content-input" id="custom-content-input">
-
                 <div class="mt-4 flex justify-between">
                     <!-- Save button -->
-                    <button type="button"
-                        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-                        onclick="updateEmailDetailsAndClosePopup()" data-i18n="Save">Save</button>
-
+                    <button type="button" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300" onclick="updateEmailDetailsAndClosePopup()" data-i18n="Save">Save</button>
                     <!-- Cancel button -->
-                    <button type="button"
-                        class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring focus:border-gray-300"
-                        onclick="closePopup()" data-i18n="Cancel">Cancel</button>
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 focus:outline-none focus:ring focus:border-gray-300" onclick="closePopup()" data-i18n="Cancel">Cancel</button>
                 </div>
             </div>
         </div>
 
-        <button type="submit"
-            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
-            data-i18n="Send_Email">
-            Send Email
-        </button>
+        <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300" data-i18n="Send_Email">Send Email</button>
     </form>
 
     {% with messages = get_flashed_messages() %}
