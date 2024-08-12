@@ -40,6 +40,7 @@ IF NOT EXISTS template
 (255),
     template_image VARCHAR
 (320),
+   is_active BOOLEAN DEFAULT true,
     PRIMARY KEY
 (template_id),
     FOREIGN KEY

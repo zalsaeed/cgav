@@ -116,6 +116,7 @@ class Template(db.Model):
     id = db.Column(db.Integer)
     template_name = db.Column(db.String(30), nullable=False)
     template_image = db.Column(db.String(300), nullable=False)
+    is_active = db.Column(db.Boolean, default=True)
 
 class CertificateCustomizations(db.Model):
     __tablename__ = 'CertificateCustomizations'

@@ -4,7 +4,7 @@ import os
 import uuid
 
 # Related Third Party Imports
-from flask import request, redirect, url_for, render_template, flash, current_app
+from flask import jsonify, request, redirect, url_for, render_template, flash, current_app
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from werkzeug.utils import secure_filename
@@ -46,7 +46,8 @@ def newtemp():
 
         new_template = Template(template_name=form.template_name.data,
                                            id = current_user.id,
-                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)),
+                                           is_active=True)
         db.session.add(new_template)
         db.session.commit()
 
@@ -317,3 +318,9 @@ def selectTemp():
     else:
         user_templates = Template.query.filter_by(id=current_user.id).all()
     return render_template("select_template.html", templates=user_templates)
+
+def DeleteTemp(temp_id):
+    tepmDelate = update(Template).where(Template.template_id == temp_id).values(is_active=False)
+    db.session.execute(tepmDelate)
+    db.session.commit()
+    return redirect("/Select_template")

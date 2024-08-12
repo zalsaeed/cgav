@@ -299,6 +299,11 @@ def bitemplate(temp_id):
 def selectTemp():
     return template_functions.selectTemp()
 
+@app.route('/Delete_template/<temp_id>', methods=['GET',"POST"])
+@login_required
+def DeleteTemp(temp_id):
+    return template_functions.DeleteTemp(temp_id)
+
 @app.route('/fetch_latest_pdf', methods=['GET'])
 def fetch_latest_pdf():
     return generate_functions.fetch_latest_pdf()

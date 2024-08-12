@@ -50,7 +50,7 @@ def ar_form():
     active_event_types = EventType.query.filter_by(is_active=True).all()
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
 
-    templates = Template.query.all()
+    templates = Template.query.filter_by(is_active=True).all()
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if request.method == 'POST':
@@ -173,7 +173,7 @@ def en_form():
     active_event_types = EventType.query.filter_by(is_active=True).all()
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
 
-    templates = Template.query.all()
+    templates = Template.query.filter_by(is_active=True).all()
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if request.method == 'POST':
@@ -294,7 +294,7 @@ def aren_form():
     active_event_types = EventType.query.filter_by(is_active=True).all()
     form.event_type.choices = [(str(event_type.event_type_id), event_type.event_type_name) for event_type in active_event_types]
 
-    templates = Template.query.all()
+    templates = Template.query.filter_by(is_active=True).all()
     form.template_choice.choices = [(str(t.template_id), t.template_name) for t in templates]
 
     if form.validate_on_submit():

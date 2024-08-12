@@ -58,7 +58,8 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         template_data = {
             "id": 1,
             "template_name": "دورة",
-            "template_image": "/root/src/flask_website/certificate-templates/template.png"
+            "template_image": "/root/src/flask_website/certificate-templates/template.png",
+            "is_active": True
         }
 
         template_table = self.base.classes.template
@@ -67,7 +68,8 @@ class TestUsingFlaskSQLAlchemy(unittest.TestCase):
         session.add(template_table(
             id=template_data['id'],
             template_name=template_data['template_name'],
-            template_image=template_data['template_image']
+            template_image=template_data['template_image'],
+            is_active = template_data['is_active']
         ))
         session.commit()
 
