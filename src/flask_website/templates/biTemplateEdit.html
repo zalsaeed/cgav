@@ -60,7 +60,7 @@
             <h5 class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;">
                 {{temp.template_name}}</h5>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                <button id="dropdownToggleButton" data-dropdown-toggle="dropdownToggle"
+                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
                     class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
                     type="button">Certificate items<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -69,19 +69,16 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="dropdownToggle"
+                <div id="dropdownHover"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
                     <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
-                        aria-labelledby="dropdownToggleButton">
+                        aria-labelledby="dropdownHoverButton">
                         {% for item, value in data.items() %}
                         <li>
                             <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <label class="relative inline-flex items-center w-full cursor-pointer">
-                                    <input oninput="checkItems(this.value, this.checked)" type="checkbox"
+                                    <input onclick="checkItems('{{value}}',this.value, this.checked)" type="checkbox"
                                         id="itemCheckbox{{loop.index}}" value="{{item}}" class="sr-only peer">
-                                    <div
-                                        class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600">
-                                    </div>
                                     <span
                                         class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{value}}</span>
                                 </label>
@@ -90,7 +87,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <button id="ardropdownToggleButton" data-dropdown-toggle="ardropdownToggle"
+                <button id="ardropdownHoverButton" data-dropdown-toggle="ardropdownHover"
                     class=" mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
                     type="button">عناصر الشهادة<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -99,19 +96,16 @@
                     </svg>
                 </button>
                 <!-- Dropdown menu -->
-                <div id="ardropdownToggle"
+                <div id="ardropdownHover"
                     class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-72 dark:bg-gray-700 dark:divide-gray-600">
                     <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
-                        aria-labelledby="ardropdownToggleButton">
+                        aria-labelledby="ardropdownHoverButton">
                         {% for aritem, value in arData.items() %}
                         <li>
                             <div class="flex p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <label class="relative inline-flex items-center w-full cursor-pointer">
-                                    <input type="checkbox" oninput="checkItems(this.value, this.checked)"
+                                    <input type="checkbox" onclick="checkItems('{{value}}',this.value, this.checked)"
                                         id="aritemCheckbox{{loop.index}}" value="{{aritem}}" class="sr-only peer">
-                                    <div
-                                        class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full rtl:peer-checked:after:translate-x-[-100%] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-500 peer-checked:bg-blue-600">
-                                    </div>
                                     <span
                                         class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{value}}</span>
                                 </label>
@@ -124,18 +118,16 @@
             <form style="display:none;" id="customizationform" class="max-w-md mx-auto my-3"
                 onsubmit="submitForm(event,{{temp.template_id}})" method="POST" enctype="multipart/form-data">
                 {{form.hidden_tag()}}
+
+                <div class="flex flex-col items-center p-4 leading-normal">
+                    <h5 id="itemTitle" class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;" ></h5>
+                </div>
+
                 <p id="note" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">All positions
                     in numbers between 0.00 to 1.00.</p>
 
                 <p id="signature" style="color: red;margin-bottom: 5px;font-style:oblique;font-size: small;">Note: if
                     you want to hide the signature set all values to '0.01'</p>
-                <!-- <p id="signaturexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
-                <p id="contactexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (10, 155) to (260, 185) in x and y coordinates.</p>
-                <p id="finalxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (40, 122) to (230, 165) in x and y coordinates.</p>
-                <p id="bodyxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (70, 92) to (210, 132) in x and y coordinates.</p>
-                <p id="namexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (40, 80) to (230, 120) in x and y coordinates.</p>
-                <p id="Titlexy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (82, 80) to (272, 120) in x and y coordinates.</p>
-                <p id="introxy" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">You can move from (50, 70) to (200, 110) in x and y coordinates.</p> -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
                         {{ form.x.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
@@ -244,7 +236,8 @@
                         {{ form.item(type="hidden",id="keyitem")}}
                     </div>
                 </div>
-                {{form.submit()}}
+                {{form.submit(style="padding: 12px 24px;margin: 0 5px;")}}
+
             </form>
             <div class="grid grid-cols-1 md:grid-cols-5 gap-0 mt-2 ml-3">
                 <button onclick="previewCertificate({{temp.template_id}},v='ar_en')" class=" custom-button"
@@ -257,12 +250,13 @@
 
 <script>
     // var checkbox = document.getElementById('bilingualCheckbox');
-    // var bilingual = document.getElementById("ardropdownToggleButton");
+    // var bilingual = document.getElementById("ardropdownHoverButton");
     var item = document.querySelectorAll("#itemCheckbox");
     var aritem = document.getElementById("aritemCheckbox");
     var customItem = document.getElementById("customizationform");
     var x_postion = document.getElementById("x_postion");
     var keyitem = document.getElementById("keyitem");
+    var itemTitle = document.getElementById("itemTitle");
     var flash1 = document.getElementById('customizationadded');
     var signature = document.getElementById("signature");
 
@@ -281,10 +275,11 @@
         var flashMessage = document.getElementById('flashMessage');
         flashMessage.style.display = 'none';
     }
-    function checkItems(value, isChecked) {
+    function checkItems(title,value, isChecked) {
         if (isChecked) {
             customItem.style.display = "block";
             keyitem.value = value;
+            itemTitle.innerHTML = title;
             if (keyitem.value == "signature_2") {
                 signature.style.display = "block";
 
@@ -323,7 +318,7 @@
 
             }
         } else {
-            customItem.style.display = "none";
+            // customItem.style.display = "none";
         }
     }
 
