@@ -65,13 +65,13 @@ input[type="file"]:focus {
 button, .button, input[type="submit"], #add-template-button {
   background-color: #427AA1; /* Adjusted color for consistency */
   color: white;
-  padding: 12px 24px;
+  /* padding: 12px 24px; */
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-  margin: 0 5px;
+  /* margin: 0 5px; */
 }
 
 button:hover, .button:hover, input[type="submit"]:hover,
