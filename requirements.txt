@@ -11,6 +11,7 @@ bcrypt==3.2.0
 click==8.1.2  # Change to specific version to resolve conflict (needed for the web app to work)
 email-validator==1.1.3
 Flask==2.0.2
+Flask-Session==0.4.0
 Flask-Mail==0.9.1 
 Flask-Bcrypt==1.0.1
 Flask-Login==0.6.0

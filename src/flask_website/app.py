@@ -3,11 +3,15 @@ import os
 from io import StringIO
 import uuid
 import csv
+import json
+import subprocess
+from datetime import timedelta
 
 # Related Third Party Imports
 from flask import Flask, render_template, url_for, redirect, request, jsonify, send_from_directory, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from flask_session import Session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -18,7 +22,6 @@ from sqlalchemy import update
 from sqlalchemy.orm.session import object_session
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-import subprocess
 
 # Local App/Library Specific Imports
 import add_certificate_function
@@ -42,33 +45,29 @@ from api_function import verify_certificate_api
 
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
 
+
 # Load environment variables from the .env file
 load_dotenv()
 
-# to access the data in .env file
-# HOSTNAME = os.environ.get('HOSTNAME')
-# DB_PORT = os.environ.get('DB_PORT')
-# MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
-# MYSQL_ROOT_PASSWORD = os.environ.get('MYSQL_ROOT_PASSWORD')
-# MYSQL_USER = os.environ.get('MYSQL_USER')
-# MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-# SCHEMA = os.environ.get("SCHEMA")
 
 app = db_connection.app
 db = db_connection.db
 bcrypt = db_connection.bcrypt
-# old uri 
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-# new uri
-# app.config['SQLALCHEMY_DATABASE_URI'] =\
-#     f'mysql+pymysql://{MYSQL_DATABASE}:{MYSQL_ROOT_PASSWORD}@{HOSTNAME}/{SCHEMA}'
 
-# TimeoutError Database need to change
-# app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
-# app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
 
-# app.config['SECRET_KEY'] = 'thisisasecretkey'
-# app.config['UPLOAD_FOLDER']='../certificate-templates'
+# Session configuration
+app.config['SECRET_KEY'] = 'thisisasecretkey'
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_USE_SIGNER'] = True
+app.config['SESSION_FILE_DIR'] = './flask_session/'
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+
+# Initialize session
+Session(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -120,17 +119,29 @@ def register():
     return users_functions.register()
 
 
-# login 
+# Login route
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return users_functions.login()
+    result = users_functions.login()
+    
+    # Manage session if login is successful
+    if isinstance(result, dict) and result.get('status') == 'success':
+        user_id = result.get('user_id')
+        session['user_id'] = user_id  # Store the user ID in session
+        session['logged_in'] = True  # Indicate that the user is logged in
+
+    return result
 
 
-#Admin route
+# Admin route
 @app.route('/admin')
 @login_required
 def admin():
-    return users_functions.admin()
+    if 'logged_in' in session and session['logged_in']:
+        return users_functions.admin()
+    else:
+        flash('You need to log in first', 'danger')
+        return redirect(url_for('login'))
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -156,9 +167,11 @@ def manage_event_types():
 def update_event_types():
     return event_types.update_event_types()
 
+# Logout route
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
+    session.clear()  # Clear the session
     logout_user()
     return redirect(url_for('login'))
 
