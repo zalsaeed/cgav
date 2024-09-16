@@ -58,12 +58,12 @@ bcrypt = db_connection.bcrypt
 # Session configuration
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_PERMANENT'] = True  # Set sessions as permanent
 app.config['SESSION_USE_SIGNER'] = True
 app.config['SESSION_FILE_DIR'] = './flask_session/'
 app.config['SESSION_COOKIE_SECURE'] = False  # Set to True in production with HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Keep session for 7 days
 
 # Initialize session
 Session(app)
@@ -107,8 +107,7 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
-
+    return redirect(url_for('certificates'))
 @app.route('/sample')
 def sample():
     return render_template('samples.html')
@@ -129,6 +128,7 @@ def login():
         user_id = result.get('user_id')
         session['user_id'] = user_id  # Store the user ID in session
         session['logged_in'] = True  # Indicate that the user is logged in
+        session.permanent = True  # Make the session permanent
 
     return result
 
