@@ -515,14 +515,14 @@
         </div>
       </div>
       <br>
-      <!-- Loading Spinner and Progress Bar -->
-      <div id="loading-spinner" style="display: none;">
+      <!-- Loading Progress Bar -->
+      <div id="loading-container" style="display: none;">
         <p style="color:#8f3131">Generating certificates, please wait...</p>
-        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="100" height="100">
         <div style="margin-top: 20px; width: 100%; max-width: 400px;">
             <div style="background-color: #e0e0e0; border-radius: 25px;">
-                <div id="progress-bar" style="height: 20px; width: 0%; background-color: #8f3131; border-radius: 25px; text-align: center; color: white;">0%</div>
+                <div id="progress-bar" style="height: 20px; width: 0%; background-color: #8f3131; border-radius: 25px; text-align: center; color: white;"></div>
             </div>
+            <p id="progress-text" style="text-align: center; margin-top: 5px; color: #8f3131;">0%</p>
         </div>
       </div>
       <!-- Buttons -->
@@ -708,12 +708,13 @@
 
   ///////////////////
   function handleGenerate(certificateEventId) {
-    const spinner = document.getElementById('loading-spinner');
+    const loadingContainer = document.getElementById('loading-container');
     const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
 
-    spinner.style.display = 'block';
+    loadingContainer.style.display = 'block';
     progressBar.style.width = '0%';
-    progressBar.innerText = '0%';
+    progressText.innerText = '0%';
 
     let total = 0;
     let progress = 0;
@@ -742,7 +743,7 @@
                 if (total > 0) {
                     const percentage = (progress / total) * 100;
                     progressBar.style.width = `${percentage}%`;
-                    progressBar.innerText = `${Math.round(percentage)}%`;
+                    progressText.innerText = `${Math.round(percentage)}%`;
                 }
                 if (progress >= total) {
                     clearInterval(progressInterval); // Stop if complete
@@ -762,7 +763,7 @@
     function handleError(error, customMessage) {
         console.error(customMessage, error);
         clearInterval(progressInterval);
-        spinner.style.display = 'none';
+        loadingContainer.style.display = 'none';
         Swal.fire({
             title: 'Error!',
             text: `${customMessage} ${error.message}`,
@@ -799,7 +800,7 @@
         })
         .finally(() => {
             clearInterval(progressInterval);
-            spinner.style.display = 'none';
+            loadingContainer.style.display = 'none';
         });
   }
   // Download section 
