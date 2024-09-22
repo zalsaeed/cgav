@@ -3,15 +3,17 @@ import logging
 import datetime
 import argparse
 import fpdf
+import pandas as pd
 
 import util
 import configuration_loader
 from csv_gen import CSVGen
 from certificate import Certificate , BilingualCertificate
 
-from db_classes import recipient, Certificate_table
+from db_classes import recipient, Certificate_table, CertificateEvent, Certificate_table
 from db_connection import db, app
 import sqlalchemy.exc
+from flask import jsonify, Flask, request
 
 # set up logger
 for handler in logging.root.handlers[:]:  
@@ -187,7 +189,7 @@ def generate_certificate(event_data, output_dir, item_positions):
     output_dir = os.path.join(output_dir, event_dir)
     util.make_sure_path_exists(output_dir)
     log.info(f"Saving output to: '{output_dir}'")
-
+    event_id = event_data['certificate_event_id']
     # Read recipients data from CSV file specified in event_data
     list_of_recipients = util.read_csv_to_dict(event_data['csv_file'])
 
@@ -312,11 +314,66 @@ def generate_certificate(event_data, output_dir, item_positions):
         log.debug(f"Hash ID: {hash}")
 
         store_certificate_hash(hash, recipient_id, event_data['certificate_event_id'])
-
+        add_progress(event_id)
     # Generate report CSV
     report_filename = util.make_file_name_compatible(f"{event_data['certificate_event_id']}-{event_data['event_title']}-{event_data['event_date']}")
     report.write_to_csv(output_dir, report_filename)
 
+def add_progress(event_id):
+    """Increment the progress of a specific certificate event by 1."""
+    event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
+    if event:
+        event.progress += 1
+        db.session.commit()
+        log.info(f"Progress updated for event_id {event_id}: {event.progress}")
+    else:
+        log.error(f"Event not found for event_id: {event_id}")
+
+def get_progress(event_id):
+    """Retrieve the progress number of certificates set for a specific event."""
+    event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
+    if event:
+        log.info(f"Progress retrieved for event_id {event_id}: {event.progress}")
+        return jsonify({'success': True, 'progress': event.progress}), 200
+    log.error(f"Event not found for event_id: {event_id}")
+    return jsonify({'success': False, 'error': 'Event not found'}), 404
+
+def set_total(event_id):
+    """Set the total number of certificates for a specific event based on the CSV file."""
+    event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
+    
+    if not event:
+        return jsonify({'success': False, 'error': 'Event not found'}), 404
+
+    csv_file_path = event.file_path
+
+    if not os.path.exists(csv_file_path):
+        return jsonify({'success': False, 'error': 'CSV file not found'}), 404
+
+    try:
+        # Read the CSV file
+        df = pd.read_csv(csv_file_path)
+
+        # Count the number of rows excluding any headers
+        total = len(df)
+        log.info(f"total: {total}")
+        # Set the total in the event and reset progress
+        event.total = total
+        event.progress = 0  # Reset progress to 0 when setting total
+        db.session.commit()
+
+        return jsonify({'success': True, 'total': event.total}), 200
+
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+        
+def get_total(event_id):
+    """Retrieve the total number of certificates set for a specific event."""
+    event = CertificateEvent.query.filter_by(certificate_event_id=event_id).first()
+    if event:
+        log.info(f"Progress retrieved for event_id {event_id}: {event.progress}")
+        return jsonify({'total': event.total}), 200
+    return jsonify({'success': False, 'error': 'Event not found'}), 404
 
 def main(event_data, item_positions):
     # Load default data and merge with incoming data

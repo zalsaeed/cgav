@@ -515,12 +515,15 @@
         </div>
       </div>
       <br>
-      <!-- Loading Spinner -->
+      <!-- Loading Spinner and Progress Bar -->
       <div id="loading-spinner" style="display: none;">
         <p style="color:#8f3131">Generating certificates, please wait...</p>
-        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="100"
-          height="100">
-        <!-- Add a spinner.gif image to your static folder -->
+        <img src="https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif" alt="Loading..." width="100" height="100">
+        <div style="margin-top: 20px; width: 100%; max-width: 400px;">
+            <div style="background-color: #e0e0e0; border-radius: 25px;">
+                <div id="progress-bar" style="height: 20px; width: 0%; background-color: #8f3131; border-radius: 25px; text-align: center; color: white;">0%</div>
+            </div>
+        </div>
       </div>
       <!-- Buttons -->
       <button id="delete-btn" class="custom-button" onclick="handleDelete()" data-i18n="Delete">Delete</button>
@@ -705,48 +708,100 @@
 
   ///////////////////
   function handleGenerate(certificateEventId) {
-    document.getElementById('loading-spinner').style.display = 'block';
+    const spinner = document.getElementById('loading-spinner');
+    const progressBar = document.getElementById('progress-bar');
 
-    fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    spinner.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressBar.innerText = '0%';
+
+    let total = 0;
+    let progress = 0;
+    let progressInterval;
+
+    async function fetchAndSetTotal() {
+        try {
+            const response = await fetch(`/set_total/${certificateEventId}`, { method: 'POST' });
+            const data = await response.json();
+            if (data.success) {
+                total = data.total;
+            } else {
+                throw new Error(data.error || 'Failed to set total.');
+            }
+        } catch (error) {
+            handleError(error, 'Error fetching total certificates.');
         }
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) {
-          Swal.fire({
-            title: 'Success!',
-            text: 'Certificates generated successfully.',
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            location.reload();
-          });
-        } else {
-          Swal.fire({
+    }
+
+    async function updateProgress() {
+        try {
+            const response = await fetch(`/api/progress/${certificateEventId}`);
+            const data = await response.json();
+            if (data.success) {
+                progress = data.progress || 0;
+                if (total > 0) {
+                    const percentage = (progress / total) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressBar.innerText = `${Math.round(percentage)}%`;
+                }
+                if (progress >= total) {
+                    clearInterval(progressInterval); // Stop if complete
+                }
+            } else {
+                throw new Error(data.error || 'Failed to fetch progress.');
+            }
+        } catch (error) {
+            handleError(error, 'Error fetching progress.');
+        }
+    }
+
+    function startProgressInterval() {
+        progressInterval = setInterval(updateProgress, 3000);
+    }
+
+    function handleError(error, customMessage) {
+        console.error(customMessage, error);
+        clearInterval(progressInterval);
+        spinner.style.display = 'none';
+        Swal.fire({
             title: 'Error!',
-            text: `Error generating certificates: ${data.error}`,
+            text: `${customMessage} ${error.message}`,
             icon: 'error',
             confirmButtonText: 'OK'
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: `${error}`,
-          icon: 'error',
-          confirmButtonText: 'OK'
         });
-      })
-      .finally(() => {
-        document.getElementById('loading-spinner').style.display = 'none';
-      });
-  }
+    }
 
+    fetchAndSetTotal()
+        .then(() => {
+            if (total <= 0) {
+                throw new Error('Total number of certificates is zero.');
+            }
+            startProgressInterval();
+            return fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Certificates generated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                throw new Error(`Error generating certificates: ${data.error || 'Unknown error.'}`);
+            }
+        })
+        .catch(error => {
+            handleError(error, 'An error occurred during the certificate generation process.');
+        })
+        .finally(() => {
+            clearInterval(progressInterval);
+            spinner.style.display = 'none';
+        });
+  }
   // Download section 
   // Function to fetch and display available certificates
   function handleDownload(eventId) {

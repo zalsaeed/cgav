@@ -41,6 +41,7 @@ import db_connection
 import users_functions
 import event_types
 import mail
+import main
 from api_function import verify_certificate_api
 
 from db_classes import CertificateEvent, EventType, CertificateForm, Template
@@ -332,6 +333,18 @@ def run_main_script(temp_id):
 @login_required
 def generate_certificate(certificate_event_id):
     return generate_functions.generate_certificate(certificate_event_id)
+
+@app.route('/api/progress/<int:event_id>', methods=['GET'])
+def api_get_progress(event_id):
+    return main.get_progress(event_id)
+
+@app.route('/api/total/<int:event_id>', methods=['GET'])
+def api_get_total(event_id):
+    return main.get_total(event_id)
+
+@app.route('/set_total/<int:event_id>', methods=['POST'])
+def set_total(event_id):
+    return main.set_total(event_id)
 
 @app.route('/send_email', methods=['GET', 'POST'])
 @login_required

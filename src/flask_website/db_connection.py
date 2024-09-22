@@ -36,6 +36,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =\
 # TimeoutError Database need to change
 app.config['SQLALCHEMY_POOL_SIZE'] = 500 # you allow up to 100 concurrent connections to the database.
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 3600 # 3600 seconds (1 hour) means that connections will be recycled after being open for 1 hour.
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SECRET_KEY'] = 'thisisasecretkey'
 app.config['UPLOAD_FOLDER']='../certificate-templates'
