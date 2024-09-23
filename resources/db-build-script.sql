@@ -171,6 +171,8 @@ male_recipient_title_en VARCHAR
     sended BOOLEAN DEFAULT FALSE,   -- New field for tracking if the certificate is sent
     downloaded BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is downloaded
     generated_ BOOLEAN DEFAULT FALSE,  -- New field for tracking if the certificate is generated
+    progress INT DEFAULT 0 , -- Counter for progress bar 
+    total INT DEFAULT 0 , -- Total certificate for progress bar
     PRIMARY KEY
 (certificate_event_id),
     FOREIGN KEY
