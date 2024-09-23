@@ -38,24 +38,30 @@ def edit_template(temp_id):
 
 def newtemp():
     form = db_classes.NewTemplates()
+
+    # Handle GET request: return the HTML page
+    if request.method == 'GET':
+        return render_template('create_new_template.html', form=form)
+
+    # Handle POST request: form submission via AJAX
     if form.validate_on_submit():
         file = form.template_image.data
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename)))
 
-
         new_template = Template(template_name=form.template_name.data,
-                                           id = current_user.id,
-                                           template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)),
-                                           is_active=True)
+                                id=current_user.id,
+                                template_image=os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)),
+                                is_active=True)
         db.session.add(new_template)
         db.session.commit()
 
-        flash('A new template has been added successfully.')
-        return redirect(url_for('selectTemp'))  # It's better to use url_for() here
+        # Send success response for AJAX
+        return jsonify({'status': 'success', 'message': 'A new template has been added successfully.'}), 200
 
-    return render_template('create_new_template.html', form=form)
-
+    # Handle form errors for POST requests
+    errors = form.errors
+    return jsonify({'status': 'error', 'errors': errors}), 400
 def artemplateEdit(temp_id):
     # temp = db_classes.Template.query.filter_by(template_name=tempname).first()
     # tempid= temp.template_id if temp else None

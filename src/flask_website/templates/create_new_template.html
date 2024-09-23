@@ -50,21 +50,26 @@
                     </svg>
                 </div>
                 <div class="hvr-profile-img">
-                    {{ form.template_image(id='getval', accept="image/*", class="upload w180", title="Template
-                    Background") }}
+                    {{ form.template_image(id='getval', accept="image/*", class="upload w180", title="Template Background") }}
                 </div>
             </div>
             <div style="margin-top:10px;" class="text-center w-full" id="container">
-                <div><button type="button" style="width: 76px;"
-                        class="cancel-button w-40 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded m-2"
-                        data-i18n="Cancel">Cancel</button></div>
-                <div>{{ form.submit(class="button w-40 text-white py-2 px-4 rounded m-2") }}
+                <div>
+                    <button type="button" style="width: 76px;" class="cancel-button w-40 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded m-2" data-i18n="Cancel">Cancel</button>
+                </div>
+                <div>
+                    {{ form.submit(class="button w-40 text-white py-2 px-4 rounded m-2") }}
                 </div>
             </div>
         </form>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     <script>
+        // Handle file upload preview
         document.getElementById('getval').addEventListener('change', readURL, true);
         function readURL() {
             var file = document.getElementById("getval").files[0];
@@ -74,10 +79,57 @@
             }
             if (file) {
                 reader.readAsDataURL(file);
-            } else {
             }
         }
+
+        // Handle form submission via AJAX
         document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('myForm');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();  // Prevent default form submission
+
+                let formData = new FormData(form);
+
+                // Send form data via AJAX
+                fetch('/create_new_template', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Show success popup
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: data.message
+                        });
+                        // Optionally, redirect to another page after success
+                        setTimeout(() => {
+                            window.location.href = '/Select_template';
+                        }, 2000);
+                    } else if (data.status === 'error') {
+                        // Handle validation errors (show errors to the user)
+                        console.error(data.errors);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Please correct the form errors.'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred.'
+                    });
+                });
+            });
+
+            // Cancel button handler
             const cancelButton = document.querySelector('.cancel-button');
             if (cancelButton) {
                 cancelButton.addEventListener('click', function () {
