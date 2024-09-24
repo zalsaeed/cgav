@@ -4,11 +4,11 @@
 
 <div class="container mt-5">
     <h1 data-i18n="Change_Email">Change Email</h1>
-    <form action="{{ url_for('change_email') }}" method="POST">
+    <form action="{{ url_for('change_email', id=user.id) }}" method="POST">
         {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.email.label(class="form-label", **{'data-i18n': 'Email'}) }}
-            {{ form.email(class="form-control") }}
+            {{ form.email(class="form-control", value=(user.email)) }}
             {% if form.email.errors %}
             {% for error in form.email.errors %}
             <div class="alert alert-danger">{{ error }}</div>
@@ -18,7 +18,7 @@
         <button type="submit"
             class="bg-[#427AA1] hover:bg-[#2c4e71] text-white py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
             data-i18n="Change_Email_Button">Change Email</button>
-        <a href="{{ url_for('settings') }}"
+        <a href="{{ url_for('settings', id=user.id) }}"
             class="cancel-button w-40 bg-red-500 hover:bg-red-700 text-white py-1 px-4 rounded m-2 text-sm"
             data-i18n="Cancel">Cancel</a>
     </form>
@@ -30,6 +30,7 @@
             Event: "Activities",
             Settings: "Settings",
             Contact: "Contact",
+            Admin_page: "Admin Page",
             Sign_out: "Sign out",
             Templates: "Templates",
             Dismiss: "Dismiss",
@@ -44,6 +45,7 @@
             Event: "الأنشطة",
             Settings: "الاعدادات",
             Contact: "تواصل معنا",
+            Admin_page: "صفحة المدير",
             Sign_out: "تسجيل خروج",
             Templates: "القوالب",
             Dismiss: "إنهاء",

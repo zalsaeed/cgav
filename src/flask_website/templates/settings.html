@@ -6,20 +6,20 @@
         <h2 data-i18n="Public_Profile">Public Profile</h2>
         <div class="profile-field">
             <label for="displayName" data-i18n="Name">Name:</label>
-            <span id="displayName">{{ first_name }} {{ last_name }}</span>
-            <a href="{{ url_for('change_name') }}"
+            <span id="displayName">{{ user.Fname }} {{ user.Lname }}</span>
+            <a href="{{ url_for('change_name', id=user.id) }}"
                 class="inline-block bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-1 px-3 rounded focus:outline-none focus:shadow-outline text-sm"
                 data-i18n="Change_Name">Change Name</a>
         </div>
         <div class="profile-field">
             <label for="displayEmail" data-i18n="Email">Email:</label>
-            <span id="displayEmail">{{ current_user.email }}</span>
-            <a href="{{ url_for('change_email') }}"
+            <span id="displayEmail">{{ user.email }}</span>
+            <a href="{{ url_for('change_email', id=user.id) }}"
                 class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
                 data-i18n="Change_Email">Change Email</a>
         </div>
         <div class="profile-field">
-            <a href="{{ url_for('change_password') }}"
+            <a href="{{ url_for('change_password', id=user.id) }}"
                 class="inline-block w-40 bg-[#427AA1] hover:bg-[#2c4e71] text-white font-bold py-2 px-4 rounded m-2 focus:outline-none focus:shadow-outline"
                 data-i18n="Change_Password">Change Password</a>
         </div>

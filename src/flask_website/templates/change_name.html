@@ -4,11 +4,11 @@
 
 <div class="container mt-5">
     <h1 data-i18n="Change_Name">Change Name</h1>
-    <form action="{{ url_for('change_name') }}" method="POST">
+    <form action="{{ url_for('change_name', id=user.id) }}" method="POST">
         {{ form.hidden_tag() }}
         <div class="mb-3">
             {{ form.name.label(class="form-label", **{'data-i18n': 'Name'}) }}
-            {{ form.name(class="form-control") }}
+            {{ form.name(class="form-control", value=(user.Fname ~ ' ' ~ user.Lname)) }}
             {% if form.name.errors %}
             {% for error in form.name.errors %}
             <div class="alert alert-danger">{{ error }}</div>
@@ -19,7 +19,7 @@
             class="form-control text-sm bg-[#427AA1] hover:bg-[#2c4e71] text-white py-1 px-4 rounded focus:outline-none focus:shadow-outline"
             data-i18n="Change_Name_Button">Change
             Name</button>
-        <a href="{{ url_for('settings') }}"
+        <a href="{{ url_for('settings', id=user.id) }}"
             class="cancel-button w-40 bg-red-500 hover:bg-red-700 text-white py-1 px-4 rounded"
             data-i18n="Cancel">Cancel</a>
     </form>
@@ -32,6 +32,7 @@
             Event: "Activities",
             Settings: "Settings",
             Contact: "Contact",
+            Admin_page: "Admin Page",
             Sign_out: "Sign out",
             Templates: "Templates",
             Dismiss: "Dismiss",
@@ -53,6 +54,7 @@
             Event: "الأنشطة",
             Settings: "الاعدادات",
             Contact: "تواصل معنا",
+            Admin_page: "صفحة المدير",
             Sign_out: "تسجيل خروج",
             Templates: "القوالب",
             Dismiss: "إنهاء",

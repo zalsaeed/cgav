@@ -134,15 +134,15 @@ def login():
     return result
 
 
-# Admin route
+
 @app.route('/admin')
 @login_required
 def admin():
-    if 'logged_in' in session and session['logged_in']:
+    # if 'logged_in' in session and session['logged_in']:
         return users_functions.admin()
-    else:
-        flash('You need to log in first', 'danger')
-        return redirect(url_for('login'))
+    # else:
+    #     flash('You need to log in first', 'danger')
+    #     return redirect(url_for('login'))
     
 #update user
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -197,26 +197,26 @@ def aren_form():
     return add_certificate_function.aren_form()
 
 
-@app.route('/settings')
+@app.route('/settings/<int:id>',methods=['GET', 'POST'])
 @login_required
-def settings():
-    return setting_functions.settings()
+def settings(id):
+    return setting_functions.settings(id)
 
-@app.route('/settings/change_name', methods=['GET', 'POST'])
+@app.route('/settings/change_name/<int:id>', methods=['GET', 'POST'])
 @login_required
-def change_name():
-    return setting_functions.change_name()
+def change_name(id):
+    return setting_functions.change_name(id)
  
 
-@app.route('/settings/change_email', methods=['GET', 'POST'])
+@app.route('/settings/change_email/<int:id>', methods=['GET', 'POST'])
 @login_required
-def change_email():
-    return setting_functions.change_email()
+def change_email(id):
+    return setting_functions.change_email(id)
 
-@app.route('/settings/change_password', methods=['GET', 'POST'])
+@app.route('/settings/change_password/<int:id>', methods=['GET', 'POST'])
 @login_required
-def change_password():
-    return setting_functions.change_password()
+def change_password(id):
+    return setting_functions.change_password(id)
 
 @app.route('/get_user_info')
 @login_required
