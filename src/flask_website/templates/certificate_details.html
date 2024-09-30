@@ -708,14 +708,6 @@
 
   ///////////////////
   function handleGenerate(certificateEventId) {
-    const loadingContainer = document.getElementById('loading-container');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-
-    loadingContainer.style.display = 'block';
-    progressBar.style.width = '0%';
-    progressText.innerText = '0%';
-
     let total = 0;
     let progress = 0;
     let progressInterval;
@@ -741,9 +733,17 @@
             if (data.success) {
                 progress = data.progress || 0;
                 if (total > 0) {
-                    const percentage = (progress / total) * 100;
-                    progressBar.style.width = `${percentage}%`;
-                    progressText.innerText = `${Math.round(percentage)}%`;
+                    const percentage = Math.round((progress / total) * 100);
+                    const progressBar = document.querySelector('.swal2-popup #progress-bar');
+                    const progressText = document.querySelector('.swal2-popup #progress-text');
+
+                    if (progressBar) {
+                        progressBar.style.width = `${percentage}%`;
+                    }
+                    
+                    if (progressText) {
+                        progressText.innerText = `${percentage}% completed`;
+                    }
                 }
                 if (progress >= total) {
                     clearInterval(progressInterval); // Stop if complete
@@ -757,13 +757,12 @@
     }
 
     function startProgressInterval() {
-        progressInterval = setInterval(updateProgress, 3000);
+        progressInterval = setInterval(updateProgress, 1500);
     }
 
     function handleError(error, customMessage) {
         console.error(customMessage, error);
         clearInterval(progressInterval);
-        loadingContainer.style.display = 'none';
         Swal.fire({
             title: 'Error!',
             text: `${customMessage} ${error.message}`,
@@ -772,37 +771,61 @@
         });
     }
 
-    fetchAndSetTotal()
-        .then(() => {
-            if (total <= 0) {
-                throw new Error('Total number of certificates is zero.');
-            }
-            startProgressInterval();
-            return fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' });
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Certificates generated successfully.',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    location.reload();
+    // Show SweetAlert2 Progress Popup
+    Swal.fire({
+        title: 'Generating Certificates',
+        html: `
+            <p style="color:#8f3131; font-size: 18px; font-weight: 500; margin-bottom: 20px;">
+                Please wait while the certificates are being generated...
+            </p>
+            <div style="margin-top: 20px; width: 100%; max-width: 450px;">
+                <div style="background-color: #e0e0e0; border-radius: 30px; overflow: hidden;">
+                    <div id="progress-bar" style="height: 20px; width: 0%; background-color: #8f3131;"></div>
+                </div>
+                <p id="progress-text" style="text-align: center; margin-top: 10px; font-size: 16px; font-weight: 500; color: #8f3131;">
+                    0% completed
+                </p>
+            </div>
+        `,
+        padding: '60px',  // Adjust padding inside the modal
+        background: '#f9f9f9',  // Set a light background color
+        showConfirmButton: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+            // Attach event listeners or start processes after modal is fully open
+            fetchAndSetTotal()
+                .then(() => {
+                    if (total <= 0) {
+                        throw new Error('Total number of certificates is zero.');
+                    }
+                    startProgressInterval();
+                    return fetch(`/generate_certificate/${certificateEventId}`, { method: 'POST' });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Certificates generated successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        throw new Error(`Error generating certificates: ${data.error || 'Unknown error.'}`);
+                    }
+                })
+                .catch(error => {
+                    handleError(error, 'An error occurred during the certificate generation process.');
                 });
-            } else {
-                throw new Error(`Error generating certificates: ${data.error || 'Unknown error.'}`);
-            }
-        })
-        .catch(error => {
-            handleError(error, 'An error occurred during the certificate generation process.');
-        })
-        .finally(() => {
+        },
+        willClose: () => {
             clearInterval(progressInterval);
-            loadingContainer.style.display = 'none';
-        });
+        }
+    });
   }
+
   // Download section 
   // Function to fetch and display available certificates
   function handleDownload(eventId) {
