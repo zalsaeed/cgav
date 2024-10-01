@@ -35,10 +35,10 @@
 
 <body>
 
-    <div style="display: none;" class="flash-message" id="flashMessage">
+    <!-- <div style="display: none;" class="flash-message" id="flashMessage">
         <p id="fMessage"></p>
         <button onclick="dismissFlashMessage()">Dismiss</button>
-    </div>
+    </div> -->
 
     <div class="text-center p-5">
         <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;" data-i18n="Certificate_Appearance">Certificate
@@ -120,7 +120,8 @@
                 {{form.hidden_tag()}}
 
                 <div class="flex flex-col items-center p-4 leading-normal">
-                    <h5 id="itemTitle" class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;" ></h5>
+                    <h5 id="itemTitle" class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                        style="color:#2C4E71;"></h5>
                 </div>
 
                 <p id="note" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">All positions
@@ -247,7 +248,7 @@
     </div>
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // var checkbox = document.getElementById('bilingualCheckbox');
     // var bilingual = document.getElementById("ardropdownHoverButton");
@@ -270,12 +271,12 @@
     let previousTwitterValue = '';
     let previousTwitterLinkValue = '';
 
-    function dismissFlashMessage() {
+    // function dismissFlashMessage() {
 
-        var flashMessage = document.getElementById('flashMessage');
-        flashMessage.style.display = 'none';
-    }
-    function checkItems(title,value, isChecked) {
+    //     var flashMessage = document.getElementById('flashMessage');
+    //     flashMessage.style.display = 'none';
+    // }
+    function checkItems(title, value, isChecked) {
         if (isChecked) {
             customItem.style.display = "block";
             keyitem.value = value;
@@ -388,13 +389,27 @@
             body: new FormData(document.getElementById('customizationform')),
         })
             .then(response => {
-                document.getElementById('flashMessage').style.display = "block";
-                document.getElementById('fMessage').innerHTML = "Customizations added successfully!";
-            })
-            .then(data => {
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Customizations added successfully!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    throw new Error('Something went wrong');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             });
     }
 

@@ -33,10 +33,10 @@
 
 <body>
 
-    <div style="display: none;" class="flash-message" id="flashMessage">
+    <!-- <div style="display: none;" class="flash-message" id="flashMessage">
         <p id="fMessage" data-i18n="Dismiss_Message"></p>
         <button onclick="dismissFlashMessage()" data-i18n="Dismiss">Dismiss</button>
-    </div>
+    </div> -->
 
     <div class="text-center p-5">
         <h1 class="font-bold text-4xl mb-4" style="color: #2C4E71;" data-i18n="Certificate_Appearance">Certificate
@@ -256,6 +256,8 @@
     </div>
 </body>
 
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var item = document.querySelectorAll("#itemCheckbox");
     var customItem = document.getElementById("customizationform");
@@ -275,10 +277,10 @@
     let previousTwitterValue = '';
     let previousTwitterLinkValue = '';
 
-    function dismissFlashMessage() {
-        var flashMessage = document.getElementById('flashMessage');
-        flashMessage.style.display = 'none';
-    }
+    // function dismissFlashMessage() {
+    //     var flashMessage = document.getElementById('flashMessage');
+    //     flashMessage.style.display = 'none';
+    // }
     function checkItems(value, isChecked) {
         if (isChecked) {
             customItem.style.display = "block";
@@ -389,13 +391,27 @@
             body: new FormData(document.getElementById('customizationform')),
         })
             .then(response => {
-                document.getElementById('flashMessage').style.display = "block";
-                document.getElementById('fMessage').innerHTML = "Customizations added successfully!";
-            })
-            .then(data => {
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Customizations added successfully!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    throw new Error('Something went wrong');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             });
     }
 
