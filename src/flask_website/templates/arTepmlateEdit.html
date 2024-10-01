@@ -63,10 +63,10 @@
                 <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover"
                     class="w-44 mt-4 text-white bg-sky-900 hover:bg-sky-800 focus:ring-4 focus:outline-none focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-sky-900 dark:hover:bg-blue-700 dark:focus:ring-sky-800"
                     type="button">عناصر الشهادة<svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m1 1 4 4 4-4" />
-                </svg>
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
                 </button>
                 <!-- Dropdown menu -->
                 <div id="dropdownHover"
@@ -81,7 +81,7 @@
                                         id="itemCheckbox{{loop.index}}" value="{{item}}" class="sr-only peer">
                                     <span
                                         class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{value}}</span>
-                                </label>        
+                                </label>
                             </div>
                         </li>
                         {% endfor %}
@@ -93,7 +93,8 @@
                 {{form.hidden_tag()}}
 
                 <div class="flex flex-col items-center p-4 leading-normal">
-                    <h5 id="itemTitle" class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white" style="color:#2C4E71;" ></h5>
+                    <h5 id="itemTitle" class="mt-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+                        style="color:#2C4E71;"></h5>
                 </div>
 
                 <p id="note" style="color:#2C4E71;margin-bottom: 5px;font-style:oblique;font-size:small;">All positions
@@ -104,42 +105,55 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div>
                         {{ form.x.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.x(id="xp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",min=0,max=1,step=".01",type="number",id="x_postion")}}
+                        {{ form.x(id="xp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg
+                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",min=0,max=1,step=".01",type="number",id="x_postion")}}
                         {% for error in form.x.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div>
                         {{ form.y.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.y(id="yp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",min=0,max=1,step=".01",type="number",id="y_postion")}}
+                        {{ form.y(id="yp",class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg
+                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",min=0,max=1,step=".01",type="number",id="y_postion")}}
                         {% for error in form.y.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div>
                         {{ form.h.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.h(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",min=0,max=1,step=".01",type="number",id="height")}}
+                        {{ form.h(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50
+                        sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",min=0,max=1,step=".01",type="number",id="height")}}
                         {% for error in form.h.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div>
                         {{ form.w.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.w(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",min=0,max=1,step=".01",type="number",id="width")}}
+                        {{ form.w(class="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50
+                        sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",min=0,max=1,step=".01",type="number",id="width")}}
                         {% for error in form.w.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div>
                         {{ form.color.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.color(class="p-1 h-10 w-full mb-2 block border border-gray-300 rounded-lg bg-gray-50 border border-gray-300 cursor-pointer focus:ring-blue-500 focus:border-blue-500 bg-white disabled:opacity-50 disabled:pointer-events-none ",type="color",id="color")}}
+                        {{ form.color(class="p-1 h-10 w-full mb-2 block border border-gray-300 rounded-lg bg-gray-50
+                        border border-gray-300 cursor-pointer focus:ring-blue-500 focus:border-blue-500 bg-white
+                        disabled:opacity-50 disabled:pointer-events-none ",type="color",id="color")}}
                         {% for error in form.color.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div id="alttextfield">
                         {{ form.text.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.text(rows="1" ,class="block mb-2 p-2 w-full text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500bg-white disabled:opacity-50 disabled:pointer-events-none ",type="textarea",id="text")}}
+                        {{ form.text(rows="1" ,class="block mb-2 p-2 w-full text-sm text-gray-900 bg-gray-50 border
+                        border-gray-300 rounded-lg border border-gray-300 focus:ring-blue-500
+                        focus:border-blue-500bg-white disabled:opacity-50 disabled:pointer-events-none
+                        ",type="textarea",id="text")}}
                         {% for error in form.text.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -158,14 +172,18 @@
                     </div>
                     <div id="websitfield" style="display: none;">
                         {{ form.websit.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.websit(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",type="text",id="websit")}}
+                        {{ form.websit(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg
+                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",type="text",id="websit")}}
                         {% for error in form.color.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div id="websitfield2" style="display: none;">
                         {{ form.websitlinke.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.websitlinke(class="block w-full h-10 p-2 text-gray-900 border border-gray-300rounded-lgbg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",type="text",id="websitlinke")}}
+                        {{ form.websitlinke(class="block w-full h-10 p-2 text-gray-900 border
+                        border-gray-300rounded-lgbg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",type="text",id="websitlinke")}}
                         {% for error in form.color.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -173,14 +191,17 @@
 
                     <div id="xfield" style="display: none;">
                         {{ form.X.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.X(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="X")}}
+                        {{ form.X(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg
+                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white ",type="text",id="X")}}
                         {% for error in form.text.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
                     </div>
                     <div id="xfield2" style="display: none;">
                         {{ form.Xlink.label(class='block mb-2 text-sm font-medium text-gray-900 text-sky-900')}}
-                        {{ form.Xlink(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 bg-white",type="text",id="Xlink")}}
+                        {{ form.Xlink(class="block w-full h-10 p-2 text-gray-900 border border-gray-300 rounded-lg
+                        bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500
+                        bg-white",type="text",id="Xlink")}}
                         {% for error in form.text.errors %}
                         <span style="color: red;">{{ error }}</span>
                         {% endfor %}
@@ -199,7 +220,7 @@
     </div>
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var item = document.querySelectorAll("#itemCheckbox");
     var aritem = document.getElementById("aritemCheckbox");
@@ -228,12 +249,12 @@
     // var introxy = document.getElementById('introxy');
     // Check if the checkbox is in the checked state
 
-    function dismissFlashMessage() {
+    // function dismissFlashMessage() {
 
-        var flashMessage = document.getElementById('flashMessage');
-        flashMessage.style.display = 'none';
-    }
-    function checkItems(title,value, isChecked) {
+    //     var flashMessage = document.getElementById('flashMessage');
+    //     flashMessage.style.display = 'none';
+    // }
+    function checkItems(title, value, isChecked) {
         console.log(title);
         if (isChecked) {
             customItem.style.display = "block";
@@ -348,16 +369,29 @@
             body: new FormData(document.getElementById('customizationform')),
         })
             .then(response => {
-                document.getElementById('flashMessage').style.display = "block";
-                document.getElementById('fMessage').innerHTML = "Customizations added successfully!";
-            })
-            .then(data => {
+                if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Customizations added successfully!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    throw new Error('Something went wrong');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             });
     }
-
     function previewCertificate(temp_id) {
 
 
