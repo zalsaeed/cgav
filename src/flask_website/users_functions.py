@@ -133,5 +133,4 @@ def delete_user(id):
         uname = user_to_delete.Fname
         db.session.delete(user_to_delete)
         db.session.commit()
-        flash(f'you deleted {uname} successfuly')
         return redirect(url_for('admin'))
