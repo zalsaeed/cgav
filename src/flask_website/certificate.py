@@ -14,6 +14,7 @@ from matplotlib.font_manager import FontProperties
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 from arabic_reshaper import reshape
 from bidi.algorithm import get_display
+from db_classes import users, api_config  # Ensure api_config is correctly defined in db_classes
 
 import util
 import configuration_loader
@@ -121,19 +122,30 @@ class Certificate:
 
         """
 
-    def add_qr_code(self, data, x, y):
-        # Generate QR code
+    def add_qr_code(self, certificate_hash, x, y):
+        # Fetch the saved API URL from the database (without relying on user_id)
+        last_api = api_config.query.order_by(api_config.id.desc()).first()
+
+        if last_api:
+            api_url = last_api.api_url
+        else:
+            api_url = "https://default-url.com"  # Fallback URL in case no API URL is saved
+
+        # Combine the API URL with the certificate hash
+        qr_data = f"{api_url}/{certificate_hash}"
+
+        # Generate QR code with the combined data and smaller border
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
             box_size=7,
-            border=4
+            border=1  # Reduce the border size to make the background smaller
         )
-        qr.add_data(data)
+        qr.add_data(qr_data)
         qr.make(fit=True)
 
-        # Create QR code image with a transparent background
-        img = qr.make_image(fill_color="black", back_color="transparent").convert('RGBA')
+        # Create QR code image with a white background
+        img = qr.make_image(fill_color="black", back_color="white").convert('RGBA')
 
         # Convert to numpy array and adjust the position and scaling if needed
         img_array = np.array(img)
@@ -355,7 +367,7 @@ class Certificate:
 
             self.greeting(self.greeting_txt, greeting_x, greeting_y, greeting_color)
 
-            self.add_qr_code(self.certificate_hash, x=0.90, y=0.20)  # Adjust x, y to place the QR code as need
+            self.add_qr_code(self.certificate_hash, x=0.90, y=0.25)  # Adjust x, y to place the QR code as need
             # contact_info_dict = {
             #     1: ["img/globe.png", "coc.qu.edu.sa", "https://coc.qu.edu.sa"],
             #     2: ["img/x-logo.png", "@coc_qu_sa", "https://twitter.com/coc_qu_sa"],
@@ -363,23 +375,23 @@ class Certificate:
             #     }
             if (x_value and xlink_value) and not (Websit_value and Websitlinke_value):
                 contact_info_dict = {
-                    1: ["img/x_icon.png", x_value, xlink_value],
-                    2: ["img/checkmark_icon.png", self.certificate_hash, None]
+                    1: ["img/x-logo.png", x_value, xlink_value],
+                    2: ["img/checkmark.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and not (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
+                    1: ["img/globe.png", Websit_value, Websitlinke_value],
                     2: ["img/checkmark_icon.png", self.certificate_hash, None]
                 }
             elif (Websit_value and Websitlinke_value) and (x_value and xlink_value):
                 contact_info_dict = {
-                    1: ["img/globe_icon.png", Websit_value, Websitlinke_value],
-                    2: ["img/x_icon.png", x_value, xlink_value],
-                    3: ["img/checkmark_icon.png", self.certificate_hash, None]
+                    1: ["img/globe.png", Websit_value, Websitlinke_value],
+                    2: ["img/x-logo.png", x_value, xlink_value],
+                    3: ["img/checkmark.png", self.certificate_hash, None]
                 }
             else:
                 contact_info_dict = {
-                    1: ["img/checkmark_icon.png", self.certificate_hash, None]
+                    1: ["img/checkmark.png", self.certificate_hash, None]
                 }
 
             self.contact_info(contact_info_dict, contact_info_x, contact_info_y, contact_info_color)
