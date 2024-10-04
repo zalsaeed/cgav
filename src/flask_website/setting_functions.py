@@ -1,5 +1,5 @@
 # Standard Library Imports
-from flask import Flask, render_template, url_for, redirect, flash, session
+from flask import Flask, render_template, url_for, redirect, flash, session, jsonify, request
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -26,45 +26,63 @@ def settings(id):
 def change_name(id):
     user_to_edit = db_classes.users.query.get_or_404(id)
     form = db_classes.ChangeNameForm()
-    if form.validate_on_submit():
-        user_to_edit.Fname = form.name.data.split()[0]  # assuming the first name is the first word
-        user_to_edit .Lname = ' '.join(form.name.data.split()[1:])  # rest of the parts are considered as the last name
+    
+    # Handle POST request (form submission)
+    if request.method == 'POST' and form.validate_on_submit():
+        user_to_edit.Fname = form.name.data.split()[0]  # first name
+        user_to_edit.Lname = ' '.join(form.name.data.split()[1:])  # last name
         db.session.commit()
-        flash('User name has been updated.', 'success')
-        return render_template('settings.html', user=user_to_edit)
+        return jsonify({'status': 'success', 'message': 'User name has been updated.'}), 200
+    
+    # If form validation fails or this is a GET request
+    if request.method == 'POST':
+        return jsonify({'status': 'error', 'message': 'Name update failed.', 'errors': form.name.errors}), 400
+    
     return render_template('change_name.html', form=form , user=user_to_edit)
+
 
 def change_email(id):
     user_to_edit = db_classes.users.query.get_or_404(id)
     form = db_classes.ChangeEmailForm()
-    if form.validate_on_submit():
+
+    # Handle POST request (form submission)
+    if request.method == 'POST' and form.validate_on_submit():
         user_to_edit.email = form.email.data
         db.session.commit()
-        flash('User email has been updated.', 'success')
-        return render_template('settings.html', user=user_to_edit)
-    return render_template('change_email.html', form=form ,user=user_to_edit)
+        return jsonify({'status': 'success', 'message': 'User email has been updated.'}), 200
+    
+    # If form validation fails or this is a GET request
+    if request.method == 'POST':
+        return jsonify({'status': 'error', 'message': 'Email update failed.', 'errors': form.email.errors}), 400
+    
+    # Handle GET request - render the form
+    return render_template('change_email.html', form=form, user=user_to_edit)
+# def change_email(id):
+#     user_to_edit = db_classes.users.query.get_or_404(id)
+#     form = db_classes.ChangeEmailForm()
+#     if form.validate_on_submit():
+#         user_to_edit.email = form.email.data
+#         db.session.commit()
+#         flash('User email has been updated.', 'success')
+#         return render_template('settings.html', user=user_to_edit)
+#     return render_template('change_email.html', form=form ,user=user_to_edit)
 
 def change_password(id):
     user_to_edit = db_classes.users.query.get_or_404(id)
     form = db_classes.ChangePasswordForm()
-    message = None  # Initialize the message variable
-    try:
-        if form.validate_on_submit():
-            if bcrypt.check_password_hash(user_to_edit.password, form.old_password.data):
-                if form.new_password.data == form.confirm_new_password.data:
-                    # Set new password with bcrypt and decode it to string
-                    hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
-                    user_to_edit.password = hashed_password
-                    db.session.commit()
-                    flash('Your password has been updated successfully.')
-                    return render_template('settings.html', user=user_to_edit)
-                else:
-                    message = 'New password and confirmation do not match.'
-            else:
-                message = 'Incorrect old password.'
-    except ValueError as e:
-            # Handle the invalid salt error
-             message = 'Incorrect old password.'
 
-    # Pass the message to the template. If the message is None, nothing will be displayed.
-    return render_template('change_password.html', form=form, message=message,user=user_to_edit)
+    if request.method == 'POST' and form.validate_on_submit():
+        # Check if the old password is correct
+        if bcrypt.check_password_hash(user_to_edit.password, form.old_password.data):
+            if form.new_password.data == form.confirm_new_password.data:
+                # Hash the new password and set it
+                hashed_password = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+                user_to_edit.password = hashed_password
+                db.session.commit()
+                return jsonify({'status': 'success', 'message': 'Your password has been updated successfully.'}), 200
+            else:
+                return jsonify({'status': 'error', 'message': 'New password and confirmation do not match.'}), 400
+        else:
+            return jsonify({'status': 'error', 'message': 'Incorrect old password.'}), 400
+    
+    return render_template('change_password.html', form=form, user=user_to_edit)
