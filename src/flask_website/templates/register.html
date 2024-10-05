@@ -13,44 +13,86 @@
   </head>
   <body>
     <div class="container-fluid">
-        <form class="mx-auto" method="POST" action="">
-            {{ form.hidden_tag() }}
-            <h4 class="text-center">Register</h4>
-            <div class="mb-3 mt-5">
+      <form class="mx-auto" id="registerForm" method="POST">
+          {{ form.hidden_tag() }}
+          <h4 class="text-center">Register</h4>
+          <div class="mb-3 mt-5">
               <label for="exampleInputEmail1" class="form-label">First name</label>
               {{form.Fname(class="form-control")}}
               <label for="exampleInputEmail1" class="form-label">Last name</label>
               {{form.Lname(class="form-control")}}
-            </div>
-
-            <!-- <div class="mb-3 mt-5">
-                <label for="exampleInputEmail1" class="form-label">last name</label>
-                {{form.Lname(class="form-control")}}
-            </div> -->
-
-
-            <div class="mb-3 mt-5">
-                <label for="exampleInputEmail1" class="form-label">Email</label>
-                {{form.email(class="form-control")}}
-            </div>
-
-            <div class="mb-3">
+          </div>
+  
+          <div class="mb-3 mt-5">
+              <label for="exampleInputEmail1" class="form-label">Email</label>
+              {{form.email(class="form-control")}}
+          </div>
+  
+          <div class="mb-3">
               <label for="exampleInputPassword1" class="form-label">Password</label>
               {{form.password(class="form-control")}}
-            </div>
+          </div>
+  
+          <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+              {{form.confirm_password(class="form-control")}}
+              <div id="emailHelp" class="form-text mt-3">
+                  <a href="{{ url_for('login') }}">Already have an account? Log In</a>
+              </div>
+          </div>
+  
+          {{form.submit(class="btn btn-primary")}}
+      </form>
+  </div>
+  
 
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
-                {{form.confirm_password(class="form-control")}}
-                <div id="emailHelp" class="form-text mt-3">
-                    <a href="{{ url_for('login') }}">Already have an account? Log In</a>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent form from submitting normally
     
-                  </div>
-            </div>
-          
-            {{form.submit(class="btn btn-primary")}}
-          </form>
-    </div>
+        const formData = new FormData(this);
+    
+        fetch("{{ url_for('register') }}", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registration Successful',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    window.location.href = data.redirect_url;
+                });
+            } else if (data.status === "error") {
+                // If there are field-specific errors, display them
+                if (data.errors) {
+                    let errorMessages = '';
+                    for (let field in data.errors) {
+                        errorMessages += `${data.errors[field]}<br>`;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Errors',
+                        html: errorMessages,  // Display all errors in a SweetAlert modal
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message,  // Generic error message
+                    });
+                }
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
 
 
 <!-- Option 1: Bootstrap Bundle with Popper -->
