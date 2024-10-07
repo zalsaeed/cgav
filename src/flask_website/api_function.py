@@ -1,5 +1,5 @@
 from flask import jsonify, render_template, request
-from db_classes import Certificate_table, recipient as RecipientModel, CertificateEvent
+from db_classes import Certificate_table, recipient as RecipientModel, CertificateEvent , api_config
 import db_connection
 from flask_login import current_user
 
