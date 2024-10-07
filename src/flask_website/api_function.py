@@ -1,5 +1,5 @@
 from flask import jsonify, render_template, request
-from db_classes import users, api_config  # Ensure api_config is correctly defined in db_classes
+from db_classes import Certificate_table, recipient as RecipientModel, CertificateEvent
 import db_connection
 from flask_login import current_user
 
@@ -37,13 +37,13 @@ def save_api_url():
 
 def verify_certificate_api(certificate_hash):
     # Query for the certificate based on the hash
-    certificate = CertificateTable.query.filter_by(certificate_hash=certificate_hash).first()
+    certificate = Certificate_table.query.filter_by(certificate_hash=certificate_hash).first()
     if certificate:
-        recipient = Recipient.query.filter_by(recipient_id=certificate.recipient_id).first()
-        certificate_event = AddCertificate.query.filter_by(
+        recipient_data = RecipientModel.query.filter_by(recipient_id=certificate.recipient_id).first()
+        certificate_event = CertificateEvent.query.filter_by(
             certificate_event_id=certificate.certificate_event_id).first()
 
-        recipient_name = recipient.first_name + ' ' + recipient.last_name if recipient else "Unknown Recipient"
+        recipient_name = recipient_data.first_name + ' ' + recipient_data.last_name if recipient_data else "Unknown Recipient"
 
         return jsonify({
             'valid': True,
@@ -57,6 +57,7 @@ def verify_certificate_api(certificate_hash):
         }), 200
     else:
         return jsonify({'valid': False, 'error': 'Certificate is invalid or not found.'}), 404
+
 
 
 @app.route('/manage_api_url')
